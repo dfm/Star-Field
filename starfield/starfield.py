@@ -49,6 +49,11 @@ class PSF(object):
         * `img` (numpy.ndarray): The image where the shape is given by
           `(nx, ny)`.
 
+        ## Bugs
+
+        * the `/= sum(...)` normalization is WRONG near the edges of
+          the image.
+
         """
         # Find the dimensions of the image if it's provided and generate an
         # "image" of zeros if not.
@@ -61,15 +66,15 @@ class PSF(object):
         x0, y0 = np.arange(nx), np.arange(ny)
 
         # Then, calculate the distances (on this grid) from the central point.
-        r2 = - ((x - x0)**2)[:, None] - ((y - y0)**2)[None, :]
+        negr2 = - ((x - x0)**2)[:, None] - ((y - y0)**2)[None, :]
 
         # For speed, just consider the points where the distance is less than
         # some factor times the maximum width.
-        mask = r2 > -wfactor * np.max(self.variances)
+        mask = negr2 > -wfactor * np.max(self.variances)
 
         # Calculate the full image as a mixture of Gaussians on the pixel
         # grid.
-        t =  np.exp(r2[mask][:,None] / self.variances[None, :])
+        t =  np.exp(0.5 * negr2[mask][:,None] / self.variances[None, :])
         t /= np.sum(t, axis=0)
         img[mask] += flux * np.sum(self.amplitudes[None, :] * t, axis=-1)
 

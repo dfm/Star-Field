@@ -197,5 +197,5 @@ if __name__ == "__main__":
     fig = pl.figure(figsize=(8,8))
     ax = fig.add_subplot(111, aspect="equal")
     ax.pcolor(-img, cmap="gray")
-    pl.savefig("example.png")
+    pl.savefig("starfield.png")
 

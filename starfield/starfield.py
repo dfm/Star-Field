@@ -178,7 +178,7 @@ if __name__ == "__main__":
     import time
     import matplotlib.pyplot as pl
 
-    psf = PSF([1.2, 0.5], [1.0, 5.0])
+    psf = PSF([1.0, 0.6], [1.0, 4.0])
 
     sf = StarField(psf, 200, 200)
     sf.generate_bg_stars(100)

@@ -3,11 +3,15 @@ Just generating some fake data.
 
 """
 
-__all__ = ["PSF", "StarField"]
+__all__ = ["Catalog", "PSF", "StarField"]
 
 import os
 
 import numpy as np
+import scipy.optimize as op
+
+import emcee
+
 try:
     import pyfits
 except ImportError:
@@ -39,6 +43,9 @@ class Catalog(object):
         self.S = kwargs.pop("flux", np.array([]))
 
         assert len(self.x) == len(self.y) == len(self.S)
+
+    def __len__(self):
+        return len(self.x)
 
     def __getitem__(self, i):
         return (self.x[i], self.y[i], self.S[i])
@@ -152,7 +159,7 @@ class StarField(object):
     * `relnoise` (float): A relative component of the noise variance.
 
     """
-    def __init__(self, psf, nx, ny, catalog=None, noisevar=1., relnoise=0.01):
+    def __init__(self, psf, nx, ny, catalog=None, noisevar=0.00001, relnoise=0.0):
         self.psf  = psf
         self.nx   = nx
         self.ny   = ny
@@ -167,6 +174,10 @@ class StarField(object):
 
         self.noisevar = noisevar
         self.relnoise = relnoise
+
+    @property
+    def variance(self):
+        return self.noisevar + self._image**2*self.relnoise
 
     def _gen_fluxes(self, N, p, f0):
         return f0*10.**(np.random.rand(N)/p)
@@ -234,22 +245,71 @@ class StarField(object):
           `(nx, ny)`.
 
         """
-        if self._image is not None:
-            return self._image
+        if self._image is None:
+            # First, initialize the image as a set of zeros.
+            self._image = np.zeros((self.nx, self.ny))
 
-        # First, initialize the image as a set of zeros.
-        self._image = np.zeros((self.nx, self.ny))
-
-        # Then, loop over the stars and sum up the contributions.
-        for x, y, S in self.catalog:
-            self._image = self.psf.image(x, y, flux=S, img=self._image)
+            # Then, loop over the stars and sum up the contributions.
+            for x, y, S in self.catalog:
+                self._image = self.psf.image(x, y, flux=S, img=self._image)
 
         if noise:
-            self._image +=\
-                    np.sqrt(self.noisevar + self._image**2*self.relnoise) \
-                    * np.random.randn(*self._image.shape)
+            return self._image + np.sqrt(self.variance) \
+                       * np.random.randn(*self._image.shape)
 
         return self._image
+
+    def lnlike(self, other):
+        """
+        Return the likelihood of other given this image.
+
+        ## Arguments
+
+        * `other` (numpy.ndarray): The image to compare to.
+
+        """
+        img = self.image(noise=False)
+        var = self.variance
+        return -0.5 * np.sum((img-other)**2 / var + np.log(2*np.pi*var))
+
+    def __call__(self, p):
+        N = self._N
+        x, y = p[:N], p[N:2*N]
+        if np.any(p < 0) or np.any(x > self.nx) or np.any(y > self.ny):
+            return -np.inf
+        self.catalog = Catalog(x=p[:N], y=p[N:2*N], flux=np.ones(N))
+        self._image = None
+        lnlike = self.lnlike(self._data)
+        return lnlike
+
+    def optimize(self, N, other):
+        self._N = N
+        self._data = other
+
+        chi2 = lambda p: -2*self(p)
+
+        p0 = np.concatenate([self.catalog.x, self.catalog.y])
+
+        p1 = op.fmin_bfgs(chi2, p0)
+
+        return p1
+
+    def sample(self, N, other, nwalkers=100):
+        self._N = N
+        self._data = other
+
+        # p0 = np.concatenate([0.5*self.nx+0.2*self.nx*np.random.randn(N),
+        #     0.5*self.ny+0.2*self.ny*np.random.randn(N)])[None, :] \
+        #             + np.random.randn(2*nwalkers*N).reshape((nwalkers, 2*N))
+
+        p0 = np.concatenate([self.catalog.x, self.catalog.y])[None, :] \
+                    + 5.0*np.random.randn(2*nwalkers*N).reshape((nwalkers, 2*N))
+
+        sampler = emcee.EnsembleSampler(nwalkers, 2*N, self, threads=nwalkers/2)
+        pos,lnprob,state = sampler.run_mcmc(p0, 200)
+        sampler.reset()
+
+        return sampler, (pos,lnprob,state)
 
     def save(self, fn):
         """
@@ -300,32 +360,13 @@ class StarField(object):
 
             ds.attrs["noisevar"] = self.noisevar
             ds.attrs["relnoise"] = self.relnoise
+            ds.attrs["psf_variances"] = \
+                    " ".join(["%e"%i for i in self.psf.variances])
+            ds.attrs["psf_amplitudes"] = \
+                    " ".join(["%e"%i for i in self.psf.amplitudes])
 
             f.create_dataset("sources", data=sources)
             f.create_dataset("bgs", data=bgs)
             f.create_dataset("clusters", data=clusters)
             f.close()
-
-if __name__ == "__main__":
-    import time
-    import matplotlib.pyplot as pl
-
-    psf = PSF([1.0, 0.6], [1.0, 4.0])
-
-    sf = StarField(psf, 200, 200)
-    sf.generate_bg_stars(100)
-    sf.generate_gaussian_stars(50, 95, 83.5, [[8.**2, 0], [0, 8.**2]])
-
-    s = time.time()
-    img = sf.image()
-    print "Generating an image w/ %d stars took: %.4f seconds"\
-            %(len(sf.catalog), time.time()-s)
-
-    fig = pl.figure(figsize=(8,8))
-    ax = fig.add_subplot(111, aspect="equal")
-    ax.pcolor(-img, cmap="gray")
-    pl.savefig("starfield.png")
-
-    sf.save("starfield.h5")
-    sf.save("starfield.fits")
 

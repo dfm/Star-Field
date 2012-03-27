@@ -3,4 +3,4 @@
 *.pyc
 *.fits
 *.h5
-starfield.png
+*.png

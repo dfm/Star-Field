@@ -296,8 +296,8 @@ class StarField(object):
             f = h5py.File(fn, "w")
             ds = f.create_dataset("data", data=self.image())
 
-            ds.attrs["noisevar"] = self._noisevar
-            ds.attrs["relnoise"] = self._relnoise
+            ds.attrs["noisevar"] = self.noisevar
+            ds.attrs["relnoise"] = self.relnoise
 
             f.create_dataset("sources", data=sources)
             f.create_dataset("bgs", data=bgs)

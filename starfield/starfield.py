@@ -250,6 +250,15 @@ class StarField(object):
         return self._image
 
     def save(self, fn):
+        """
+        Save the image and metadata to a file.
+
+        ## Arguments
+
+        * `fn` (str): The filename to save to. This should have either
+          `.fits` or `.h5` extension.
+
+        """
         root, ext = os.path.splitext(fn)
         if ext.lower() not in [".fits", ".h5"]:
             root += ext

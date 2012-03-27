@@ -15,7 +15,6 @@ fig = pl.figure(figsize=(8,8))
 ax = fig.add_subplot(111, aspect="equal")
 ax.pcolor(-img, cmap="gray")
 pl.savefig("example.png")
-
 ```
 
 !["Just some stars"](https://github.com/dfm/Star-Field/raw/master/example.png)

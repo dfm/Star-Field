@@ -5,8 +5,17 @@
 
 __all__ = ["PSF", "StarField"]
 
+import os
 
 import numpy as np
+try:
+    import pyfits
+except ImportError:
+    pyfits = None
+try:
+    import h5py
+except ImportError:
+    h5py = None
 
 class PSF(object):
     """
@@ -24,6 +33,11 @@ class PSF(object):
         self.variances = np.atleast_1d(variances)
         self.amplitudes = np.atleast_1d(amplitudes)
         self.amplitudes /= np.sum(self.amplitudes)
+
+        # Precalculate the normalization.
+        N = 10*np.sqrt(np.max(variances))
+        self._norm = 1.0
+        self._norm = 1./np.sum(self.image(0.5*N, 0.5*N, nx=N, ny=N))
 
     def image(self, x, y, flux=1., nx=200, ny=200, img=None, wfactor=5):
         """
@@ -49,11 +63,6 @@ class PSF(object):
         * `img` (numpy.ndarray): The image where the shape is given by
           `(nx, ny)`.
 
-        ## Bugs
-
-        * the `/= sum(...)` normalization is WRONG near the edges of
-          the image.
-
         """
         # Find the dimensions of the image if it's provided and generate an
         # "image" of zeros if not.
@@ -75,8 +84,9 @@ class PSF(object):
         # Calculate the full image as a mixture of Gaussians on the pixel
         # grid.
         t =  np.exp(0.5 * negr2[mask][:,None] / self.variances[None, :])
-        t /= np.sum(t, axis=0)
-        img[mask] += flux * np.sum(self.amplitudes[None, :] * t, axis=-1)
+        t /= np.sqrt(2 * np.pi * self.variances[None, :])
+        img[mask] += self._norm * flux \
+                * np.sum(self.amplitudes[None, :] * t, axis=-1)
 
         return img
 
@@ -100,6 +110,11 @@ class StarField(object):
         self.y    = np.array([])
         self.flux = np.array([])
 
+        self._image = None
+
+        self._bgs = []
+        self._clusters = []
+
     def _gen_fluxes(self, N, p, f0):
         return f0*10.**(np.random.rand(N)/p)
 
@@ -118,6 +133,8 @@ class StarField(object):
         * `f0` (float): The normalization of the luminosity function.
 
         """
+        self._bgs.append((N, p, f0))
+
         flux = self._gen_fluxes(N, p, f0)
         x, y = self.nx * np.random.rand(N), self.ny * np.random.rand(N)
 
@@ -143,6 +160,9 @@ class StarField(object):
         * `f0` (float): The normalization of the luminosity function.
 
         """
+        cov = np.atleast_2d(cov)
+        self._clusters.append((N,x0,y0,cov[0,0],cov[0,1],cov[1,1],p,f0))
+
         flux = self._gen_fluxes(N, p, f0)
         xy = np.random.multivariate_normal([x0, y0], cov, N)
 
@@ -165,19 +185,77 @@ class StarField(object):
           `(nx, ny)`.
 
         """
+        if self._image is not None:
+            return self._image
+
         # First, initialize the image as a set of zeros.
-        img = np.zeros((self.nx, self.ny))
+        self._image = np.zeros((self.nx, self.ny))
 
         # Then, loop over the stars and sum up the contributions.
         for k in range(len(self.x)):
-            img = self.psf.image(self.x[k], self.y[k], flux=self.flux[k],
-                    img=img)
+            self._image = self.psf.image(self.x[k], self.y[k], flux=self.flux[k],
+                    img=self._image)
 
         if noise:
-            img += np.sqrt(noisevar + img**2*relnoise) \
-                    * np.random.randn(*img.shape)
+            self._image += np.sqrt(noisevar + self._image**2*relnoise) \
+                    * np.random.randn(*self._image.shape)
+            self._relnoise = relnoise
+            self._noisevar = noisevar
 
-        return img
+        return self._image
+
+    def save(self, fn):
+        root, ext = os.path.splitext(fn)
+        if ext.lower() not in [".fits", ".h5"]:
+            root += ext
+            ext = ".fits"
+        fn = root + ext
+
+        assert (ext.lower() == ".fits" and pyfits is not None) \
+                or (ext.lower() == ".h5" and h5py is not None)
+
+
+        if ext.lower() == ".fits":
+            hdu0 = pyfits.PrimaryHDU(self.image())
+
+            try:
+                hdu0.header.update("noisevar", self._noisevar)
+                hdu0.header.update("relnoise", self._relnoise)
+            except AttributeError:
+                pass
+
+            sources = pyfits.new_table(pyfits.ColDefs([
+                    pyfits.Column(name="x",    format="E", array=self.x),
+                    pyfits.Column(name="y",    format="E", array=self.y),
+                    pyfits.Column(name="flux", format="E", array=self.flux),
+                ]))
+
+            hdulist = pyfits.HDUList([hdu0, sources])
+            hdulist.writeto(fn, clobber=True)
+
+        if ext.lower() == ".h5":
+            sources = np.array([(self.x[i], self.y[i], self.flux[i])
+                        for i in range(len(self.x))],
+                dtype=[("x", float), ("y", float), ("flux", float)])
+            bgs = np.array(self._bgs, dtype=[("N", int), ("p", float),
+                                            ("f0", float)])
+            clusters = np.array(self._clusters, dtype=[("N", int),
+                ("x0", float), ("y0", float), ("c00", float), ("c01", float),
+                ("c11", float), ("p", float), ("f0", float)])
+
+            f = h5py.File(fn, "w")
+            ds = f.create_dataset("data", data=self.image())
+
+            try:
+                ds.attrs["noisevar"] = self._noisevar
+                ds.attrs["relnoise"] = self._relnoise
+            except AttributeError:
+                pass
+
+            f.create_dataset("sources", data=sources)
+            f.create_dataset("bgs", data=bgs)
+            f.create_dataset("clusters", data=clusters)
+            f.close()
 
 if __name__ == "__main__":
     import time
@@ -198,4 +276,7 @@ if __name__ == "__main__":
     ax = fig.add_subplot(111, aspect="equal")
     ax.pcolor(-img, cmap="gray")
     pl.savefig("starfield.png")
+
+    sf.save("starfield.h5")
+    sf.save("starfield.fits")
 

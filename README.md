@@ -1,5 +1,11 @@
 # Synthetic Star Field Generator
 
+Generate some sweet fake crowded stellar fields for fun & profit.
+
+## Example
+
+Run this...
+
 ```python
 from starfield import PSF, StarField
 import matplotlib.pyplot as pl
@@ -17,5 +23,14 @@ ax.pcolor(-img, cmap="gray")
 pl.savefig("example.png")
 ```
 
+...to get this...
+
 !["Just some stars"](https://github.com/dfm/Star-Field/raw/master/example.png)
+
+...and you can save it to a file...
+
+```python
+sf.save("starfield.h5")
+sf.save("starfield.fits")
+```
 

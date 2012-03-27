@@ -38,6 +38,8 @@ class Catalog(object):
         self.y = kwargs.pop("y", np.array([]))
         self.S = kwargs.pop("flux", np.array([]))
 
+        assert len(self.x) == len(self.y) == len(self.S)
+
     def __getitem__(self, i):
         return (self.x[i], self.y[i], self.S[i])
 
@@ -317,7 +319,7 @@ if __name__ == "__main__":
     s = time.time()
     img = sf.image()
     print "Generating an image w/ %d stars took: %.4f seconds"\
-            %(len(sf.catalog.x), time.time()-s)
+            %(len(sf.catalog), time.time()-s)
 
     fig = pl.figure(figsize=(8,8))
     ax = fig.add_subplot(111, aspect="equal")

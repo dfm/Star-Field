@@ -1,5 +1,5 @@
 """
-
+Just generating some fake data.
 
 """
 
@@ -16,6 +16,24 @@ try:
     import h5py
 except ImportError:
     h5py = None
+
+class Catalog(object):
+    def __init__(self):
+        self.x = np.array([])
+        self.y = np.array([])
+        self.S = np.array([])
+
+    def __getitem__(self, i):
+        return (self.x[i], self.y[i], self.S[i])
+
+    @property
+    def flux(self):
+        return self.S
+
+    def add_star(self, x, y, S):
+        self.x = np.append(self.x, x)
+        self.y = np.append(self.y, y)
+        self.S = np.append(self.S, S)
 
 class PSF(object):
     """
@@ -102,13 +120,13 @@ class StarField(object):
     * `ny` (int): The height of the image.
 
     """
-    def __init__(self, psf, nx, ny):
+    def __init__(self, psf, nx, ny, catalog=None):
         self.psf  = psf
         self.nx   = nx
         self.ny   = ny
-        self.x    = np.array([])
-        self.y    = np.array([])
-        self.flux = np.array([])
+        if catalog is None:
+            catalog = Catalog()
+        self.catalog = catalog
 
         self._image = None
 
@@ -138,9 +156,7 @@ class StarField(object):
         flux = self._gen_fluxes(N, p, f0)
         x, y = self.nx * np.random.rand(N), self.ny * np.random.rand(N)
 
-        self.flux = np.append(self.flux, flux)
-        self.x    = np.append(self.x, x)
-        self.y    = np.append(self.y, y)
+        self.catalog.add_star(x, y, flux)
 
     def generate_gaussian_stars(self, N, x0, y0, cov, p=-2, f0=100.):
         """
@@ -166,9 +182,7 @@ class StarField(object):
         flux = self._gen_fluxes(N, p, f0)
         xy = np.random.multivariate_normal([x0, y0], cov, N)
 
-        self.flux = np.append(self.flux, flux)
-        self.x    = np.append(self.x, xy[:,0])
-        self.y    = np.append(self.y, xy[:,1])
+        self.catalog.add_star(xy[:,0], xy[:,1], flux)
 
     def image(self, noise=True, noisevar=1., relnoise=0.01):
         """
@@ -192,9 +206,8 @@ class StarField(object):
         self._image = np.zeros((self.nx, self.ny))
 
         # Then, loop over the stars and sum up the contributions.
-        for k in range(len(self.x)):
-            self._image = self.psf.image(self.x[k], self.y[k], flux=self.flux[k],
-                    img=self._image)
+        for x, y, S in self.catalog:
+            self._image = self.psf.image(x, y, flux=S, img=self._image)
 
         if noise:
             self._image += np.sqrt(noisevar + self._image**2*relnoise) \
@@ -225,17 +238,16 @@ class StarField(object):
                 pass
 
             sources = pyfits.new_table(pyfits.ColDefs([
-                    pyfits.Column(name="x",    format="E", array=self.x),
-                    pyfits.Column(name="y",    format="E", array=self.y),
-                    pyfits.Column(name="flux", format="E", array=self.flux),
+                pyfits.Column(name="x", format="E", array=self.catalog.x),
+                pyfits.Column(name="y", format="E", array=self.catalog.y),
+                pyfits.Column(name="S", format="E", array=self.catalog.flux),
                 ]))
 
             hdulist = pyfits.HDUList([hdu0, sources])
             hdulist.writeto(fn, clobber=True)
 
         if ext.lower() == ".h5":
-            sources = np.array([(self.x[i], self.y[i], self.flux[i])
-                        for i in range(len(self.x))],
+            sources = np.array([s for s in self.catalog],
                 dtype=[("x", float), ("y", float), ("flux", float)])
             bgs = np.array(self._bgs, dtype=[("N", int), ("p", float),
                                             ("f0", float)])
@@ -270,7 +282,7 @@ if __name__ == "__main__":
     s = time.time()
     img = sf.image()
     print "Generating an image w/ %d stars took: %.4f seconds"\
-            %(len(sf.x), time.time()-s)
+            %(len(sf.catalog.x), time.time()-s)
 
     fig = pl.figure(figsize=(8,8))
     ax = fig.add_subplot(111, aspect="equal")

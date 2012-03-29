@@ -4,3 +4,7 @@
 *.fits
 *.h5
 *.png
+*.aux
+*.dvi
+*.log
+*.pdf

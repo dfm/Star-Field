@@ -1,0 +1,42 @@
+#ifndef _StarHyperparameters_
+#define _StarHyperparameters_
+
+#include "Star.h"
+#include <vector>
+#include <ostream>
+
+class StarHyperparameters
+{
+	friend class TestModel;
+
+	private:
+		// Positional hyperparameters
+		double xMean, yMean, sig;
+
+		// Flux hyperparameters
+		double meanFlux;
+
+		static const double minMeanFlux;
+		static const double maxMeanFlux;
+
+	public:
+		StarHyperparameters();			
+
+		void fromPrior(int thread);
+		double perturb(int thread);
+		double perturb(int thread, std::vector<Star>& stars); // Take stars along for the ride
+
+		// Generate a star from the prior
+		// given the hyperparameters
+		Star generateStar(int thread) const;
+
+		// Evaluate the probability density
+		// for a star given the hyperparameters
+		double logp(const Star& star) const;
+		double logp(const std::vector<Star>& stars) const;
+		friend std::ostream& operator << (std::ostream& out, const StarHyperparameters& hyp);
+
+};
+
+#endif
+

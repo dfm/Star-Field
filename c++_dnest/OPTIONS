@@ -1,0 +1,13 @@
+# File containing parameters for NewSampler
+# Put comments at the top, or at the end of the line.
+# Don't exceed 1000 characters in a comment
+1	# Number of particles
+10000	# new level interval
+10000	# regularisation (C in the paper)
+10000	# save interval
+1000	# maximum number of levels
+1	# Backtracking scale length (lambda in the paper)
+10	# Strength of effect to force histogram to equal push. 0-10 is best. (beta in the paper)
+1	# Delete particles
+0	# Maximum number of saves (0 = infinite)
+

@@ -8,3 +8,5 @@
 *.dvi
 *.log
 *.pdf
+*.o
+

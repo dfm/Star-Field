@@ -7,7 +7,7 @@
 
 class StarHyperparameters
 {
-	friend class TestModel;
+	friend class StarFieldModel;
 
 	private:
 		// Positional hyperparameters

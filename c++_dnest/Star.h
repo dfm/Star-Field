@@ -7,7 +7,7 @@
 
 class Star
 {
-	friend class TestModel;
+	friend class StarFieldModel;
 	friend class StarHyperparameters;
 
 	private:

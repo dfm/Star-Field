@@ -27,11 +27,6 @@ using namespace DNest;
 
 int main(int argc, char** argv)
 {
-	int numThreads = boost::thread::hardware_concurrency();
-	cout<<"# Running on "<<numThreads<<" threads."<<endl;
-
-	int firstSeed = -time(0);
-	RandomNumberGenerator::initialise(firstSeed);
 
 	StarFieldModel t;
 
@@ -39,16 +34,15 @@ int main(int argc, char** argv)
 	// load the level structure from the file specified
 	if(argc >= 2)
 	{
-		DNestSampler sampler(numThreads, firstSeed-10, &t, argv[1]);
+		DNestSampler sampler(&t, argv[1]);
 		sampler.run();
 	}
 	else
 	{
-		DNestSampler sampler(numThreads, firstSeed-10, &t);
+		DNestSampler sampler(&t);
 		sampler.run();
 	}
 
-	RandomNumberGenerator::free();
 	return 0;
 }
 

@@ -17,7 +17,7 @@
 */
 
 
-#include "TestModel.h"
+#include "StarFieldModel.h"
 #include "Utils.h"
 #include "RandomNumberGenerator.h"
 #include <cmath>
@@ -25,40 +25,40 @@
 using namespace std;
 using namespace DNest;
 
-const double TestModel::noiseSigma = 1E-5;
-const double TestModel::noiseCoeff = 0;
-const int TestModel::maxNumStars = 500;
-Data TestModel::data;
-PSF TestModel::psf(1.0*Data::dx, 5.0*Data::dx, 0.5);
+const double StarFieldModel::noiseSigma = 1E-5;
+const double StarFieldModel::noiseCoeff = 0;
+const int StarFieldModel::maxNumStars = 500;
+Data StarFieldModel::data;
+PSF StarFieldModel::psf(1.0*Data::dx, 5.0*Data::dx, 0.5);
 
-TestModel::TestModel()
+StarFieldModel::StarFieldModel()
 :mockImage(Data::ni, Data::nj)
 {
 	if(!data.isLoaded())
 		data.load("data_100stars.txt");
 }
 
-TestModel::~TestModel()
+StarFieldModel::~StarFieldModel()
 {
 
 }
 
-Model* TestModel::factory() const
+Model* StarFieldModel::factory() const
 {
-	return new TestModel;
+	return new StarFieldModel;
 }
 
-Model* TestModel::clone() const
+Model* StarFieldModel::clone() const
 {
-	return new TestModel(*this);
+	return new StarFieldModel(*this);
 }
 
-void TestModel::copyFrom(const Model* other)
+void StarFieldModel::copyFrom(const Model* other)
 {
-	*this = *((TestModel*)other);
+	*this = *((StarFieldModel*)other);
 }
 
-void TestModel::fromPrior()
+void StarFieldModel::fromPrior()
 {
 	hyp.fromPrior();
 	int numStars = randInt(maxNumStars + 1);
@@ -70,7 +70,7 @@ void TestModel::fromPrior()
 	calculateLogLikelihood();
 }
 
-double TestModel::perturb()
+double StarFieldModel::perturb()
 {
 	if(staleness >= 1000)
 		calculateMockImage();
@@ -92,7 +92,7 @@ double TestModel::perturb()
 	return logH;
 }
 
-double TestModel::perturbHelper1()
+double StarFieldModel::perturbHelper1()
 {
 	if(stars.size() == 0)
 		return 0;
@@ -112,7 +112,7 @@ double TestModel::perturbHelper1()
 	return logH;
 }
 
-double TestModel::perturbHelper2()
+double StarFieldModel::perturbHelper2()
 {
 	if(stars.size() == 0)
 		return 0;
@@ -131,7 +131,7 @@ double TestModel::perturbHelper2()
 	return logH;
 }
 
-double TestModel::perturbHelper3()
+double StarFieldModel::perturbHelper3()
 {
 	// Move hyperparameters
 
@@ -150,7 +150,7 @@ double TestModel::perturbHelper3()
 	return logH;
 }
 
-double TestModel::perturbHelper4()
+double StarFieldModel::perturbHelper4()
 {
 	// Add or remove a star
 	if(randomU() <= 0.5)
@@ -175,7 +175,7 @@ double TestModel::perturbHelper4()
 	return 0;
 }
 
-void TestModel::calculateMockImage()
+void StarFieldModel::calculateMockImage()
 {
 	mockImage.zero();
 	for(size_t i=0; i<stars.size(); i++)
@@ -183,7 +183,7 @@ void TestModel::calculateMockImage()
 	staleness = 0;
 }
 
-void TestModel::calculateLogLikelihood()
+void StarFieldModel::calculateLogLikelihood()
 {
 	logl.logl = 0.0;
 
@@ -196,7 +196,7 @@ void TestModel::calculateLogLikelihood()
 		}
 }
 
-void TestModel::print(ostream& out) const
+void StarFieldModel::print(ostream& out) const
 {
 	out<<stars.size()<<' '<<hyp<<' '<<mockImage;
 }

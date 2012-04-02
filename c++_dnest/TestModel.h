@@ -17,8 +17,8 @@
 */
 
 
-#ifndef _TestModel_
-#define _TestModel_
+#ifndef _StarFieldModel_
+#define _StarFieldModel_
 
 #include "Model.h"
 #include <ostream>
@@ -29,7 +29,7 @@
 #include "PSF.h"
 #include "StarHyperparameters.h"
 
-class TestModel:public DNest::Model
+class StarFieldModel:public DNest::Model
 {
 	private:
 		static Data data;
@@ -52,8 +52,8 @@ class TestModel:public DNest::Model
 		double perturbHelper4();
 
 	public:
-		TestModel();
-		~TestModel();
+		StarFieldModel();
+		~StarFieldModel();
 		Model* factory() const;
 		Model* clone() const;
 		void copyFrom(const Model* other);

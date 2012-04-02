@@ -18,7 +18,7 @@
 
 #include <iostream>
 #include <boost/thread.hpp>
-#include "TestModel.h"
+#include "StarFieldModel.h"
 #include "DNestSampler.h"
 #include "RandomNumberGenerator.h"
 
@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 	int firstSeed = -time(0);
 	RandomNumberGenerator::initialise(firstSeed);
 
-	TestModel t;
+	StarFieldModel t;
 
 	// If a command line argument is found,
 	// load the level structure from the file specified

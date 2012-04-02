@@ -46,10 +46,10 @@ class TestModel:public DNest::Model
 		int staleness;
 
 		void calculateMockImage();
-		double perturbHelper1(int thread);
-		double perturbHelper2(int thread);
-		double perturbHelper3(int thread);
-		double perturbHelper4(int thread);
+		double perturbHelper1();
+		double perturbHelper2();
+		double perturbHelper3();
+		double perturbHelper4();
 
 	public:
 		TestModel();
@@ -58,9 +58,9 @@ class TestModel:public DNest::Model
 		Model* clone() const;
 		void copyFrom(const Model* other);
 
-		void fromPrior(int thread);
+		void fromPrior();
 		void calculateLogLikelihood();
-		double perturb(int thread);
+		double perturb();
 		double getValue();
 		void print(std::ostream& out) const;
 };

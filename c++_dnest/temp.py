@@ -1,7 +1,7 @@
 from pylab import *
 import time
 
-sample = atleast_2d(loadtxt('sample.txt'))
+sample = atleast_2d(loadtxt('posterior_sample.txt'))
 data = loadtxt('data_100stars.txt')
 sample = sample[:,5:]
 ion()

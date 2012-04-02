@@ -16,20 +16,20 @@ StarHyperparameters::StarHyperparameters()
 
 }
 
-void StarHyperparameters::fromPrior(int thread)
+void StarHyperparameters::fromPrior()
 {
-	xMean = Data::xMin + Data::xRange*randomU(thread);
-	yMean = Data::yMin + Data::yRange*randomU(thread);
-	sig = exp(log(1E-2*Data::range) + log(1E2)*randomU(thread));
-	meanFlux = exp(log(minMeanFlux) + log(maxMeanFlux/minMeanFlux)*randomU(thread));
+	xMean = Data::xMin + Data::xRange*randomU();
+	yMean = Data::yMin + Data::yRange*randomU();
+	sig = exp(log(1E-2*Data::range) + log(1E2)*randomU());
+	meanFlux = exp(log(minMeanFlux) + log(maxMeanFlux/minMeanFlux)*randomU());
 }
 
-Star StarHyperparameters::generateStar(int thread) const
+Star StarHyperparameters::generateStar() const
 {
 	double x, y, flux;
-	x = xMean + sig*randn(thread);
-	y = yMean + sig*randn(thread);
-	flux = -meanFlux*log(randomU(thread));
+	x = xMean + sig*randn();
+	y = yMean + sig*randn();
+	flux = -meanFlux*log(randomU());
 	return Star(x, y, flux);
 }
 
@@ -52,29 +52,29 @@ double StarHyperparameters::logp(const vector<Star>& stars) const
 	return result;
 }
 
-double StarHyperparameters::perturb(int thread)
+double StarHyperparameters::perturb()
 {
-	double scale = pow(10.0, 1.5 - 6*randomU(thread));
+	double scale = pow(10.0, 1.5 - 6*randomU());
 
-	int which = randInt(thread, 3);
+	int which = randInt(3);
 	if(which == 0)
 	{
-		xMean += Data::xRange*scale*randn(thread);
-		yMean += Data::yRange*scale*randn(thread);
+		xMean += Data::xRange*scale*randn();
+		yMean += Data::yRange*scale*randn();
 		xMean = mod(xMean - Data::xMin, Data::xRange) + Data::xMin;
 		yMean = mod(yMean - Data::yMin, Data::yRange) + Data::yMin;
 	}
 	else if(which == 1)
 	{
 		sig = log(sig);
-		sig += log(1E2)*scale*randn(thread);
+		sig += log(1E2)*scale*randn();
 		sig = mod(sig - log(1E-2*Data::range), log(1E2)) + log(1E-2*Data::range);
 		sig = exp(sig);
 	}
 	else if(which == 2)
 	{
 		meanFlux = log(meanFlux);
-		meanFlux += log(maxMeanFlux/minMeanFlux)*scale*randn(thread);
+		meanFlux += log(maxMeanFlux/minMeanFlux)*scale*randn();
 		meanFlux = mod(meanFlux - log(minMeanFlux), log(maxMeanFlux/minMeanFlux)) + log(minMeanFlux);
 		meanFlux = exp(meanFlux);
 	}
@@ -82,17 +82,17 @@ double StarHyperparameters::perturb(int thread)
 	return 0;
 }
 
-double StarHyperparameters::perturb(int thread, vector<Star>& stars)
+double StarHyperparameters::perturb(vector<Star>& stars)
 {
-	double scale = pow(10.0, 1.5 - 6*randomU(thread));
+	double scale = pow(10.0, 1.5 - 6*randomU());
 
-	int which = randInt(thread, 3);
+	int which = randInt(3);
 	if(which == 0)
 	{
 		double xDiff = -xMean;
 		double yDiff = -yMean;
-		xMean += Data::xRange*scale*randn(thread);
-		yMean += Data::yRange*scale*randn(thread);
+		xMean += Data::xRange*scale*randn();
+		yMean += Data::yRange*scale*randn();
 		xMean = mod(xMean - Data::xMin, Data::xRange) + Data::xMin;
 		yMean = mod(yMean - Data::yMin, Data::yRange) + Data::yMin;
 		xDiff += xMean;
@@ -107,7 +107,7 @@ double StarHyperparameters::perturb(int thread, vector<Star>& stars)
 	{
 		double ratio = 1.0/meanFlux;
 		meanFlux = log(meanFlux);
-		meanFlux += log(maxMeanFlux/minMeanFlux)*scale*randn(thread);
+		meanFlux += log(maxMeanFlux/minMeanFlux)*scale*randn();
 		meanFlux = mod(meanFlux - log(minMeanFlux), log(maxMeanFlux/minMeanFlux)) + log(minMeanFlux);
 		meanFlux = exp(meanFlux);
 		ratio *= meanFlux;
@@ -118,7 +118,7 @@ double StarHyperparameters::perturb(int thread, vector<Star>& stars)
 	{
 		double ratio = 1.0/sig;
 		sig = log(sig);
-		sig += log(1E2)*scale*randn(thread);
+		sig += log(1E2)*scale*randn();
 		sig = mod(sig - log(1E-2*Data::range), log(1E2)) + log(1E-2*Data::range);
 		sig = exp(sig);
 		ratio *= sig;

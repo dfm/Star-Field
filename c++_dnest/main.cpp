@@ -16,7 +16,6 @@
     along with DNest.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include <iostream>
 #include <boost/thread.hpp>
 #include "TestModel.h"
@@ -30,7 +29,9 @@ int main(int argc, char** argv)
 {
 	int numThreads = boost::thread::hardware_concurrency();
 	cout<<"# Running on "<<numThreads<<" threads."<<endl;
-	RandomNumberGenerator::initialise(numThreads, -1);
+
+	int firstSeed = -time(0);
+	RandomNumberGenerator::initialise(firstSeed);
 
 	TestModel t;
 
@@ -38,17 +39,16 @@ int main(int argc, char** argv)
 	// load the level structure from the file specified
 	if(argc >= 2)
 	{
-		DNestSampler sampler(numThreads, &t, argv[1]);
+		DNestSampler sampler(numThreads, firstSeed-10, &t, argv[1]);
 		sampler.run();
 	}
 	else
 	{
-		DNestSampler sampler(numThreads, &t);
+		DNestSampler sampler(numThreads, firstSeed-10, &t);
 		sampler.run();
 	}
 
 	RandomNumberGenerator::free();
-
 	return 0;
 }
 

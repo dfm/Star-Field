@@ -22,13 +22,13 @@ class StarHyperparameters
 	public:
 		StarHyperparameters();			
 
-		void fromPrior(int thread);
-		double perturb(int thread);
-		double perturb(int thread, std::vector<Star>& stars); // Take stars along for the ride
+		void fromPrior();
+		double perturb();
+		double perturb(std::vector<Star>& stars); // Take stars along for the ride
 
 		// Generate a star from the prior
 		// given the hyperparameters
-		Star generateStar(int thread) const;
+		Star generateStar() const;
 
 		// Evaluate the probability density
 		// for a star given the hyperparameters

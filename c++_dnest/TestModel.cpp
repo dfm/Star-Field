@@ -58,53 +58,53 @@ void TestModel::copyFrom(const Model* other)
 	*this = *((TestModel*)other);
 }
 
-void TestModel::fromPrior(int thread)
+void TestModel::fromPrior()
 {
-	hyp.fromPrior(thread);
-	int numStars = randInt(thread, maxNumStars + 1);
+	hyp.fromPrior();
+	int numStars = randInt(maxNumStars + 1);
 	for(int i=0; i<numStars; i++)
-		stars.push_back(hyp.generateStar(thread));
+		stars.push_back(hyp.generateStar());
 	calculateMockImage();
 
-	Model::fromPrior(thread);
+	Model::fromPrior();
 	calculateLogLikelihood();
 }
 
-double TestModel::perturb(int thread)
+double TestModel::perturb()
 {
 	if(staleness >= 1000)
 		calculateMockImage();
 
 	double logH = 0.0;
-	int which = randInt(thread, 4);
+	int which = randInt(4);
 
 	if(which == 0)
-		logH = perturbHelper1(thread);
+		logH = perturbHelper1();
 	else if(which == 1)
-		logH = perturbHelper2(thread);
+		logH = perturbHelper2();
 	else if(which == 2)
-		logH = perturbHelper3(thread);
+		logH = perturbHelper3();
 	else
-		logH = perturbHelper4(thread);
+		logH = perturbHelper4();
 
-	Model::perturb(thread);
+	Model::perturb();
 	calculateLogLikelihood();
 	return logH;
 }
 
-double TestModel::perturbHelper1(int thread)
+double TestModel::perturbHelper1()
 {
 	if(stars.size() == 0)
 		return 0;
 
 	// Move a star in position
-	double scale = pow(10.0, 1.5 - 6.0*randomU(thread));
-	int which = randInt(thread, stars.size());
+	double scale = pow(10.0, 1.5 - 6.0*randomU());
+	int which = randInt(stars.size());
 
 	double logH = -hyp.logp(stars[which]);
 	stars[which].decrementImage(mockImage, psf);
-	stars[which].x += hyp.sig*scale*randn(thread);
-	stars[which].y += hyp.sig*scale*randn(thread);
+	stars[which].x += hyp.sig*scale*randn();
+	stars[which].y += hyp.sig*scale*randn();
 	stars[which].incrementImage(mockImage, psf);
 	logH += hyp.logp(stars[which]);
 
@@ -112,18 +112,18 @@ double TestModel::perturbHelper1(int thread)
 	return logH;
 }
 
-double TestModel::perturbHelper2(int thread)
+double TestModel::perturbHelper2()
 {
 	if(stars.size() == 0)
 		return 0;
 
 	// Move a star in flux
-	double scale = pow(10.0, 1.5 - 6.0*randomU(thread));
-	int which = randInt(thread, stars.size());
+	double scale = pow(10.0, 1.5 - 6.0*randomU());
+	int which = randInt(stars.size());
 
 	double logH = -hyp.logp(stars[which]);
 	stars[which].decrementImage(mockImage, psf);
-	stars[which].flux += hyp.meanFlux*scale*randn(thread);
+	stars[which].flux += hyp.meanFlux*scale*randn();
 	stars[which].incrementImage(mockImage, psf);
 	logH += hyp.logp(stars[which]);
 
@@ -131,34 +131,34 @@ double TestModel::perturbHelper2(int thread)
 	return logH;
 }
 
-double TestModel::perturbHelper3(int thread)
+double TestModel::perturbHelper3()
 {
 	// Move hyperparameters
 
 	double logH = 0;
-	if(randomU(thread) <= 0.5)
+	if(randomU() <= 0.5)
 	{
 		logH -= hyp.logp(stars);
-		logH += hyp.perturb(thread);
+		logH += hyp.perturb();
 		logH += hyp.logp(stars);
 	}
 	else
 	{
-		logH += hyp.perturb(thread, stars);
+		logH += hyp.perturb(stars);
 		calculateMockImage();
 	}
 	return logH;
 }
 
-double TestModel::perturbHelper4(int thread)
+double TestModel::perturbHelper4()
 {
 	// Add or remove a star
-	if(randomU(thread) <= 0.5)
+	if(randomU() <= 0.5)
 	{
 		// Add
 		if((int)stars.size() == maxNumStars)
 			return 0;
-		stars.push_back(hyp.generateStar(thread));
+		stars.push_back(hyp.generateStar());
 		stars.back().incrementImage(mockImage, psf);
 	}
 	else
@@ -166,7 +166,7 @@ double TestModel::perturbHelper4(int thread)
 		// Remove
 		if(stars.size() == 0)
 			return 0;
-		int which = randInt(thread, stars.size());
+		int which = randInt(stars.size());
 		stars[which].decrementImage(mockImage, psf);
 		stars.erase(stars.begin() + which);
 	}

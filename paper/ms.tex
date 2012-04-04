@@ -1,28 +1,37 @@
 \documentclass[letterpaper, 11pt]{article}
-\usepackage{graphicx}
+\usepackage{graphicx} 
 \usepackage{natbib}
 \usepackage[left=3cm,top=3cm,right=3cm]{geometry}
 
-\renewcommand{\topfraction}{0.85}
-\renewcommand{\textfraction}{0.1}
+\renewcommand{\topfraction}{0.85} \renewcommand{\textfraction}{0.1} 
 \parindent=0cm
 
-\title{Crowded Star Fields \\
-\bf{Obviously need a better title}}
-\author{Brendon J. Brewer, David W. Hogg, Daniel Foreman-Mackey \\
+\title{Crowded Star Fields \\ \bf{Obviously need a better title}} 
+\author{Brendon J. Brewer, David W. Hogg, Daniel Foreman-Mackey \\ 
 \bf{Order subject to change}}
 
-\begin{document}
-\maketitle
+\begin{document} \maketitle
 
 \section{Introduction}
 
-The stars are at positions $\{(x_i, y_i)\}_{i=1}^n$ and have fluxes $\{f_i\}$.
-Each star also has an associated binary variable 
+\section{The Unknown Parameters}
+The stars are at positions $\{(x_i, 
+y_i)\}_{i=1}^n$ and have fluxes $\{f_i\}$. We also include 
+hyperparameters, denoted collectively, by $\alpha$, describing the 
+distribution of the positions and fluxes of the stars.
 
+\begin{eqnarray} 
+p(\{(x_i, y_i, f_i)\} | \alpha) &=&
+\prod_{i=1}^n p(x_i, y_i, f_i | \alpha) \\
+&=& \prod_{i=1}^n p(x_i, y_i | \alpha)p(f_i | \alpha) 
+\end{eqnarray}
+Here, we have assumed that the ``luminosity function'' 
+(distribution of fluxes) does not depend on position.
 
-\begin{thebibliography}{99}
-\end{thebibliography}
+In summary, the unknown parameters are $\{(x_i, y_i, f_i)\}_{i=1}^n$
+and $\alpha$.
+
+\begin{thebibliography}{99} \end{thebibliography}
 
 \end{document}
 

@@ -152,23 +152,62 @@ double StarFieldModel::perturbHelper3()
 
 double StarFieldModel::perturbHelper4()
 {
-	// Add or remove a star
+/*
+	// Amount to change the number of atoms by
+	int delta = (int)round(maxNumAtoms*pow(10.0, 1.5 - 6.0*randomU())*randn());
+	int newNumAtoms = (int)atoms.size() + delta;
+	newNumAtoms = mod(newNumAtoms, maxNumAtoms);
+	delta = newNumAtoms - (int)atoms.size();
+
+	if(delta == 0)
+		delta = (randomU() < 0.5)?(1):(-1);
+
+//	if(((int)atoms.size() + delta > maxNumAtoms) || ((int)atoms.size() + delta < 0))
+//		return 0;
+
+	if(delta > 0)
+		for(int i=0; i<delta; i++)
+			addAtom();
+	else if(delta < 0)
+		for(int i=0; i<-delta; i++)
+			removeAtom();
+	else
+		cerr<<delta<<" This shouldn't happen."<<endl;
+*/
+
+	// Add or remove stars
+	int delta = (int)round(maxNumStars*pow(10.0, 1.5 - 6.0*randomU())*randn()); // Change in number of stars
+	int newNumStars = (int)stars.size() + delta;
+	newNumStars = mod(newNumStars, maxNumStars);
+	delta = newNumStars - (int)stars.size();
+
+	if(delta == 0)
+		delta = (randomU() < 0.5)?(1):(-1);
+
 	if(randomU() <= 0.5)
 	{
 		// Add
-		if((int)stars.size() == maxNumStars)
+		if((int)stars.size() + delta > maxNumStars)
 			return 0;
-		stars.push_back(hyp.generateStar());
-		stars.back().incrementImage(mockImage, psf);
+
+		for(int i=0; i<delta; i++)
+		{
+			stars.push_back(hyp.generateStar());
+			stars.back().incrementImage(mockImage, psf);
+		}
 	}
 	else
 	{
 		// Remove
-		if(stars.size() == 0)
+		if((int)stars.size() + delta < 0)
 			return 0;
-		int which = randInt(stars.size());
-		stars[which].decrementImage(mockImage, psf);
-		stars.erase(stars.begin() + which);
+
+		for(int i=0; i<-delta; i++)
+		{
+			int which = randInt(stars.size());
+			stars[which].decrementImage(mockImage, psf);
+			stars.erase(stars.begin() + which);
+		}
 	}
 	staleness++;
 

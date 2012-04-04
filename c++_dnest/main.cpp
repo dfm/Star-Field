@@ -16,39 +16,103 @@
     along with DNest.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 #include <iostream>
-#include <boost/thread.hpp>
 #include "StarFieldModel.h"
-#include "DNestSampler.h"
+#include "MultiSampler.h"
 #include "RandomNumberGenerator.h"
+#include "DNestSampler.h"
+#include <boost/thread.hpp>
+#include <boost/program_options.hpp>
 
 using namespace std;
 using namespace DNest;
+namespace po = boost::program_options;
+
+void runMultiThread(const Model* exampleModel, const string& levelsFile);				// Run multithreaded sampler
+void runLegacy(const Model* exampleModel, const string& levelsFile);	// Run legacy sampler
 
 int main(int argc, char** argv)
 {
-	int numThreads = boost::thread::hardware_concurrency();
-	cout<<"# Running on "<<numThreads<<" threads."<<endl;
+	// What kind of model will we be running?
+	StarFieldModel exampleModel;
 
-	int firstSeed = -time(0);
-	RandomNumberGenerator::initialise(firstSeed);
+	// Which kind of sampler, and should we pre-load level structure?
+	bool legacy = false;
+	string levelsFile = "";
 
-	StarFieldModel t;
-
-	// If a command line argument is found,
-	// load the level structure from the file specified
-	if(argc >= 2)
+	// Handle command line options
 	{
-		DNestSampler sampler(numThreads, firstSeed-10, &t, argv[1]);
+		// Declare the supported options.
+		po::options_description desc("Welcome to DNest. Allowed options");
+		desc.add_options()
+		    ("help", "produce help message")
+		    ("levels", po::value<string>(), "Input levels file")
+		    ("legacy", "use legacy sampler (serial)")
+		;
+
+		po::variables_map vm;
+		po::store(po::parse_command_line(argc, argv, desc), vm);
+		po::notify(vm);    
+
+		if (vm.count("help"))
+		{
+		    cout<<desc<<endl;
+		    return 1;
+		}
+
+		if(vm.count("legacy")) 
+			legacy = true;
+
+		if(vm.count("levels"))
+			levelsFile = vm["levels"].as<string>();
+	}
+
+	// Run the sampler!
+	if(legacy)
+		runLegacy(&exampleModel, levelsFile);
+	else
+		runMultiThread(&exampleModel, levelsFile);		
+
+	return 0;
+}
+
+void runLegacy(const Model* exampleModel, const string& levelsFile)
+{
+	RandomNumberGenerator::initialise(-time(0));
+
+	if(levelsFile == "")
+	{
+		DNestSampler sampler(exampleModel);
 		sampler.run();
 	}
 	else
 	{
-		DNestSampler sampler(numThreads, firstSeed-10, &t);
+		DNestSampler sampler(exampleModel, levelsFile.c_str());
 		sampler.run();
 	}
 
 	RandomNumberGenerator::free();
-	return 0;
+
+}
+
+void runMultiThread(const Model* exampleModel, const string& levelsFile)
+{
+	// Multithreaded
+	int threads = boost::thread::hardware_concurrency();
+	cout<<"# Running on "<<threads<<" threads."<<endl;
+
+	DNestOptions options("OPTIONS");
+
+	if(levelsFile == "")
+	{
+		MultiSampler sampler(threads, exampleModel, options);
+		sampler.runThreaded();
+	}
+	else
+	{
+		MultiSampler sampler(threads, exampleModel, options, levelsFile.c_str());
+		sampler.runThreaded();
+	}
 }
 

@@ -97,16 +97,31 @@ double StarFieldModel::perturbHelper1()
 	if(stars.size() == 0)
 		return 0;
 
+	// Number of stars to move
+	int delta = (int)round(maxNumStars*pow(10.0, 1.5 - 6.0*randomU())*randn()); // Change in number of stars
+	int newNumStars = (int)stars.size() + delta;
+	newNumStars = mod(newNumStars, maxNumStars);
+	delta = newNumStars - (int)stars.size();
+
+	if(delta == 0)
+		delta = (randomU() < 0.5)?(1):(-1);
+	delta = abs(delta);
+
 	// Move a star in position
 	double scale = pow(10.0, 1.5 - 6.0*randomU());
-	int which = randInt(stars.size());
 
-	double logH = -hyp.logp(stars[which]);
-	stars[which].decrementImage(mockImage, psf);
-	stars[which].x += hyp.sig*scale*randn();
-	stars[which].y += hyp.sig*scale*randn();
-	stars[which].incrementImage(mockImage, psf);
-	logH += hyp.logp(stars[which]);
+	double logH = 0;
+	for(int i=0; i<delta; i++)
+	{
+		int which = randInt(stars.size());
+
+		logH -= -hyp.logp(stars[which]);
+		stars[which].decrementImage(mockImage, psf);
+		stars[which].x += hyp.sig*scale*randn();
+		stars[which].y += hyp.sig*scale*randn();
+		stars[which].incrementImage(mockImage, psf);
+		logH += hyp.logp(stars[which]);
+	}
 
 	staleness++;
 	return logH;
@@ -117,15 +132,30 @@ double StarFieldModel::perturbHelper2()
 	if(stars.size() == 0)
 		return 0;
 
+	// Number of stars to move
+	int delta = (int)round(maxNumStars*pow(10.0, 1.5 - 6.0*randomU())*randn()); // Change in number of stars
+	int newNumStars = (int)stars.size() + delta;
+	newNumStars = mod(newNumStars, maxNumStars);
+	delta = newNumStars - (int)stars.size();
+
+	if(delta == 0)
+		delta = (randomU() < 0.5)?(1):(-1);
+	delta = abs(delta);
+
 	// Move a star in flux
 	double scale = pow(10.0, 1.5 - 6.0*randomU());
-	int which = randInt(stars.size());
 
-	double logH = -hyp.logp(stars[which]);
-	stars[which].decrementImage(mockImage, psf);
-	stars[which].flux += hyp.meanFlux*scale*randn();
-	stars[which].incrementImage(mockImage, psf);
-	logH += hyp.logp(stars[which]);
+	double logH = 0;
+	for(int i=0; i<delta; i++)
+	{
+		int which = randInt(stars.size());
+
+		logH -= -hyp.logp(stars[which]);
+		stars[which].decrementImage(mockImage, psf);
+		stars[which].flux += hyp.meanFlux*scale*randn();
+		stars[which].incrementImage(mockImage, psf);
+		logH += hyp.logp(stars[which]);
+	}
 
 	staleness++;
 	return logH;

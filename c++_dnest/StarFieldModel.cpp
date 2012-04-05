@@ -25,9 +25,9 @@
 using namespace std;
 using namespace DNest;
 
-const double StarFieldModel::noiseSigma = 1E-5;
+const double StarFieldModel::noiseSigma = 0.02;
 const double StarFieldModel::noiseCoeff = 0;
-const int StarFieldModel::maxNumStars = 500;
+const int StarFieldModel::maxNumStars = 200;
 Data StarFieldModel::data;
 PSF StarFieldModel::psf(1.0*Data::dx, 5.0*Data::dx, 0.5);
 
@@ -182,29 +182,6 @@ double StarFieldModel::perturbHelper3()
 
 double StarFieldModel::perturbHelper4()
 {
-/*
-	// Amount to change the number of atoms by
-	int delta = (int)round(maxNumAtoms*pow(10.0, 1.5 - 6.0*randomU())*randn());
-	int newNumAtoms = (int)atoms.size() + delta;
-	newNumAtoms = mod(newNumAtoms, maxNumAtoms);
-	delta = newNumAtoms - (int)atoms.size();
-
-	if(delta == 0)
-		delta = (randomU() < 0.5)?(1):(-1);
-
-//	if(((int)atoms.size() + delta > maxNumAtoms) || ((int)atoms.size() + delta < 0))
-//		return 0;
-
-	if(delta > 0)
-		for(int i=0; i<delta; i++)
-			addAtom();
-	else if(delta < 0)
-		for(int i=0; i<-delta; i++)
-			removeAtom();
-	else
-		cerr<<delta<<" This shouldn't happen."<<endl;
-*/
-
 	// Add or remove stars
 	int delta = (int)round(maxNumStars*pow(10.0, 1.5 - 6.0*randomU())*randn()); // Change in number of stars
 	int newNumStars = (int)stars.size() + delta;

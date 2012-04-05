@@ -98,14 +98,9 @@ double StarFieldModel::perturbHelper1()
 		return 0;
 
 	// Number of stars to move
-	int delta = (int)round(maxNumStars*pow(10.0, 1.5 - 6.0*randomU())*randn()); // Change in number of stars
-	int newNumStars = (int)stars.size() + delta;
-	newNumStars = mod(newNumStars, maxNumStars);
-	delta = newNumStars - (int)stars.size();
-
-	if(delta == 0)
-		delta = (randomU() < 0.5)?(1):(-1);
-	delta = abs(delta);
+	int delta = (int)floor(maxNumStars*pow(10.0, 1.5 - 6.0*randomU())); // Change in number of stars
+	if(delta == 0 || delta > maxNumStars)
+		delta = 1;
 
 	// Move a star in position
 	double scale = pow(10.0, 1.5 - 6.0*randomU());
@@ -133,14 +128,9 @@ double StarFieldModel::perturbHelper2()
 		return 0;
 
 	// Number of stars to move
-	int delta = (int)round(maxNumStars*pow(10.0, 1.5 - 6.0*randomU())*randn()); // Change in number of stars
-	int newNumStars = (int)stars.size() + delta;
-	newNumStars = mod(newNumStars, maxNumStars);
-	delta = newNumStars - (int)stars.size();
-
-	if(delta == 0)
-		delta = (randomU() < 0.5)?(1):(-1);
-	delta = abs(delta);
+	int delta = (int)floor(maxNumStars*pow(10.0, 1.5 - 6.0*randomU())); // Change in number of stars
+	if(delta == 0 || delta > maxNumStars)
+		delta = 1;
 
 	// Move a star in flux
 	double scale = pow(10.0, 1.5 - 6.0*randomU());

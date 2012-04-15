@@ -13,7 +13,7 @@
 class Hyperparameters
 {
 	protected:
-
+		// Parameters go here when you inherit
 
 	public:
 
@@ -22,6 +22,14 @@ class Hyperparameters
 		virtual double perturb() = 0;
 		virtual	double perturb(std::vector<Star>& stars) = 0; // Take stars along for the ride
 
+		// Generate a star from the prior
+		// given the hyperparameters
+		virtual Star generateStar() const = 0;
+
+		// Evaluate the probability density
+		// for a star given the hyperparameters
+		virtual double logp(const Star& star) const = 0;
+		double logp(const std::vector<Star>& stars) const;
 
 };
 

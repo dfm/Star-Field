@@ -9,4 +9,6 @@
 *.log
 *.pdf
 *.o
+main
+libstarfield.a
 

@@ -30,6 +30,8 @@ class Image
 		void compute();
 
 	public:
+		Image();
+
 		/*
 		* Main constructor: set up image size (number of pixels)
 		* and image domain

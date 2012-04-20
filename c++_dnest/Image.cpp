@@ -5,6 +5,11 @@ using namespace std;
 
 #include <iostream>
 
+Image::Image()
+{
+
+}
+
 Image::Image(int nI, int nJ, double xMin, double xMax, double yMin, double yMax)
 :nI(nI), nJ(nJ)
 ,xMin(xMin), xMax(xMax), yMin(yMin), yMax(yMax)

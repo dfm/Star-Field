@@ -14,8 +14,8 @@ class Data
 		Data();
 		void load(const char* filename);
 
-		// Read-only access to values
-		double operator () (int i, int j) const;
+		// Access to values
+		double& operator () (int i, int j);
 };
 
 #endif

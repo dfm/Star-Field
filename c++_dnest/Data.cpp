@@ -15,3 +15,8 @@ void Data::load(const char* filename)
 	fin.close();
 }
 
+double& Data::operator () (int i, int j)
+{
+	return image(i, j);
+}
+

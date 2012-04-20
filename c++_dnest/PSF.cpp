@@ -17,6 +17,8 @@ PSF::PSF(double sigma1, double sigma2, double weight)
 {
 	assert(weight >= 0 && weight <= 1);
 	assert(sigma1 < sigma2);
+
+
 }
 
 double PSF::evaluate(double x, double y) const

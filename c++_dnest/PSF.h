@@ -1,6 +1,8 @@
 #ifndef _PSF_
 #define _PSF_
 
+#include "Image.h"
+
 // Pixel-convolved PSF
 class PSF
 {
@@ -13,7 +15,7 @@ class PSF
 		double prefactor1, prefactor2;
 		double norm;
 
-//		Image image; // How it looks if placed at the center of the data field
+		Image image; // How it looks if placed at the center of the data field
 
 	public:
 		PSF(double sigma1, double sigma2, double weight);

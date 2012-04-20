@@ -1,17 +1,14 @@
 #ifndef _Data_
 #define _Data_
 
-#include "Array.h"
+#include "Image.h"
 
 // It's a singleton class
 
 class Data
 {
 	private:
-		// Hard coded for now
-		static const int numPixels;
-
-		Array pixels; // Pixel intensities
+		Image image; // Pixel intensities
 
 	public:
 		Data();

@@ -28,7 +28,7 @@ class Hyperparameters
 
 		// Evaluate the probability density
 		// for a star given the hyperparameters
-		virtual double logp(const Star& star) const = 0;
+		virtual double _logp(const Star& star) const = 0;
 		double logp(const std::vector<Star>& stars) const;
 
 };

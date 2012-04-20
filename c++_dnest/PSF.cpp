@@ -17,12 +17,6 @@ PSF::PSF(double sigma1, double sigma2, double weight)
 {
 	assert(weight >= 0 && weight <= 1);
 	assert(sigma1 < sigma2);
-
-	// Calculate normalisation by putting a star in the middle of the data field
-	Array image(Data::ni, Data::nj, 0.0);
-	Star s((Data::xMin + Data::xMax)/2, (Data::yMin + Data::yMax)/2, 1.0);
-	s.incrementImage(image, *this);
-	norm = 1.0/image.sum();
 }
 
 double PSF::evaluate(double x, double y) const
@@ -41,25 +35,6 @@ double PSF::evaluate(double rsq) const
 	}
 	else
 		result = 0.0;
-	return result;
-}
-
-
-Array PSF::evaluate(const Array& x, const Array& y) const
-{
-	Array rsq = x;
-	for(int i=0; i<rsq.getNi(); i++)
-		for(int j=0; j<rsq.getNj(); j++)
-			rsq[i][j] = x[i][j]*x[i][j] + y[i][j]*y[i][j];
-	return evaluate(rsq);
-}
-
-Array PSF::evaluate(const Array& rsq) const
-{
-	Array result = rsq;
-	for(int i=0; i<rsq.getNi(); i++)
-		for(int j=0; j<rsq.getNj(); j++)
-			result[i][j] = evaluate(rsq[i][j]);
 	return result;
 }
 

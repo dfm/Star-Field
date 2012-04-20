@@ -3,8 +3,6 @@
 
 #include "Image.h"
 
-// It's a singleton class
-
 class Data
 {
 	private:
@@ -14,7 +12,7 @@ class Data
 		Data();
 		void load(const char* filename);
 
-		// Access to values
+		// Access to pixel values
 		double& operator () (int i, int j);
 };
 

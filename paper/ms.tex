@@ -1,8 +1,9 @@
 \documentclass[letterpaper, 11pt]{article}
-\usepackage{authblk}
-\usepackage{graphicx} 
-\usepackage{natbib}
-\usepackage{amsmath}
+\usepackage{authblk}	% For nice author-affil lists
+\usepackage{graphicx}	% For figures
+\usepackage{natbib}	% For citet and citep
+\usepackage{amsmath}	% for \iint
+\usepackage{bbm}	% for blackboard bold numbers
 \usepackage[left=3cm,top=3cm,right=3cm]{geometry}
 
 \title{More than one Author with different Affiliations}
@@ -88,8 +89,9 @@ g(\delta_x, \delta_y) \, d\delta_x \, d\delta_y \label{blur}
 Then, we observe the blurred image with a certain pixellation, such that
 the true flux $F$ within a particular pixel is:
 \begin{eqnarray}
-F_{\rm{pixel}} &=& \iint_{\rm{pixel}} f_{\rm blurred}(x, y) \,dx\,dy
-\label{pixel}
+F_{\rm{pixel}} &=& \iint_{\rm{pixel}} f_{\rm blurred}(x, y) \,dx\,dy\\
+&=& \iint f_{\rm blurred}(x, y)\mathbbm{1}\left[(x,y) \in \textnormal{pixel}
+\right] \,dx\,dy \label{pixel}
 \end{eqnarray}
 We observe $F_{\rm{pixel}}$ for many pixels, with noise added.
 

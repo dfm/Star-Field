@@ -57,6 +57,22 @@ tell us anything about the location and flux of another star.
 A model for the spatial distribution corresponds to a choice of functional forms
 for the distributions $p(x_i, y_i | \alpha)$ and $p(f_i | \beta)$.
 
+\subsection{Toy Model}
+For the first implementation I wrote at NYU, I used the following model and
+priors:
+\begin{itemize}
+\item $N \sim \textnormal{Uniform}(0, 1, 2, ..., 1000)$ \\
+\item The parameters of the spatial
+distribution: $\alpha = \left\{x_c, y_c, \sigma\right\}$ \\
+\item The spatial distribution: $p(x_i, y_i | \alpha)\sim\mathcal{N}\left(
+\texttt{mean}=(x_c, y_c), \texttt{covariance}=
+\left(\begin{array}{cc}\sigma^2 & 0 \\ 0 & \sigma^2\end{array}\right)\right)$ \\
+\item The luminosity function: $p(f_i | \beta) \sim
+\textnormal{Exponential}\left(\texttt{mean}=\beta\right)$
+\end{itemize}
+
+
+
 \section{A More Realistic Model}
 \citep{2008ApJ...682..874K}
 
@@ -74,8 +90,7 @@ the true flux $F$ within a particular pixel is:
 \begin{eqnarray}
 F_{\rm{pixel}} &=& \iint_{\rm{pixel}} f_{\rm blurred}(x, y) \,dx\,dy
 \end{eqnarray}
-
-
+We observe $F_{\rm{pixel}}$ for many pixels, with noise added.
 
 \section{Proposal Distributions}
 

@@ -1,46 +1,93 @@
 \documentclass[letterpaper, 11pt]{article}
+\usepackage{authblk}
 \usepackage{graphicx} 
 \usepackage{natbib}
+\usepackage{amsmath}
 \usepackage[left=3cm,top=3cm,right=3cm]{geometry}
+
+\title{More than one Author with different Affiliations}
 
 \renewcommand{\topfraction}{0.85} \renewcommand{\textfraction}{0.1} 
 \parindent=0cm
 
-\title{Crowded Star Fields \\ \bf{Obviously need a better title}} 
-\author{Brendon J. Brewer, David W. Hogg, Daniel Foreman-Mackey \\ 
-\bf{Order subject to change}}
+\title{Probabilistic Catalogues from Crowded Star Fields}
+\author[1,2]{Brendon J. Brewer}
+\author[3]{David W. Hogg}
+\author[3]{Daniel Foreman-Mackey}
+\affil[1]{UCSB}
+\affil[2]{Auckland}
+\affil[3]{NYU}
 
-\begin{document} \maketitle
+\date{Title and author order subject to change}
+
+\begin{document}
+\maketitle
 
 \section{Introduction}
 
 \section{The Unknown Parameters}
-The stars are at positions $\{(x_i, 
-y_i)\}_{i=1}^n$ and have fluxes $\{f_i\}$. We also include 
-hyperparameters, denoted collectively, by $\alpha$, describing the 
-distribution of the positions and fluxes of the stars.
+There are $N$ stars in the field, where $N$ is unknown. Each star has an unknown position
+$(x,y)$ in the plane of the sky, and an unknown flux $f$. We also
+parameterise the {\it distribution} of positions by parameters $\alpha$,
+and we parameterise the distribution of fluxes (aka the {\it luminosity function}) by parameters $\beta$.
 
-\begin{eqnarray} 
-p(\{(x_i, y_i, f_i)\} | \alpha) &=&
-\prod_{i=1}^n p(x_i, y_i, f_i | \alpha) \\
-&=& \prod_{i=1}^n p(x_i, y_i | \alpha)p(f_i | \alpha) 
+In summary, the unknown parameters are:
+\begin{eqnarray}
+\theta = \left\{N, \alpha, \beta, \left\{x_i, y_i\right\}_{i=1}^N, \left\{f_i\right\}_{i=1}^N\right\}
 \end{eqnarray}
-Here, we have assumed that the ``luminosity function'' 
+
+The prior probability distribution for the unknown parameters can be factorised
+using the product rule. In its most general form, this is:
+\begin{eqnarray}
+p(\theta) = p(N)p(\alpha|N)p(\beta|\alpha,N)\prod_{i=1}^N 
+\end{eqnarray}
+However, we make a variety of independence assumptions, which simplifies the prior
+distribution to:
+\begin{eqnarray}
+p(\theta) = p(N)p(\alpha)p(\beta)\prod_{i=1}^N p(x_i, y_i | \alpha) p(f_i | \beta) 
+\end{eqnarray}
+
+Here, we have assumed that the luminosity function 
 (distribution of fluxes) does not depend on position.
 
 In summary, the unknown parameters are $\{(x_i, y_i, f_i)\}_{i=1}^n$
 and $\alpha$.
 
-\section{The Luminosity Function}
+\section{A Toy Model}
+
+\begin{eqnarray}
+N &\sim& \textnormal{Uniform}(0, 1, 2, ..., 1000) \\
+\alpha &=& \left\{x_c, y_c, \sigma\right\} \\
+\end{eqnarray}
+
+\begin{table}
+\begin{tabular}{ccc}
+Parameter & \vline & Prior \\
+\hline \\
+N & & \\
+\end{tabular}
+\end{table}
+
+\section{A More Realistic Model}
 \citep{2008ApJ...682..874K}
 
 \appendix
 \section{Pixel Convolved PSF}
-Consider a ``true image'' $f(x, y)$. We now model how this image
+Consider a ``true image'' $f_0(x, y)$ with infinite resolution. We now model how this image
 gives rise to the observed data. First, it is convolved with a
-PSF $g(x,y)$ to give the 
+PSF $g(x,y)$ (assumed normalised to 1) to give the blurred image:
+\begin{eqnarray}
+f_{\rm{blurred}}(x,y) &=& \iint f(x, y)g(x - \delta_x, y - \delta_y) \, d\delta_x \, d\delta_y
+\end{eqnarray}
+Then, we observe the blurred image with a certain pixellation, such that
+the flux within a pixel is:
+\begin{eqnarray}
+F &=& \iint_{\rm{pixel}} f_{\rm blurred}(x, y) \,dx\,dy
+\end{eqnarray}
 
-\section{Reversible Jump Moves}
+
+
+\section{Proposal Distributions}
 
 
 

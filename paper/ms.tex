@@ -113,6 +113,8 @@ Nested Sampling is good because it is invariant under monotonic transformations
 of the likelihood function. i.e. the exploration only depends on things like
 whether one point is better than another, and not on how much better it is.
 
+\subsubsection{Proposal Distributions}
+
 \begin{table}
 \begin{center}
 \begin{tabular}{c|c|c}
@@ -137,10 +139,10 @@ via logH
 \end{center}
 \caption{All $\delta$ parameters are drawn from multi-scale distibutions such
 that the largest steps are of order the prior width, and the smallest steps
-are of order $10^{-6}$ times the prior width.}
+are of order $10^{-6}$ times the prior width.\label{proposals}}
 \end{table}
 
-
+See Table~\ref{proposals} for a list of current proposal distributions.
 
 \subsection{Future Possibilities}
 {\bf Hogg}: {\it I think this problem is important enough and general enough

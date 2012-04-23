@@ -68,8 +68,11 @@ distribution: $\alpha = \left\{x_c, y_c, \sigma\right\}$ \\
 \item The spatial distribution: $p(x_i, y_i | \alpha)\sim\mathcal{N}\left(
 \texttt{mean}=(x_c, y_c), \texttt{covariance}=
 \left(\begin{array}{cc}\sigma^2 & 0 \\ 0 & \sigma^2\end{array}\right)\right)$ \\
+\item Prior on $\alpha$: Uniform within image for $(x_c, y_c)$, logUniform for
+$\sigma$ with max value $\sim$ image size.
 \item The luminosity function: $p(f_i | \beta) \sim
-\textnormal{Exponential}\left(\texttt{mean}=\beta\right)$
+\textnormal{Exponential}\left(\texttt{mean}=\beta\right)$ \\
+\item Prior on $\beta$: logUniform with generous bounds.
 \end{itemize}
 
 
@@ -109,6 +112,33 @@ posterior, and then assigning importance weights when you want the posterior.
 Nested Sampling is good because it is invariant under monotonic transformations
 of the likelihood function. i.e. the exploration only depends on things like
 whether one point is better than another, and not on how much better it is.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{c|c|c}
+Parameter & Proposal & Notes\\
+\hline
+$N$ & $N \to N + \delta_N$ & Generate $\delta_N$ new stars from prior given
+$(\alpha, \beta)$\\
+$N$ & $N \to N - \delta_N$ & Remove $\delta_N$ stars at random\\
+$\alpha$ & $\alpha \to \alpha + \delta_\alpha$ & Move stars along with $\alpha$
+\\
+$\alpha$ & $\alpha \to \alpha + \delta_\alpha$ & Stars fixed, use logHastings
+factor \\
+$\beta$ & $\beta \to \beta + \delta_\beta$ & Move stars' fluxes along with
+$\beta$\\
+$\beta$ & $\beta \to \beta + \delta_\beta$ & Stars' fluxes fixed, use
+logHastings factor \\
+$(x,y)$ & $(x,y) \to (x,y)+(\delta_x, \delta_y)$ & Can move $>1$ star.
+Include prior via logH \\
+$f$ & $f \to f + \delta_f$ & Can move $>1$ stars' fluxes. Include prior
+via logH
+\end{tabular}
+\end{center}
+\caption{All $\delta$ parameters are drawn from multi-scale distibutions such
+that the largest steps are of order the prior width, and the smallest steps
+are of order $10^{-6}$ times the prior width.}
+\end{table}
 
 
 

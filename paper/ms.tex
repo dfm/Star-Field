@@ -101,11 +101,29 @@ F_{\rm{pixel}} &=& \iint_{\rm{pixel}} \iint f_0(x-x', y-y')
 g(x', y') \, dx' \, dy' \,dx\,dy
 \end{eqnarray}
 
-\section{Proposal Distributions}
+\section{MCMC Implementation}
+\subsection{Current}
+I am using Diffusive Nested Sampling \citep{dnest}, which is really just
+Metropolis-Hastings but targeting a fancy distribution instead of the actual
+posterior, and then assigning importance weights when you want the posterior.
+Nested Sampling is good because it is invariant under monotonic transformations
+of the likelihood function. i.e. the exploration only depends on things like
+whether one point is better than another, and not on how much better it is.
 
+
+
+\subsection{Future Possibilities}
+{\bf Hogg}: {\it I think this problem is important enough and general enough
+that we should spend some time working on some ideas there.  If we can sample
+over image explanations, our powers in astronomy will be awesome
+beyond our wildest imaginings.}
 
 
 \begin{thebibliography}{99}
+\bibitem[\protect\citeauthoryear{Brewer, P{\'a}rtay, 
+\& Cs{\'a}nyi}{2011b}]{dnest} Brewer B.~J., P{\'a}rtay L.~B.,
+Cs{\'a}nyi G., 2011, Statistics and Computing, 21, 4, 649-656. arXiv:0912.2380
+
 \bibitem[Kelly et al.(2008)]{2008ApJ...682..874K} Kelly, B.~C., Fan, X., 
 \& Vestergaard, M.\ 2008, ApJ, 682, 874 
 \end{thebibliography}

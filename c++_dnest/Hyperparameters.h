@@ -25,6 +25,7 @@ class Hyperparameters
 		// Generate a star from the prior
 		// given the hyperparameters
 		virtual Star generateStar() const = 0;
+		virtual double perturbStar(Star& star) const = 0;
 
 		// Evaluate the probability density
 		// for a star given the hyperparameters

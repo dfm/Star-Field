@@ -26,6 +26,7 @@ class Ignorance:public Hyperparameters
 		// Generate a star from the prior
 		// given the hyperparameters
 		Star generateStar() const;
+		double perturbStar(Star& star) const;
 
 		// Evaluate the probability density
 		// for a star given the hyperparameters

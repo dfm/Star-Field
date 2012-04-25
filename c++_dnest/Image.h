@@ -70,6 +70,9 @@ class Image
 		// Read/write pixel access
 		double& operator () (int i, int j);
 
+		// Read only pixel access
+		const double& operator () (int i, int j) const;
+
 		/*
 		* Increment this image's pixels by another image.
 		* Image sizes and domain must match!

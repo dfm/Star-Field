@@ -62,6 +62,11 @@ double& Image::operator () (int i, int j)
 	return pixels(i, j);
 }
 
+const double& Image::operator () (int i, int j) const
+{
+	return pixels(i, j);
+}
+
 ostream& operator << (ostream& out, const Image& image)
 {
 	out<<"# ";

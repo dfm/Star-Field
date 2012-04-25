@@ -11,6 +11,10 @@ class Ignorance:public Hyperparameters
 	private:
 		// Look ma, no parameters!
 
+		// Well, some...
+		static const double minFlux, maxFlux;
+		static const double logMinFlux, logMaxFlux;
+
 
 	public:
 

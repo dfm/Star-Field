@@ -21,7 +21,7 @@ class Data
 		static void load(const char* filename);
 
 		// Read-only getter for the image
-		const Image& get_image() const { return image; }
+		static const Image& get_image() { return instance.image; }
 };
 
 #endif

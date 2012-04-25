@@ -3,17 +3,25 @@
 
 #include "Image.h"
 
+/*
+* An instance of this class represents the data set.
+* Private constructor --> it's a singleton
+*/
+
 class Data
 {
 	private:
 		Image image; // Pixel intensities
+		bool loaded;
+
+		static Data instance; // Singleton instance
+		Data();
 
 	public:
-		Data();
-		void load(const char* filename);
+		static void load(const char* filename);
 
-		// Access to pixel values
-		double& operator () (int i, int j);
+		// Read-only getter for the image
+		const Image& get_image() const { return image; }
 };
 
 #endif

@@ -3,7 +3,7 @@
 
 class Star
 {
-	private:
+	public:
 		double x, y, flux;
 
 	public:

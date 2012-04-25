@@ -14,6 +14,7 @@ class PSF
 		double weight;
 
 		double preFactor1, preFactor2;
+		double rsqEdge;
 
 	public:
 		PSF(double sigma1, double sigma2, double weight);

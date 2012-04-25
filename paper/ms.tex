@@ -84,25 +84,21 @@ $\sigma$ with max value $\sim$ image size.
 \section{Pixel Convolved PSF}
 Consider a ``true image'' $f_0(x, y)$ with infinite resolution. We now model how
 this image gives rise to the observed data. First, it is convolved with a
-PSF $g(x, y)$ (assumed normalised to 1) to give the blurred image:
+PSF $g(\delta_x, \delta_y)$ (assumed normalised to 1) to give the blurred image:
 \begin{eqnarray}
-f_{\rm{blurred}}(x, y) &=& \iint f_0(x-x', y-y')
-g(x', y') \, dx' \, dy' \label{blur}
+f_{\rm{blurred}}(x, y) &=& \iint f_0(x-\delta_x, y-\delta_y)
+g(\delta_x, \delta_y) \, d\delta_x \, d\delta_y \label{blur}
 \end{eqnarray}
-Then, we observe the blurred image with a certain pixellation, such that
-the true flux $F$ within a particular pixel is:
+Then, we observe the blurred image with a certain pixellation. Consider a pixel.
+The true flux $F$ within the pixel is:
 \begin{eqnarray}
-F_{\rm{pixel}} &=& \iint_{\rm{pixel}} f_{\rm blurred}(x, y) \,dx\,dy\\
+F &=& \iint_{\rm pixel} f_{\rm blurred}(x, y) \,dx'\,dy'\\
 &=& \iint f_{\rm blurred}(x, y)\mathbbm{1}\left[(x,y) \in \textnormal{pixel}
 \right] \,dx\,dy \label{pixel}
 \end{eqnarray}
-We observe $F_{\rm{pixel}}$ for many pixels, with noise added.
+Now consider $F$ as a function of the central location $(x_c, y_c)$ of the
+pixel.
 
-Combining Equations~\ref{blur} and~\ref{pixel} gives:
-\begin{eqnarray}
-F_{\rm{pixel}} &=& \iint_{\rm{pixel}} \iint f_0(x-x', y-y')
-g(x', y') \, dx' \, dy' \,dx\,dy
-\end{eqnarray}
 
 \section{MCMC Implementation}
 \subsection{Current}

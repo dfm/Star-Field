@@ -12,15 +12,12 @@ class PSF
 	private:
 		double sigma1, sigma2;
 		double weight;
-		double prefactor1, prefactor2;
-		double norm;
 
-		Image image; // How it looks if placed at the center of the data field
+		double preFactor1, preFactor2;
 
 	public:
 		PSF(double sigma1, double sigma2, double weight);
 		double evaluate(double x, double y) const;
-		double evaluate(double rsq) const;
 };
 
 #endif

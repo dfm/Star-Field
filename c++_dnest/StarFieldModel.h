@@ -27,7 +27,7 @@
 #include "Array.h"
 #include "Data.h"
 #include "PSF.h"
-#include "StarHyperparameters.h"
+#include "Hyperparameters.h"
 
 class StarFieldModel:public DNest::Model
 {
@@ -36,7 +36,7 @@ class StarFieldModel:public DNest::Model
 		static PSF psf;
 		static const int maxNumStars;
 
-		StarHyperparameters hyp;
+		Hyperparameters hyp;
 		std::vector<Star> stars;
 
 		Array mockImage;

@@ -3,7 +3,6 @@
 
 #include <ostream>
 #include <istream>
-#include <Eigen/Core>
 #include "Array.h"
 
 /*

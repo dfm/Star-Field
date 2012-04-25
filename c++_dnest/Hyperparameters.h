@@ -8,7 +8,7 @@
 */
 
 #include <vector>
-#include "../Star.h"
+#include "Star.h"
 
 class Hyperparameters
 {

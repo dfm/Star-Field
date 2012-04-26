@@ -67,6 +67,11 @@ const double& Image::operator () (int i, int j) const
 	return pixels(i, j);
 }
 
+void Image::increment(const Star& star, const PSF& psf, double coefficient)
+{
+	
+}
+
 ostream& operator << (ostream& out, const Image& image)
 {
 	out<<"# ";

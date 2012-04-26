@@ -4,6 +4,8 @@
 #include <ostream>
 #include <istream>
 #include "Array.h"
+#include "Star.h"
+#include "PSF.h"
 
 /*
 * Implement an image as a 2D array of doubles, with bounding
@@ -49,6 +51,13 @@ class Image
 		void setConstant(double value);
 
 		/*
+		* Increment by a star's footprint
+		* "coefficient" allows for removal as well
+		*/
+		void increment(const Star& star, const PSF& psf, double coefficient);
+		
+
+		/*
 		* Getters
 		*/
 		int get_nI() const { return nI; }
@@ -62,6 +71,7 @@ class Image
 		double get_dx() const { return dx; }
 		double get_dy() const { return dy; }
 		double get_dA() const { return dA; }
+		const Array& get_pixels() const { return pixels; }
 
 		/*
 		* MEMBER OPERATOR OVERLOADS

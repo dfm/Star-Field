@@ -1,5 +1,4 @@
 #include "PSF.h"
-#include "Data.h"
 #include "Star.h"
 #include <cmath>
 #include <cassert>

@@ -1,8 +1,6 @@
 #ifndef _PSF_
 #define _PSF_
 
-#include "Image.h"
-
 // Pixel-convolved PSF
 class PSF
 {

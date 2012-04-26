@@ -14,14 +14,12 @@ class Data
 		Image image; // Pixel intensities
 		bool loaded;
 
-		static Data instance; // Singleton instance
-		Data();
-
 	public:
-		static void load(const char* filename);
+		Data();
+		void load(const char* filename);
 
 		// Read-only getter for the image
-		static const Image& get_image() { return instance.image; }
+		const Image& get_image() { return image; }
 };
 
 #endif

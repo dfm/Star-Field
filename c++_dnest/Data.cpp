@@ -4,8 +4,6 @@
 
 using namespace std;
 
-Data Data::instance;
-
 Data::Data()
 :loaded(false)
 {
@@ -17,8 +15,8 @@ void Data::load(const char* filename)
 	fstream fin(filename, ios::in);
 	if(!fin)
 		cerr<<"Error: Can't load "<<filename<<"."<<endl;
-	fin>>instance.image;
+	fin>>image;
 	fin.close();
-	instance.loaded = true;
+	loaded = true;
 }
 

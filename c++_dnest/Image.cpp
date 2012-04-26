@@ -1,4 +1,5 @@
 #include "Image.h"
+#include "Data.h"
 #include <cassert>
 
 using namespace std;
@@ -67,9 +68,12 @@ const double& Image::operator () (int i, int j) const
 	return pixels(i, j);
 }
 
-void Image::increment(const Star& star, const PSF& psf, double coefficient)
+void Image::increment(const Star& star, const PSF& psf, double coefficient, const Data& data)
 {
-	
+	for(int i=0; i<nI; i++)
+		for(int j=0; j<nJ; j++)
+			pixels(i, j) += coefficient*psf.evaluate
+					(data.get_xc(i, j), data.get_yc(i, j));
 }
 
 ostream& operator << (ostream& out, const Image& image)

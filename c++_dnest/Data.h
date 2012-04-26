@@ -2,8 +2,8 @@
 #define _Data_
 
 #include <vector>
-#include "Image.h"
 #include "Array.h"
+#include "Image.h"
 
 /*
 * An instance of this class represents a data set.

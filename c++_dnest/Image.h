@@ -7,6 +7,8 @@
 #include "Star.h"
 #include "PSF.h"
 
+class Data;
+
 /*
 * Implement an image as a 2D array of doubles, with bounding
 * information. Pixels need not be square, but you probably want
@@ -53,9 +55,9 @@ class Image
 		/*
 		* Increment by a star's footprint
 		* "coefficient" allows for removal as well
+		* Same as above, but use xc, yc from the data (faster)
 		*/
-		void increment(const Star& star, const PSF& psf, double coefficient);
-		
+		void increment(const Star& star, const PSF& psf, double coefficient, const Data& data);
 
 		/*
 		* Getters

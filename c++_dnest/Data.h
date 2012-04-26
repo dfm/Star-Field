@@ -6,8 +6,7 @@
 #include "Array.h"
 
 /*
-* An instance of this class represents the data set.
-* Private constructor --> it's a singleton
+* An instance of this class represents a data set.
 */
 
 class Data

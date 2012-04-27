@@ -220,6 +220,9 @@ void StarFieldModel<HyperType>::calculateLogLikelihood()
 template<class HyperType>
 void StarFieldModel<HyperType>::print(ostream& out) const
 {
-	out<<stars.size()<<' '<<hyperparameters<<' '<<mockImage;
+	out<<stars.size()<<' '<<hyperparameters<<' ';
+	for(int i=0; i<Data::get_data().get_ni(); i++)
+		for(int j=0; j<Data::get_data().get_nj(); j++)
+			out<<mockImage(i, j)<<' ';
 }
 

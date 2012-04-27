@@ -26,6 +26,7 @@ void Data::load(const char* filename)
 	yRange = yMax - yMin;
 	dx = xRange/nj;
 	dy = yRange/ni;
+	dA = dx*dy;
 
 	image.resize(ni, nj);
 

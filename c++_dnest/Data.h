@@ -15,7 +15,7 @@ class Data
 		bool loaded;
 
 		double ni, nj, xMin, xMax, yMin, yMax;
-		double xRange, yRange, dx, dy;
+		double xRange, yRange, dx, dy, dA;
 
 		// Pixel centers
 		Array xc, yc;
@@ -39,6 +39,7 @@ class Data
 		double get_yRange() const { return yRange; }
 		double get_dx() const { return dx; }
 		double get_dy() const { return dy; }
+		double get_dA() const { return dA; }
 
 		// Getters for xc and yc
 		double get_xc(int i, int j) const { return xc(i, j); }

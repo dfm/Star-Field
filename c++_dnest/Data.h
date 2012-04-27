@@ -39,6 +39,9 @@ class Data
 		// Getters for xc and yc
 		double get_xc(int i, int j) const { return xc(i, j); }
 		double get_yc(int i, int j) const { return yc(i, j); }
+
+		// Getter for pixel values
+		double operator () (int i, int j) const { return image(i, j); }
 };
 
 #endif

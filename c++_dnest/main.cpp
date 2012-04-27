@@ -19,6 +19,7 @@
 
 #include <iostream>
 #include "StarFieldModel.h"
+#include "Hyperparameters/Ignorance.h"
 #include "MultiSampler.h"
 #include "RandomNumberGenerator.h"
 #include "DNestSampler.h"
@@ -35,7 +36,7 @@ void runLegacy(const Model* exampleModel, const string& levelsFile);	// Run lega
 int main(int argc, char** argv)
 {
 	// What kind of model will we be running?
-	StarFieldModel exampleModel;
+	StarFieldModel<Ignorance> exampleModel;
 
 	// Which kind of sampler, and should we pre-load level structure?
 	bool legacy = false;

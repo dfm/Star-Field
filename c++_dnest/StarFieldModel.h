@@ -33,7 +33,6 @@ template<class HyperType>
 class StarFieldModel:public DNest::Model
 {
 	private:
-		static Data data;
 		static PSF psf;
 		static const int maxNumStars;
 		static const double noiseSigma; 

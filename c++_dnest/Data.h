@@ -20,6 +20,9 @@ class Data
 		// Pixel centers
 		Array xc, yc;
 
+		// An instance
+		static Data data;
+
 	public:
 		Data();
 		void load(const char* filename);
@@ -43,6 +46,12 @@ class Data
 
 		// Getter for pixel values
 		double operator () (int i, int j) const { return image(i, j); }
+
+		// Getter for the instance
+		static const Data& get_data() { return data; } 
+
+		// Setter for the instance
+		static void load_data(const char* filename) { data.load(filename); }
 };
 
 #endif

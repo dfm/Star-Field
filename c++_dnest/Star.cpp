@@ -14,18 +14,18 @@ Star::Star(double x, double y, double flux)
 
 }
 
-Array& Star::incrementImage(Array& image, const PSF& psf, const Data& data, double coefficient) const
+Array& Star::incrementImage(Array& image, const PSF& psf, double coefficient) const
 {
 	// Calculate the image of just this star on the data grid
-	Array starImage(data.get_ni(), data.get_nj());
+	Array starImage(Data::get_data().get_ni(), Data::get_data().get_nj());
 	starImage.setZero();
 
-	for(int i=0; i<data.get_ni(); i++)
+	for(int i=0; i<Data::get_data().get_ni(); i++)
 	{
-		for(int j=0; j<data.get_nj(); j++)
+		for(int j=0; j<Data::get_data().get_nj(); j++)
 		{
 			starImage(i, j) += flux*coefficient*
-	(psf.evaluate(data.get_xc(i, j) - x, data.get_yc(i, j) - y));
+	(psf.evaluate(Data::get_data().get_xc(i, j) - x, Data::get_data().get_yc(i, j) - y));
 		}
 	}
 
@@ -35,13 +35,13 @@ Array& Star::incrementImage(Array& image, const PSF& psf, const Data& data, doub
 	return image;
 }
 
-Array& Star::incrementImage(Array& image, const PSF& psf, const Data& data) const
+Array& Star::incrementImage(Array& image, const PSF& psf) const
 {
-	return incrementImage(image, psf, data, 1.0);
+	return incrementImage(image, psf, 1.0);
 }
 
-Array& Star::decrementImage(Array& image, const PSF& psf, const Data& data) const
+Array& Star::decrementImage(Array& image, const PSF& psf) const
 {
-	return incrementImage(image, psf, data, -1.0);
+	return incrementImage(image, psf, -1.0);
 }
 

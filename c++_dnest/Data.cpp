@@ -27,6 +27,8 @@ void Data::load(const char* filename)
 	dx = xRange/nj;
 	dy = yRange/ni;
 
+	image.resize(ni, nj);
+
 	for(int i=0; i<ni; i++)
 		for(int j=0; j<nj; j++)
 			fin>>image(i, j);

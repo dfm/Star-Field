@@ -150,7 +150,7 @@ double NYU::_logp(const Star& star) const
 	double result = 0.;
 	result += -log(2*M_PI*sigma*sigma) - 0.5*pow((star.x - xc)/sigma, 2)
 					   - 0.5*pow((star.y - yc)/sigma, 2);
-	result += -log(mu) - mu/star.flux;
+	result += -log(mu) - star.flux/mu;
 	if(star.flux < 0)
 		result = -1E300;
 	return result;

@@ -4,6 +4,8 @@
 
 using namespace std;
 
+Data Data::data;
+
 Data::Data()
 :loaded(false)
 {

@@ -49,7 +49,6 @@ class StarFieldModel:public DNest::Model
 		double perturbHelper1();
 		double perturbHelper2();
 		double perturbHelper3();
-		double perturbHelper4();
 
 	public:
 		StarFieldModel();

@@ -2,6 +2,7 @@
 #define _Ignorance_
 
 #include "../Hyperparameters.h"
+#include <ostream>
 
 /*
 * Stars can be anywhere
@@ -31,6 +32,8 @@ class Ignorance:public Hyperparameters
 		// Evaluate the probability density
 		// for a star given the hyperparameters
 		double _logp(const Star& star) const;
+
+		friend std::ostream& operator << (std::ostream& out, const Ignorance& i);
 
 };
 

@@ -4,6 +4,7 @@
 #include "../Data.h"
 #include <cmath>
 
+using namespace std;
 using namespace DNest;
 
 const double Ignorance::minFlux = 1E-3;
@@ -67,5 +68,10 @@ double Ignorance::_logp(const Star& star) const
 		|| star.y < Data::get_data().get_yMin() || star.y > Data::get_data().get_yMax())
 		result = -1E300;
 	return result;
+}
+
+ostream& operator << (ostream& out, const Ignorance& i)
+{
+	return out;
 }
 

@@ -38,7 +38,7 @@ template<class HyperType>
 Data StarFieldModel<HyperType>::data;
 
 template<class HyperType>
-PSF StarFieldModel<HyperType>::psf(1.0*Data::dx, 5.0*Data::dx, 0.5);
+const PSF StarFieldModel<HyperType>::psf(1.0*Data::dx, 5.0*Data::dx, 0.5);
 
 template<class HyperType>
 StarFieldModel<HyperType>::StarFieldModel()

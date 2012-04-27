@@ -34,15 +34,15 @@ class StarFieldModel:public DNest::Model
 {
 	private:
 		static Data data;
-		static PSF psf;
+		static const PSF psf;
 		static const int maxNumStars;
+		static const double noiseSigma; 
+		static const double noiseCoeff;
 
 		HyperType hyperparameters;
 		std::vector<Star> stars;
 
 		Array mockImage;
-		static const double noiseSigma; 
-		static const double noiseCoeff;
 
 		int staleness;
 

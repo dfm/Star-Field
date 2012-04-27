@@ -38,14 +38,17 @@ template<class HyperType>
 Data StarFieldModel<HyperType>::data;
 
 template<class HyperType>
-const PSF StarFieldModel<HyperType>::psf(1.0*Data::dx, 5.0*Data::dx, 0.5);
+const PSF StarFieldModel<HyperType>::psf;
 
 template<class HyperType>
 StarFieldModel<HyperType>::StarFieldModel()
 :mockImage(Data::ni, Data::nj)
 {
 	if(!data.isLoaded())
+	{
 		data.load("data_100stars.txt");
+		psf.set(1.0*data.get_dx(), 5.0*data.get_dx(), 0.5);
+	}
 }
 
 template<class HyperType>
@@ -128,10 +131,10 @@ double StarFieldModel<HyperType>::perturbHelper1()
 		int which = randInt(stars.size());
 
 		logH -= -hyp.logp(stars[which]);
-		stars[which].decrementImage(mockImage, psf);
+		stars[which].decrementImage(mockImage, psf, data);
 		stars[which].x += hyp.sig*scale*randn();
 		stars[which].y += hyp.sig*scale*randn();
-		stars[which].incrementImage(mockImage, psf);
+		stars[which].incrementImage(mockImage, psf, data);
 		logH += hyp.logp(stars[which]);
 	}
 
@@ -159,9 +162,9 @@ double StarFieldModel<HyperType>::perturbHelper2()
 		int which = randInt(stars.size());
 
 		logH -= -hyp.logp(stars[which]);
-		stars[which].decrementImage(mockImage, psf);
+		stars[which].decrementImage(mockImage, psf, data);
 		stars[which].flux += hyp.meanFlux*scale*randn();
-		stars[which].incrementImage(mockImage, psf);
+		stars[which].incrementImage(mockImage, psf, data);
 		logH += hyp.logp(stars[which]);
 	}
 
@@ -210,7 +213,7 @@ double StarFieldModel<HyperType>::perturbHelper4()
 		for(int i=0; i<delta; i++)
 		{
 			stars.push_back(hyp.generateStar());
-			stars.back().incrementImage(mockImage, psf);
+			stars.back().incrementImage(mockImage, psf, data);
 		}
 	}
 	else
@@ -222,7 +225,7 @@ double StarFieldModel<HyperType>::perturbHelper4()
 		for(int i=0; i<-delta; i++)
 		{
 			int which = randInt(stars.size());
-			stars[which].decrementImage(mockImage, psf);
+			stars[which].decrementImage(mockImage, psf, data);
 			stars.erase(stars.begin() + which);
 		}
 	}
@@ -234,9 +237,9 @@ double StarFieldModel<HyperType>::perturbHelper4()
 template<class HyperType>
 void StarFieldModel<HyperType>::calculateMockImage()
 {
-	mockImage.zero();
+	mockImage.setZero();
 	for(size_t i=0; i<stars.size(); i++)
-		stars[i].incrementImage(mockImage, psf);
+		stars[i].incrementImage(mockImage, psf, data);
 	staleness = 0;
 }
 

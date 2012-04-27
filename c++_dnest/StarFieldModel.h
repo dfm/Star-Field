@@ -34,7 +34,7 @@ class StarFieldModel:public DNest::Model
 {
 	private:
 		static Data data;
-		static const PSF psf;
+		static PSF psf;
 		static const int maxNumStars;
 		static const double noiseSigma; 
 		static const double noiseCoeff;

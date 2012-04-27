@@ -16,24 +16,33 @@ void Data::load(const char* filename)
 	fstream fin(filename, ios::in);
 	if(!fin)
 		cerr<<"Error: Can't load "<<filename<<"."<<endl;
-	fin>>image;
+	char hash;
+	fin>>hash;
+	fin>>ni>>nj>>xMin>>xMax>>yMin>>yMax;
+
+	xRange = xMax - xMin;
+	yRange = yMax - yMin;
+	dx = xRange/nj;
+	dy = yRange/ni;
+
+	for(int i=0; i<ni; i++)
+		for(int j=0; j<nj; j++)
+			fin>>image(i, j);
 	fin.close();
 	loaded = true;
 
-
-	vector<double> x(image.get_nJ());
-	vector<double> y(image.get_nI());
-	for(int j=0; j<image.get_nJ(); j++)
-		x[j] = image.get_xMin() + (j + 0.5)*image.get_dx();
-	for(int i=0; i<image.get_nI(); i++)
-		y[i] = image.get_yMax() - (i + 0.5)*image.get_dy();
-
 	// Assign the xc, yc arrays
-	xc = image.get_pixels();
-	yc = image.get_pixels();
-	for(int i=0; i<image.get_nI(); i++)
+	vector<double> x(ni);
+	vector<double> y(nj);
+	for(int j=0; j<nj; j++)
+		x[j] = xMin + (j + 0.5)*dx;
+	for(int i=0; i<ni; i++)
+		y[i] = yMax - (i + 0.5)*dy;
+	xc = image;
+	yc = image;
+	for(int i=0; i<ni; i++)
 	{
-		for(int j=0; j<image.get_nJ(); j++)
+		for(int j=0; j<nj; j++)
 		{
 			xc(i, j) = x[j];
 			yc(i, j) = y[i];

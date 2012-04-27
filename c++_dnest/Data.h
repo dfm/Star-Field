@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "Array.h"
-#include "Image.h"
 
 /*
 * An instance of this class represents a data set.
@@ -12,8 +11,11 @@
 class Data
 {
 	private:
-		Image image; // Pixel intensities
+		Array image; // Pixel intensities
 		bool loaded;
+
+		double ni, nj, xMin, xMax, yMin, yMax;
+		double xRange, yRange, dx, dy;
 
 		// Pixel centers
 		Array xc, yc;
@@ -21,9 +23,6 @@ class Data
 	public:
 		Data();
 		void load(const char* filename);
-
-		// Read-only getter for the image
-		const Image& get_image() const { return image; }
 
 		// Getters for xc and yc
 		double get_xc(int i, int j) const { return xc(i, j); }

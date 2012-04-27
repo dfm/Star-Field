@@ -23,7 +23,7 @@ for i in xrange(0, sample.shape[0]):
 	gca().set_xticks([])
 	gca().set_yticks([])
 	draw()
-	print([i, max(sample[i,:])])
+	print([i, mock.min()])
 ioff()
 show()
 

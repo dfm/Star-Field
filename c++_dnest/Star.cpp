@@ -1,6 +1,6 @@
 #include "Star.h"
+#include "Data.h"
 #include <cassert>
-#define PSF_NORMALISE
 
 using namespace std;
 
@@ -25,20 +25,13 @@ Array& Star::incrementImage(Array& image, const PSF& psf, double coefficient) co
 	{
 		for(int j=0; j<Data::get_data().get_nj(); j++)
 		{
-			starImage(i, j) += flux*coefficient*
+			starImage(i, j) += coefficient*flux*
 	(psf.evaluate(Data::get_data().get_xc(i, j) - x, Data::get_data().get_yc(i, j) - y));
 		}
 	}
 
-	#ifdef PSF_NORMALISE
-		double sum = starImage.sum();
-		if(sum != 0)
-			starImage *= flux/sum;
-	#endif
-
 	// Increment image
 	image += starImage;
-
 	return image;
 }
 

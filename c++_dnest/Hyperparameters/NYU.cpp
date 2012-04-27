@@ -131,7 +131,7 @@ double NYU::perturbPosition(Star& star, double scale) const
 	star.x += sigma*scale*randn();
 	star.y += sigma*scale*randn();
 	logH += _logp(star);
-	return 0.;
+	return logH;
 }
 
 double NYU::perturbFlux(Star& star, double scale) const

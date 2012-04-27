@@ -29,6 +29,7 @@
 #include "PSF.h"
 #include "Hyperparameters.h"
 
+template<class HyperType>
 class StarFieldModel:public DNest::Model
 {
 	private:
@@ -36,7 +37,7 @@ class StarFieldModel:public DNest::Model
 		static PSF psf;
 		static const int maxNumStars;
 
-		Hyperparameters hyp;
+		HyperType hyperparameters;
 		std::vector<Star> stars;
 
 		Array mockImage;
@@ -64,5 +65,8 @@ class StarFieldModel:public DNest::Model
 		double getValue();
 		void print(std::ostream& out) const;
 };
+
+#include "StarFieldModelImpl.h"
+
 #endif
 

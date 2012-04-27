@@ -25,40 +25,55 @@
 using namespace std;
 using namespace DNest;
 
-const double StarFieldModel::noiseSigma = 0.02;
-const double StarFieldModel::noiseCoeff = 0;
-const int StarFieldModel::maxNumStars = 200;
-Data StarFieldModel::data;
-PSF StarFieldModel::psf(1.0*Data::dx, 5.0*Data::dx, 0.5);
+template<class HyperType>
+const double StarFieldModel<HyperType>::noiseSigma = 0.02;
 
-StarFieldModel::StarFieldModel()
+template<class HyperType>
+const double StarFieldModel<HyperType>::noiseCoeff = 0;
+
+template<class HyperType>
+const int StarFieldModel<HyperType>::maxNumStars = 200;
+
+template<class HyperType>
+Data StarFieldModel<HyperType>::data;
+
+template<class HyperType>
+PSF StarFieldModel<HyperType>::psf(1.0*Data::dx, 5.0*Data::dx, 0.5);
+
+template<class HyperType>
+StarFieldModel<HyperType>::StarFieldModel()
 :mockImage(Data::ni, Data::nj)
 {
 	if(!data.isLoaded())
 		data.load("data_100stars.txt");
 }
 
-StarFieldModel::~StarFieldModel()
+template<class HyperType>
+StarFieldModel<HyperType>::~StarFieldModel()
 {
 
 }
 
-Model* StarFieldModel::factory() const
+template<class HyperType>
+Model* StarFieldModel<HyperType>::factory() const
 {
 	return new StarFieldModel;
 }
 
-Model* StarFieldModel::clone() const
+template<class HyperType>
+Model* StarFieldModel<HyperType>::clone() const
 {
 	return new StarFieldModel(*this);
 }
 
-void StarFieldModel::copyFrom(const Model* other)
+template<class HyperType>
+void StarFieldModel<HyperType>::copyFrom(const Model* other)
 {
 	*this = *((StarFieldModel*)other);
 }
 
-void StarFieldModel::fromPrior()
+template<class HyperType>
+void StarFieldModel<HyperType>::fromPrior()
 {
 	hyp.fromPrior();
 	int numStars = randInt(maxNumStars + 1);
@@ -70,7 +85,8 @@ void StarFieldModel::fromPrior()
 	calculateLogLikelihood();
 }
 
-double StarFieldModel::perturb()
+template<class HyperType>
+double StarFieldModel<HyperType>::perturb()
 {
 	if(staleness >= 1000)
 		calculateMockImage();
@@ -92,7 +108,8 @@ double StarFieldModel::perturb()
 	return logH;
 }
 
-double StarFieldModel::perturbHelper1()
+template<class HyperType>
+double StarFieldModel<HyperType>::perturbHelper1()
 {
 	if(stars.size() == 0)
 		return 0;
@@ -122,7 +139,8 @@ double StarFieldModel::perturbHelper1()
 	return logH;
 }
 
-double StarFieldModel::perturbHelper2()
+template<class HyperType>
+double StarFieldModel<HyperType>::perturbHelper2()
 {
 	if(stars.size() == 0)
 		return 0;
@@ -151,7 +169,8 @@ double StarFieldModel::perturbHelper2()
 	return logH;
 }
 
-double StarFieldModel::perturbHelper3()
+template<class HyperType>
+double StarFieldModel<HyperType>::perturbHelper3()
 {
 	// Move hyperparameters
 
@@ -170,7 +189,8 @@ double StarFieldModel::perturbHelper3()
 	return logH;
 }
 
-double StarFieldModel::perturbHelper4()
+template<class HyperType>
+double StarFieldModel<HyperType>::perturbHelper4()
 {
 	// Add or remove stars
 	int delta = (int)round(maxNumStars*pow(10.0, 1.5 - 6.0*randomU())*randn()); // Change in number of stars
@@ -211,7 +231,8 @@ double StarFieldModel::perturbHelper4()
 	return 0;
 }
 
-void StarFieldModel::calculateMockImage()
+template<class HyperType>
+void StarFieldModel<HyperType>::calculateMockImage()
 {
 	mockImage.zero();
 	for(size_t i=0; i<stars.size(); i++)
@@ -219,7 +240,8 @@ void StarFieldModel::calculateMockImage()
 	staleness = 0;
 }
 
-void StarFieldModel::calculateLogLikelihood()
+template<class HyperType>
+void StarFieldModel<HyperType>::calculateLogLikelihood()
 {
 	logl.logl = 0.0;
 
@@ -232,7 +254,8 @@ void StarFieldModel::calculateLogLikelihood()
 		}
 }
 
-void StarFieldModel::print(ostream& out) const
+template<class HyperType>
+void StarFieldModel<HyperType>::print(ostream& out) const
 {
 	out<<stars.size()<<' '<<hyp<<' '<<mockImage;
 }

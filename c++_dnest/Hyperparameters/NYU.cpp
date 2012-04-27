@@ -133,6 +133,7 @@ double NYU::perturbFlux(Star& star, double scale) const
 {
 	star.flux = 1. - exp(-star.flux/mu);
 	star.flux += scale*randn();
+	star.flux = mod(star.flux, 1.0);
 	star.flux = -mu*log(1. - star.flux);
 	return 0.;
 }

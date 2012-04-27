@@ -29,6 +29,9 @@ Array& Star::incrementImage(Array& image, const PSF& psf, double coefficient) co
 		}
 	}
 
+	double sum = starImage.sum();
+	starImage *= flux/sum;
+
 	// Increment image
 	image += starImage;
 

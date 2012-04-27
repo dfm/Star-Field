@@ -3,17 +3,24 @@
 #include "Utils.h"
 #include "../Data.h"
 #include <cmath>
+#include <iostream>
 
 using namespace std;
 using namespace DNest;
 
-const double NYU::minMu = 1E-3;
-const double NYU::maxMu = 1E3;
-const double NYU::minSigma = 1E-2*sqrt(Data::get_data().get_xRange()*Data::get_data().get_yRange());
-const double NYU::maxSigma = 100*NYU::minSigma;
+double NYU::minMu = 1E-3;
+double NYU::maxMu = 1E3;
+double NYU::minSigma;
+double NYU::maxSigma;
 
 void NYU::fromPrior()
 {
+	if(!Data::get_data().isLoaded())
+		cerr<<"WARNING: Data not loaded."<<endl;
+
+	maxSigma = sqrt(Data::get_data().get_xRange()*Data::get_data().get_yRange());
+	minSigma = 1E-2*maxSigma;
+
 	xc = Data::get_data().get_xMin() + Data::get_data().get_xRange()*randomU();
 	yc = Data::get_data().get_yMin() + Data::get_data().get_yRange()*randomU();
 	sigma = exp(log(minSigma) + log(maxSigma/minSigma)*randomU());

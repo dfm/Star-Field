@@ -19,7 +19,7 @@
 
 #include <iostream>
 #include "StarFieldModel.h"
-#include "Hyperparameters/Ignorance.h"
+#include "Hyperparameters/NYU.h"
 #include "MultiSampler.h"
 #include "RandomNumberGenerator.h"
 #include "DNestSampler.h"
@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 	Data::load_data("data_100stars.txt");
 
 	// What kind of model will we be running?
-	StarFieldModel<Ignorance> exampleModel;
+	StarFieldModel<NYU> exampleModel;
 
 	// Which kind of sampler, and should we pre-load level structure?
 	bool legacy = false;

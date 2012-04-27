@@ -13,7 +13,7 @@ class NYU:public Hyperparameters
 		double xc, yc, sigma;	// Positional
 		double mu;		// Flux
 
-		static const double minMu, maxMu, minSigma, maxSigma;
+		static double minMu, maxMu, minSigma, maxSigma;
 
 	public:
 

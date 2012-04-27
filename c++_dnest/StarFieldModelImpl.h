@@ -42,8 +42,7 @@ StarFieldModel<HyperType>::StarFieldModel()
 :mockImage(Data::get_data().get_ni(), Data::get_data().get_nj())
 {
 	if(!Data::get_data().isLoaded())
-		Data::load_data("data_100stars.txt");
-
+		cerr<<"WARNING: Data not loaded."<<endl;
 	psf.set(1.0*Data::get_data().get_dx(), 5.0*Data::get_data().get_dx(), 0.5);
 }
 

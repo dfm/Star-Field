@@ -1,3 +1,8 @@
+# Copyright
+
+This repository is (c) 2012 Daniel Foreman-Mackey, David W. Hogg and Brendon
+J. Brewer. All rights reserved.
+
 # Synthetic Star Field Generator
 
 Generate some sweet fake crowded stellar fields for fun & profit.

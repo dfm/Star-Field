@@ -1,42 +1,166 @@
 \documentclass[letterpaper, 11pt]{article}
-\usepackage{graphicx} 
-\usepackage{natbib}
+\usepackage{authblk}	% For nice author-affil lists
+\usepackage{graphicx}	% For figures
+\usepackage{natbib}	% For citet and citep
+\usepackage{amsmath}	% for \iint
+\usepackage{bbm}	% for blackboard bold numbers
 \usepackage[left=3cm,top=3cm,right=3cm]{geometry}
+
+\title{More than one Author with different Affiliations}
 
 \renewcommand{\topfraction}{0.85} \renewcommand{\textfraction}{0.1} 
 \parindent=0cm
 
-\title{Crowded Star Fields \\ \bf{Obviously need a better title}} 
-\author{Brendon J. Brewer, David W. Hogg, Daniel Foreman-Mackey \\ 
-\bf{Order subject to change}}
+\title{Probabilistic Catalogues from Crowded Star Fields}
+\author[1,2]{Brendon J. Brewer}
+\author[3]{David W. Hogg}
+\author[3]{Daniel Foreman-Mackey}
+\affil[1]{UCSB}
+\affil[2]{Auckland}
+\affil[3]{NYU}
 
-\begin{document} \maketitle
+\date{{\bf Title and author order subject to change} \\
+{\bf Also nag me if you prefer American English}}
+
+\begin{document}
+\maketitle
 
 \section{Introduction}
 
 \section{The Unknown Parameters}
-The stars are at positions $\{(x_i, 
-y_i)\}_{i=1}^n$ and have fluxes $\{f_i\}$. We also include 
-hyperparameters, denoted collectively, by $\alpha$, describing the 
-distribution of the positions and fluxes of the stars.
-
-\begin{eqnarray} 
-p(\{(x_i, y_i, f_i)\} | \alpha) &=&
-\prod_{i=1}^n p(x_i, y_i, f_i | \alpha) \\
-&=& \prod_{i=1}^n p(x_i, y_i | \alpha)p(f_i | \alpha) 
+There are $N$ stars in the field, where $N$ is unknown. Each star has an unknown
+position $(x,y)$ in the plane of the sky, and an unknown flux $f$. We also
+parameterise the {\it distribution} of positions by parameters $\alpha$,
+and we parameterise the distribution of fluxes (aka the {\it luminosity
+function}) by parameters $\beta$. In summary, the unknown parameters are:
+\begin{eqnarray}
+\theta = \left\{N, \alpha, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
+\left\{f_i\right\}_{i=1}^N\right\}
 \end{eqnarray}
-Here, we have assumed that the ``luminosity function'' 
-(distribution of fluxes) does not depend on position.
 
-In summary, the unknown parameters are $\{(x_i, y_i, f_i)\}_{i=1}^n$
-and $\alpha$.
+The prior probability distribution for the unknown parameters can be factorised
+using the product rule. With a variety of independence assumptions, the prior
+can be written as:
+\begin{eqnarray}
+p(\theta) = p(N)p(\alpha)p(\beta)\prod_{i=1}^N p(x_i, y_i | \alpha)
+p(f_i | \beta) 
+\end{eqnarray}
 
-\section{The Luminosity Function}
+Here, we have assumed that the luminosity function does not depend on position.
+We have also assumed independence of $N$, $\alpha$ and $\beta$, which means that
+learning the value of one would not tell us anything about the values of the
+others. Finally, the positions and fluxes of the stars come independently from
+a common distribution. If we knew the spatial distribution and the luminosity
+function of the stars, then the location and flux of a particular star would not
+tell us anything about the location and flux of another star.
+
+\section{Particular Models}
+A model for the spatial distribution corresponds to a choice of functional forms
+for the distributions $p(x_i, y_i | \alpha)$ and $p(f_i | \beta)$.
+
+\subsection{Toy Model}
+For the first implementation I wrote at NYU, I used the following model and
+priors:
+\begin{itemize}
+\item $N \sim \textnormal{Uniform}(0, 1, 2, ..., 1000)$ \\
+\item The parameters of the spatial
+distribution: $\alpha = \left\{x_c, y_c, \sigma\right\}$ \\
+\item The spatial distribution: $p(x_i, y_i | \alpha)\sim\mathcal{N}\left(
+\texttt{mean}=(x_c, y_c), \texttt{covariance}=
+\left(\begin{array}{cc}\sigma^2 & 0 \\ 0 & \sigma^2\end{array}\right)\right)$ \\
+\item Prior on $\alpha$: Uniform within image for $(x_c, y_c)$, logUniform for
+$\sigma$ with max value $\sim$ image size.
+\item The luminosity function: $p(f_i | \beta) \sim
+\textnormal{Exponential}\left(\texttt{mean}=\beta\right)$ \\
+\item Prior on $\beta$: logUniform with generous bounds.
+\end{itemize}
+
+
+
+\section{A More Realistic Model}
 \citep{2008ApJ...682..874K}
 
+\appendix
+\section{Pixel Convolved PSF}
+Consider a ``true image'' $f_0(x, y)$ with infinite resolution. We now model how
+this image gives rise to the observed data. First, it is convolved with a
+PSF $g(\delta_x, \delta_y)$ (assumed normalised to 1) to give the blurred image:
+\begin{eqnarray}
+f_{\rm{blurred}}(x, y) &=& \iint f_0(x-\delta_x, y-\delta_y)
+g(\delta_x, \delta_y) \, d\delta_x \, d\delta_y \label{blur}
+\end{eqnarray}
+Then, we observe the blurred image with a certain pixellation. Consider a pixel.
+The true flux $F$ within the pixel is:
+\begin{eqnarray}
+F &=& \iint_{\rm pixel} f_{\rm blurred}(x, y) \,dx'\,dy'\\
+&=& \iint f_{\rm blurred}(x, y)\mathbbm{1}\left[(x,y) \in \textnormal{pixel}
+\right] \,dx\,dy \label{pixel}
+\end{eqnarray}
+Now consider $F$ as a function of the central location $(x_c, y_c)$ of the
+pixel.
+
+
+\section{MCMC Implementation}
+\subsection{Current}
+I am using Diffusive Nested Sampling \citep{dnest}, which is really just
+Metropolis-Hastings but targeting a fancy distribution instead of the actual
+posterior, and then assigning importance weights when you want the posterior.
+Nested Sampling is good because it is invariant under monotonic transformations
+of the likelihood function. i.e. the exploration only depends on things like
+whether one point is better than another, and not on how much better it is.
+
+\subsubsection{Proposal Distributions}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{c|c|c}
+Parameter & Proposal & Notes\\
+\hline
+$N$ & $N \to N + \delta_N$ & Generate $\delta_N$ new stars from prior given
+$(\alpha, \beta)$\\
+$N$ & $N \to N - \delta_N$ & Remove $\delta_N$ stars at random\\
+$\alpha$ & $\alpha \to \alpha + \delta_\alpha$ & Move stars along with $\alpha$
+\\
+$\alpha$ & $\alpha \to \alpha + \delta_\alpha$ & Stars fixed, use logHastings
+factor \\
+$\beta$ & $\beta \to \beta + \delta_\beta$ & Move stars' fluxes along with
+$\beta$\\
+$\beta$ & $\beta \to \beta + \delta_\beta$ & Stars' fluxes fixed, use
+logHastings factor \\
+$(x,y)$ & $(x,y) \to (x,y)+(\delta_x, \delta_y)$ & Can move $>1$ star.
+Include prior via logH \\
+$f$ & $f \to f + \delta_f$ & Can move $>1$ stars' fluxes. Include prior
+via logH
+\end{tabular}
+\end{center}
+\caption{All $\delta$ parameters are drawn from multi-scale distibutions such
+that the largest steps are of order the prior width, and the smallest steps
+are of order $10^{-6}$ times the prior width.\label{proposals}}
+\end{table}
+
+See Table~\ref{proposals} for a list of current proposal distributions.
+
+\subsection{Future Possibilities}
+{\bf Hogg}: {\it I think this problem is important enough and general enough
+that we should spend some time working on some ideas there.  If we can sample
+over image explanations, our powers in astronomy will be awesome
+beyond our wildest imaginings.}
+
+\subsection{Genetic Moves}
+Here I will sketch some ideas...
+
+
 \begin{thebibliography}{99}
+\bibitem[\protect\citeauthoryear{Brewer, P{\'a}rtay, 
+\& Cs{\'a}nyi}{2011b}]{dnest} Brewer B.~J., P{\'a}rtay L.~B.,
+Cs{\'a}nyi G., 2011, Statistics and Computing, 21, 4, 649-656. arXiv:0912.2380
+
 \bibitem[Kelly et al.(2008)]{2008ApJ...682..874K} Kelly, B.~C., Fan, X., 
 \& Vestergaard, M.\ 2008, ApJ, 682, 874 
+
+\bibitem[Mackay(2003)]{mackay} Mackay, D.~J.~C., 2003, Information Theory,
+Inference and Learning Algorithms, Cambridge University Press, UK.
+
 \end{thebibliography}
 
 \end{document}

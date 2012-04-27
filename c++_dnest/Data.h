@@ -23,6 +23,7 @@ class Data
 	public:
 		Data();
 		void load(const char* filename);
+		bool isLoaded() const { return loaded; }
 
 		// Various getters
 		int get_ni() const { return ni; }

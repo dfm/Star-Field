@@ -1,5 +1,6 @@
 #include "Star.h"
 #include <cassert>
+#define PSF_NORMALISE
 
 using namespace std;
 
@@ -29,8 +30,11 @@ Array& Star::incrementImage(Array& image, const PSF& psf, double coefficient) co
 		}
 	}
 
-	double sum = starImage.sum();
-	starImage *= flux/sum;
+	#ifdef PSF_NORMALISE
+		double sum = starImage.sum();
+		if(sum != 0)
+			starImage *= flux/sum;
+	#endif
 
 	// Increment image
 	image += starImage;

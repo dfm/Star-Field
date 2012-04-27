@@ -32,8 +32,8 @@ void Data::load(const char* filename)
 	loaded = true;
 
 	// Assign the xc, yc arrays
-	vector<double> x(ni);
-	vector<double> y(nj);
+	vector<double> x(nj);
+	vector<double> y(ni);
 	for(int j=0; j<nj; j++)
 		x[j] = xMin + (j + 0.5)*dx;
 	for(int i=0; i<ni; i++)

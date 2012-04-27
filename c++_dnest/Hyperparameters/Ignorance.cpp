@@ -37,25 +37,23 @@ Star Ignorance::generateStar() const
 	return Star(x, y, flux);
 }
 
-double Ignorance::perturbStar(Star& star) const
+double Ignorance::perturbPosition(Star& star, double scale) const
 {
-	double scale = pow(10., 1.5 - 6.*randomU());
-	if(randomU() <= 0.5)
-	{
-		star.x += Data::get_data().get_xRange()*scale*randn();
-		star.y += Data::get_data().get_yRange()*scale*randn();
-		star.x = mod(star.x - Data::get_data().get_xMin(),
-			Data::get_data().get_xRange()) + Data::get_data().get_xMin();
-		star.y = mod(star.y - Data::get_data().get_yMin(),
-			Data::get_data().get_yRange()) + Data::get_data().get_yMin();
-	}
-	else
-	{
-		star.flux = log(star.flux);
-		star.flux += (logMaxFlux - logMinFlux)*scale*randn();
-		star.flux = mod(star.flux - logMinFlux, logMaxFlux - logMinFlux) + logMinFlux;
-		star.flux = exp(star.flux);
-	}
+	star.x += Data::get_data().get_xRange()*scale*randn();
+	star.y += Data::get_data().get_yRange()*scale*randn();
+	star.x = mod(star.x - Data::get_data().get_xMin(),
+		Data::get_data().get_xRange()) + Data::get_data().get_xMin();
+	star.y = mod(star.y - Data::get_data().get_yMin(),
+		Data::get_data().get_yRange()) + Data::get_data().get_yMin();
+	return 0.;
+}
+
+double Ignorance::perturbFlux(Star& star, double scale) const
+{
+	star.flux = log(star.flux);
+	star.flux += (logMaxFlux - logMinFlux)*scale*randn();
+	star.flux = mod(star.flux - logMinFlux, logMaxFlux - logMinFlux) + logMinFlux;
+	star.flux = exp(star.flux);
 	return 0.;
 }
 

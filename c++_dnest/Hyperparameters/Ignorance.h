@@ -21,13 +21,15 @@ class Ignorance:public Hyperparameters
 
 		/* Implement undefined methods */
 		void fromPrior();
+
 		double perturb();
 		double perturb(std::vector<Star>& stars); // Take stars along for the ride
 
 		// Generate a star from the prior
 		// given the hyperparameters
 		Star generateStar() const;
-		double perturbStar(Star& star) const;
+		double perturbPosition(Star& star, double scale) const;
+		double perturbFlux(Star& star, double scale) const;
 
 		// Evaluate the probability density
 		// for a star given the hyperparameters

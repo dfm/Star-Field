@@ -87,9 +87,6 @@ void StarFieldModel<HyperType>::fromPrior()
 template<class HyperType>
 double StarFieldModel<HyperType>::perturb()
 {
-	if(staleness >= 1000)
-		calculateMockImage();
-
 	double logH = 0.0;
 	int which = randInt(3);
 
@@ -99,6 +96,9 @@ double StarFieldModel<HyperType>::perturb()
 		logH = perturbHelper2();
 	else if(which == 2)
 		logH = perturbHelper3();
+
+	if(staleness >= 1000)
+		calculateMockImage();
 
 	Model::perturb();
 	calculateLogLikelihood();
@@ -111,20 +111,39 @@ double StarFieldModel<HyperType>::perturbHelper1()
 	if(stars.size() == 0)
 		return 0;
 
-	// Number of stars to move
-	int delta = (int)floor(maxNumStars*pow(10.0, 1.5 - 6.0*randomU())); // Change in number of stars
-	if(delta == 0 || delta > maxNumStars)
-		delta = 1;
+	// Chance of moving each star
+	double chance = pow(10., 0.5 - 4*randomU());
+	double scale = pow(10., 1.5 - 6.*randomU());
 
-	// Move a star in position or flux
 	double logH = 0;
-	for(int i=0; i<delta; i++)
-	{
-		int which = randInt(stars.size());
 
-		stars[which].decrementImage(mockImage, psf);
-		logH += hyperparameters.perturbStar(stars[which]);
-		stars[which].incrementImage(mockImage, psf);
+	int which = randInt(2);
+
+	if(which == 0)
+	{
+		// Move positions
+		for(size_t i=0; i<stars.size(); i++)
+		{
+			if(randomU() <= chance)
+			{
+				stars[i].decrementImage(mockImage, psf);
+				logH += hyperparameters.perturbPosition(stars[i], scale);
+				stars[i].incrementImage(mockImage, psf);
+			}
+		}
+	}
+	else
+	{
+		// Move fluxes
+		for(size_t i=0; i<stars.size(); i++)
+		{
+			if(randomU() <= chance)
+			{
+				stars[i].decrementImage(mockImage, psf);
+				logH += hyperparameters.perturbFlux(stars[i], scale);
+				stars[i].incrementImage(mockImage, psf);
+			}
+		}
 	}
 
 	staleness++;
@@ -219,7 +238,7 @@ void StarFieldModel<HyperType>::calculateLogLikelihood()
 template<class HyperType>
 void StarFieldModel<HyperType>::print(ostream& out) const
 {
-	out<<stars.size()<<' '<<hyperparameters<<' ';
+	out<<stars.size()<<' '<<staleness<<' '<<hyperparameters<<' ';
 	for(int i=0; i<Data::get_data().get_ni(); i++)
 		for(int j=0; j<Data::get_data().get_nj(); j++)
 			out<<mockImage(i, j)<<' ';

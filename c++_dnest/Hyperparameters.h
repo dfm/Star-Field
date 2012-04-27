@@ -19,13 +19,20 @@ class Hyperparameters
 
 		/* Stuff that derived classes must implement */
 		virtual void fromPrior() = 0;
+
+		// These return the logH for the hyperparameters part only,
+		// not the stars part (StarFieldModel handles that)
 		virtual double perturb() = 0;
 		virtual	double perturb(std::vector<Star>& stars) = 0; // Take stars along for the ride
 
 		// Generate a star from the prior
 		// given the hyperparameters
 		virtual Star generateStar() const = 0;
-		virtual double perturbStar(Star& star) const = 0;
+
+		// Scale should be not much bigger than 1
+		// Typically it is my pow(10., 1.5 - 6.*randomU()) thing
+		virtual double perturbPosition(Star& star, double scale) const = 0;
+		virtual double perturbFlux(Star& star, double scale) const = 0;
 
 		// Evaluate the probability density
 		// for a star given the hyperparameters

@@ -115,20 +115,18 @@ Star NYU::generateStar() const
 	return Star(x, y, flux);
 }
 
-double NYU::perturbStar(Star& star) const
+double NYU::perturbPosition(Star& star, double scale) const
 {
-	double scale = pow(10., 1.5 - 6.*randomU());
-	if(randomU() <= 0.5)
-	{
-		star.x += sigma*scale*randn();
-		star.y += sigma*scale*randn();
-	}
-	else
-	{
-		star.flux = 1. - exp(-star.flux/mu);
-		star.flux += scale*randn();
-		
-	}
+	star.x += sigma*scale*randn();
+	star.y += sigma*scale*randn();
+	return 0.;
+}
+
+double NYU::perturbFlux(Star& star, double scale) const
+{
+	star.flux = 1. - exp(-star.flux/mu);
+	star.flux += scale*randn();
+	star.flux = -mu*log(1. - star.flux);
 	return 0.;
 }
 
@@ -137,14 +135,17 @@ double NYU::perturbStar(Star& star) const
 double NYU::_logp(const Star& star) const
 {
 	double result = 0.;
-	if(star.x < Data::get_data().get_xMin() || star.x > Data::get_data().get_xMax()
-		|| star.y < Data::get_data().get_yMin() || star.y > Data::get_data().get_yMax())
+	result += -log(2*M_PI*sigma*sigma) - 0.5*pow((star.x - xc)/sigma, 2)
+					   - 0.5*pow((star.y - yc)/sigma, 2);
+	result += -log(mu) - mu/star.flux;
+	if(star.flux < 0)
 		result = -1E300;
 	return result;
 }
 
 ostream& operator << (ostream& out, const NYU& i)
 {
+	out<<i.xc<<' '<<i.yc<<' '<<i.sigma<<' '<<i.mu;
 	return out;
 }
 

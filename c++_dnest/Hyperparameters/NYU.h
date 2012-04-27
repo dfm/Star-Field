@@ -25,7 +25,8 @@ class NYU:public Hyperparameters
 		// Generate a star from the prior
 		// given the hyperparameters
 		Star generateStar() const;
-		double perturbStar(Star& star) const;
+		double perturbPosition(Star& star, double scale) const;
+		double perturbFlux(Star& star, double scale) const;
 
 		// Evaluate the probability density
 		// for a star given the hyperparameters

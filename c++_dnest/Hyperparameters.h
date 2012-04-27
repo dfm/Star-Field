@@ -20,10 +20,8 @@ class Hyperparameters
 		/* Stuff that derived classes must implement */
 		virtual void fromPrior() = 0;
 
-		// These return the logH for the hyperparameters part only,
-		// not the stars part (StarFieldModel handles that)
-		virtual double perturb() = 0;
-		virtual	double perturb(std::vector<Star>& stars) = 0; // Take stars along for the ride
+		virtual double perturb1(const std::vector<Star>& stars) = 0; // Keep stars fixed
+		virtual	double perturb2(std::vector<Star>& stars) = 0; // Take stars along for the ride
 
 		// Generate a star from the prior
 		// given the hyperparameters

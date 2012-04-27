@@ -157,13 +157,11 @@ double StarFieldModel<HyperType>::perturbHelper2()
 	double logH = 0;
 	if(randomU() <= 0.5)
 	{
-		logH -= hyperparameters.logp(stars);
-		logH += hyperparameters.perturb();
-		logH += hyperparameters.logp(stars);
+		logH += hyperparameters.perturb1(stars);
 	}
 	else
 	{
-		logH += hyperparameters.perturb(stars);
+		logH += hyperparameters.perturb2(stars);
 		calculateMockImage();
 	}
 	return logH;

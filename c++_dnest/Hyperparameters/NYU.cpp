@@ -8,8 +8,8 @@
 using namespace std;
 using namespace DNest;
 
-double NYU::minMu = 1E-3;
-double NYU::maxMu = 1E3;
+double NYU::minMu = 1E-6;
+double NYU::maxMu = 1;
 double NYU::minSigma;
 double NYU::maxSigma;
 
@@ -27,8 +27,9 @@ void NYU::fromPrior()
 	mu = exp(log(minMu) + log(maxMu/minMu)*randomU());
 }
 
-double NYU::perturb()
+double NYU::perturb1(const vector<Star>& stars)
 {
+	double logH = -logp(stars);
 	int which = randInt(3);
 
 	double scale = pow(10., 1.5 - 6.*randomU());
@@ -55,10 +56,12 @@ double NYU::perturb()
 		mu = mod(mu - log(minMu), log(maxMu/minMu)) + log(minMu);
 		mu = exp(mu);
 	}
-	return 0.;
+
+	logH += logp(stars);
+	return logH;
 }
 
-double NYU::perturb(std::vector<Star>& stars)
+double NYU::perturb2(std::vector<Star>& stars)
 {
 	int which = randInt(3);
 
@@ -124,8 +127,10 @@ Star NYU::generateStar() const
 
 double NYU::perturbPosition(Star& star, double scale) const
 {
+	double logH = -_logp(star);
 	star.x += sigma*scale*randn();
 	star.y += sigma*scale*randn();
+	logH += _logp(star);
 	return 0.;
 }
 

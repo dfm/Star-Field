@@ -17,12 +17,12 @@ void Ignorance::fromPrior()
 
 }
 
-double Ignorance::perturb()
+double Ignorance::perturb1(const vector<Star>& stars)
 {
 	return 0.;
 }
 
-double Ignorance::perturb(std::vector<Star>& stars)
+double Ignorance::perturb2(vector<Star>& stars)
 {
 	return 0.;
 }

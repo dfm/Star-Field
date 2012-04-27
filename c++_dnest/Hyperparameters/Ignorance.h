@@ -22,8 +22,8 @@ class Ignorance:public Hyperparameters
 		/* Implement undefined methods */
 		void fromPrior();
 
-		double perturb();
-		double perturb(std::vector<Star>& stars); // Take stars along for the ride
+		double perturb1(const std::vector<Star>& stars);
+		double perturb2(std::vector<Star>& stars); // Take stars along for the ride
 
 		// Generate a star from the prior
 		// given the hyperparameters

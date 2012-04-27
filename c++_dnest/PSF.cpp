@@ -8,6 +8,11 @@ using namespace std;
 
 const double PSF::edge = 5.0;
 
+PSF::PSF()
+{
+
+}
+
 PSF::PSF(double sigma1, double sigma2, double weight)
 {
 	set(sigma1, sigma2, weight);

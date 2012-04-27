@@ -15,6 +15,7 @@ class PSF
 		double rsqEdge;
 
 	public:
+		PSF();
 		PSF(double sigma1, double sigma2, double weight);
 		double evaluate(double x, double y) const;
 		void set(double sigma1, double sigma2, double weight);

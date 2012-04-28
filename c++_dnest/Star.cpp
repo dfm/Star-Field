@@ -17,21 +17,15 @@ Star::Star(double x, double y, double flux)
 
 Array& Star::incrementImage(Array& image, const PSF& psf, double coefficient) const
 {
-	// Calculate the image of just this star on the data grid
-	Array starImage(Data::get_data().get_ni(), Data::get_data().get_nj());
-	starImage.setZero();
-
 	for(int i=0; i<Data::get_data().get_ni(); i++)
 	{
 		for(int j=0; j<Data::get_data().get_nj(); j++)
 		{
-			starImage(i, j) += coefficient*flux*
+			image(i, j) += coefficient*flux*
 	(psf.evaluate(Data::get_data().get_xc(i, j) - x, Data::get_data().get_yc(i, j) - y));
 		}
 	}
 
-	// Increment image
-	image += starImage;
 	return image;
 }
 

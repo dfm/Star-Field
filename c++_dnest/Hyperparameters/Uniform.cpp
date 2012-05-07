@@ -48,8 +48,10 @@ void Uniform::transform(double u_x, double u_y, double u_f,
 	}
 
 	// Compute position
-	x = u_x;
-	y = u_y;
+	x = (Data::get_data().get_xMin() - 0.1*Data::get_data().get_xRange())
+		 + 1.2*Data::get_data().get_xRange()*u_x;
+	y = (Data::get_data().get_yMin() - 0.1*Data::get_data().get_yRange())
+		 + 1.2*Data::get_data().get_yRange()*u_y;
 }
 
 void Uniform::print(ostream& out) const

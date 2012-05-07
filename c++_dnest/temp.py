@@ -3,7 +3,7 @@ import time
 
 sample = atleast_2d(loadtxt('sample.txt'))
 data = loadtxt('data_100stars.txt')
-sample = sample[:,6:]
+sample = sample[:,3:]
 
 ion()
 hold(False)

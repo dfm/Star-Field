@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <iostream>
+#include "Star.h"
 
 class Hyperparameters
 {
@@ -16,6 +17,9 @@ class Hyperparameters
 		// Parameters go here when you inherit
 
 	public:
+
+		// Generate a star
+		Star generateStar(double u_x, double u_y, double u_f) const;
 
 		/* Stuff that derived classes must implement */
 

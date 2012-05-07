@@ -82,10 +82,18 @@ void StarFieldModel<HyperType>::fromPrior()
 		u_y[i] = randomU();
 		u_f[i] = randomU();
 	}
+	generateStars();
 	calculateMockImage();
 
 	Model::fromPrior();
 	calculateLogLikelihood();
+}
+
+template<class HyperType>
+void StarFieldModel<HyperType>::generateStars()
+{
+	for(int i=0; i<maxNumStars; i++)
+		stars[i] = hyperparameters.generateStar(u_x[i], u_y[i], u_f[i]);
 }
 
 template<class HyperType>
@@ -99,9 +107,6 @@ double StarFieldModel<HyperType>::perturb()
 	else if(which == 1)
 		logH = perturbHelper2();
 
-	if(staleness >= 1000)
-		calculateMockImage();
-
 	Model::perturb();
 	calculateLogLikelihood();
 	return logH;
@@ -110,16 +115,48 @@ double StarFieldModel<HyperType>::perturb()
 template<class HyperType>
 double StarFieldModel<HyperType>::perturbHelper1()
 {
-	double logH = 0.;
+	double chance = pow(10., 0.5 - 4.*randomU());
+	double scale = pow(10., 1.5 - 6.*randomU());
+	int which = randInt(2);
+	if(which == 0)
+	{
+		for(int i=0; i<maxNumStars; i++)
+		{
+			if(randomU() <= chance)
+			{
+				stars[i].decrementImage(mockImage, psf);
+				u_x[i] = mod(u_x[i] + scale*randn(), 1.);
+				u_y[i] = mod(u_y[i] + scale*randn(), 1.);
+				stars[i] = hyperparameters.
+					generateStar(u_x[i], u_y[i], u_f[i]);
+				stars[i].incrementImage(mockImage, psf);
+			}
+		}
+	}
+	else if(which == 1)
+	{
+		for(int i=0; i<maxNumStars; i++)
+		{
+			if(randomU() <= chance)
+			{
+				stars[i].decrementImage(mockImage, psf);
+				u_f[i] = mod(u_f[i] + scale*randn(), 1.);
+				stars[i] = hyperparameters.
+					generateStar(u_x[i], u_y[i], u_f[i]);
+				stars[i].incrementImage(mockImage, psf);
+			}		
+		}
+	}
 
-	return logH;
+	return 0.;
 }
 
 template<class HyperType>
 double StarFieldModel<HyperType>::perturbHelper2()
 {
-	double logH = 0;
-
+	double logH = hyperparameters.perturb();
+	generateStars();
+	calculateMockImage();
 	return logH;
 }
 
@@ -128,7 +165,8 @@ void StarFieldModel<HyperType>::calculateMockImage()
 {
 	mockImage.setZero();
 	for(size_t i=0; i<stars.size(); i++)
-		stars[i].incrementImage(mockImage, psf);
+		if(stars[i].flux > 0.)
+			stars[i].incrementImage(mockImage, psf);
 	staleness = 0;
 }
 

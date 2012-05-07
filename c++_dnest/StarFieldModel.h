@@ -46,10 +46,10 @@ class StarFieldModel:public DNest::Model
 
 		int staleness;
 
+		void generateStars();
 		void calculateMockImage();
 		double perturbHelper1();
 		double perturbHelper2();
-		double perturbHelper3();
 
 	public:
 		StarFieldModel();

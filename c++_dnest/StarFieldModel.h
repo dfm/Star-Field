@@ -39,6 +39,7 @@ class StarFieldModel:public DNest::Model
 		static const double noiseCoeff;
 
 		HyperType hyperparameters;
+		std::vector<double> uniforms;
 		std::vector<Star> stars;
 
 		Array mockImage;

@@ -25,11 +25,12 @@ class Hyperparameters
 		// Metropolis-Hastings proposal
 		virtual double perturb() = 0;
 
-		/* Transform U(0, 1) latent variables into fluxes */
-		virtual void transform(double u) const = 0;
-
-		/* Transform U(0, 1) latent variables into positions */
-		virtual void transform(double u_x, double u_y) const = 0;
+		/*
+		* Transform U(0, 1) latent variables into positions 
+		* and fluxes
+		*/
+		virtual void transform(double u_x, double u_y, double u_f,
+				double& x, double& y, double& f) const = 0;
 
 		/* Print the hyperparameters */
 		virtual void print(std::ostream& out) const = 0;

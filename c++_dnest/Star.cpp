@@ -17,6 +17,9 @@ Star::Star(double x, double y, double flux)
 
 Array& Star::incrementImage(Array& image, const PSF& psf, double coefficient) const
 {
+	if(flux == 0.)
+		return image;
+
 	for(int i=0; i<Data::get_data().get_ni(); i++)
 	{
 		for(int j=0; j<Data::get_data().get_nj(); j++)

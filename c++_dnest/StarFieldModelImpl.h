@@ -42,6 +42,7 @@ StarFieldModel<HyperType>::StarFieldModel()
 :u_x(maxNumStars), u_y(maxNumStars), u_f(maxNumStars)
 ,stars(maxNumStars)
 ,mockImage(Data::get_data().get_ni(), Data::get_data().get_nj())
+,staleness(0)
 {
 	if(!Data::get_data().isLoaded())
 		cerr<<"WARNING: Data not loaded."<<endl;
@@ -107,6 +108,9 @@ double StarFieldModel<HyperType>::perturb()
 	else if(which == 1)
 		logH = perturbHelper2();
 
+	if(staleness >= 1000)
+		calculateMockImage();
+
 	Model::perturb();
 	calculateLogLikelihood();
 	return logH;
@@ -147,7 +151,7 @@ double StarFieldModel<HyperType>::perturbHelper1()
 			}		
 		}
 	}
-
+	staleness++;
 	return 0.;
 }
 
@@ -165,8 +169,7 @@ void StarFieldModel<HyperType>::calculateMockImage()
 {
 	mockImage.setZero();
 	for(size_t i=0; i<stars.size(); i++)
-		if(stars[i].flux > 0.)
-			stars[i].incrementImage(mockImage, psf);
+		stars[i].incrementImage(mockImage, psf);
 	staleness = 0;
 }
 

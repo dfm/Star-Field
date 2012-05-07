@@ -43,7 +43,6 @@ class StarFieldModel:public DNest::Model
 		std::vector<Star> stars;
 
 		Array mockImage;
-
 		int staleness;
 
 		void generateStars();

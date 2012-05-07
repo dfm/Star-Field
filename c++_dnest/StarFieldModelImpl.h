@@ -26,7 +26,7 @@ using namespace std;
 using namespace DNest;
 
 template<class HyperType>
-const double StarFieldModel<HyperType>::noiseSigma = 0.02;
+const double StarFieldModel<HyperType>::noiseSigma = 30.;
 
 template<class HyperType>
 const double StarFieldModel<HyperType>::noiseCoeff = 0;

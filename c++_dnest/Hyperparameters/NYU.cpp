@@ -8,8 +8,8 @@
 using namespace std;
 using namespace DNest;
 
-double NYU::minMu = 1E-6;
-double NYU::maxMu = 1;
+double NYU::minMu = 1E-3;
+double NYU::maxMu = 1E3;
 double NYU::minSigma;
 double NYU::maxSigma;
 

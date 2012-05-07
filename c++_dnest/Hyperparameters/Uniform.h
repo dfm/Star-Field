@@ -27,7 +27,7 @@ class Uniform:public Hyperparameters
 		* and fluxes
 		*/
 		void transform(double u_x, double u_y, double u_f,
-				double& x, double& y, double& f) const = 0;
+				double& x, double& y, double& f) const;
 
 		/* Print the hyperparameters */
 		void print(std::ostream& out) const;

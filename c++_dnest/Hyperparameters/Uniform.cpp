@@ -52,3 +52,9 @@ void Uniform::transform(double u_x, double u_y, double u_f,
 	y = u_y;
 }
 
+void Uniform::print(ostream& out) const
+{
+	out<<onFraction<<' '<<mu;
+}
+
+

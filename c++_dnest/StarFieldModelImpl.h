@@ -39,9 +39,9 @@ PSF StarFieldModel<HyperType>::psf;
 
 template<class HyperType>
 StarFieldModel<HyperType>::StarFieldModel()
-:uniforms(maxNumStars)
+:u_x(maxNumStars), u_y(maxNumStars), u_f(maxNumStars)
 ,stars(maxNumStars)
-mockImage(Data::get_data().get_ni(), Data::get_data().get_nj())
+,mockImage(Data::get_data().get_ni(), Data::get_data().get_nj())
 {
 	if(!Data::get_data().isLoaded())
 		cerr<<"WARNING: Data not loaded."<<endl;
@@ -78,7 +78,9 @@ void StarFieldModel<HyperType>::fromPrior()
 	hyperparameters.fromPrior();
 	for(int i=0; i<maxNumStars; i++)
 	{
-		uniforms[i] = randomU();
+		u_x[i] = randomU();
+		u_y[i] = randomU();
+		u_f[i] = randomU();
 	}
 	calculateMockImage();
 
@@ -89,7 +91,7 @@ void StarFieldModel<HyperType>::fromPrior()
 template<class HyperType>
 double StarFieldModel<HyperType>::perturb()
 {
-	double logH = 0.0;
+	double logH = 0.;
 	int which = randInt(2);
 
 	if(which == 0)
@@ -108,8 +110,7 @@ double StarFieldModel<HyperType>::perturb()
 template<class HyperType>
 double StarFieldModel<HyperType>::perturbHelper1()
 {
-	if(stars.size() == 0)
-		return 0;
+	double logH = 0.;
 
 	return logH;
 }
@@ -151,7 +152,8 @@ void StarFieldModel<HyperType>::calculateLogLikelihood()
 template<class HyperType>
 void StarFieldModel<HyperType>::print(ostream& out) const
 {
-	out<<staleness<<' '<<hyperparameters<<' ';
+	out<<staleness<<' ';
+	hyperparameters.print(out); out<<' ';
 	for(int i=0; i<Data::get_data().get_ni(); i++)
 		for(int j=0; j<Data::get_data().get_nj(); j++)
 			out<<mockImage(i, j)<<' ';

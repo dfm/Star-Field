@@ -149,6 +149,21 @@ beyond our wildest imaginings.}
 \subsection{Genetic Moves}
 Here I will sketch some ideas...
 
+\subsection{Improving the Efficiency of Reversible Jump}
+Instead of parameterising by $N$ and the positions and fluxes, what if we have
+$3N_{\rm max}$ latent variables $\theta$ that always exist, and transform these
+into
+positions and fluxes by a transformation $f$:
+\begin{eqnarray}
+\{\mathbf{x}, \mathbf{y}, \mathbf{f}\} &=& f(\theta)
+\end{eqnarray}
+The transformation can be parameterised by various parameters of its own, such
+that a known fraction of the fluxes end up being nonzero, etc. This could have
+various advantages, most notably: when new stars are added, they are added with
+low fluxes. It also turns the variable dimension problem into a fixed dimension
+one, so emcee, MultiNest or similar will now work, although the multimodality problem will
+still exist.
+
 
 \begin{thebibliography}{99}
 \bibitem[\protect\citeauthoryear{Brewer, P{\'a}rtay, 

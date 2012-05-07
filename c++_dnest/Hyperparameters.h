@@ -8,7 +8,7 @@
 */
 
 #include <vector>
-#include "Star.h"
+#include <iostream>
 
 class Hyperparameters
 {
@@ -18,25 +18,21 @@ class Hyperparameters
 	public:
 
 		/* Stuff that derived classes must implement */
+
+		// Generate hyperparameters from the prior
 		virtual void fromPrior() = 0;
 
-		virtual double perturb1(const std::vector<Star>& stars) = 0; // Keep stars fixed
-		virtual	double perturb2(std::vector<Star>& stars) = 0; // Take stars along for the ride
+		// Metropolis-Hastings proposal
+		virtual double perturb() = 0;
 
-		// Generate a star from the prior
-		// given the hyperparameters
-		virtual Star generateStar() const = 0;
+		/* Transform U(0, 1) latent variables into fluxes */
+		virtual void transform(double u) const = 0;
 
-		// Scale should be not much bigger than 1
-		// Typically it is my pow(10., 1.5 - 6.*randomU()) thing
-		virtual double perturbPosition(Star& star, double scale) const = 0;
-		virtual double perturbFlux(Star& star, double scale) const = 0;
+		/* Transform U(0, 1) latent variables into positions */
+		virtual void transform(double u_x, double u_y) const = 0;
 
-		// Evaluate the probability density
-		// for a star given the hyperparameters
-		virtual double _logp(const Star& star) const = 0;
-		double logp(const std::vector<Star>& stars) const;
-
+		/* Print the hyperparameters */
+		virtual void print(std::ostream& out) const = 0;
 };
 
 #endif

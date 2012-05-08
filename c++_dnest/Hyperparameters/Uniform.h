@@ -1,5 +1,5 @@
-#ifndef _Ignorance_
-#define _Ignorance_
+#ifndef _Uniform_
+#define _Uniform_
 
 #include "../Hyperparameters.h"
 #include <ostream>
@@ -7,21 +7,18 @@
 /*
 * Stars can be anywhere
 */
-class Ignorance:public Hyperparameters
+class Uniform:public Hyperparameters
 {
 	private:
-		// Look ma, no parameters!
+		double mu; // Mean flux
 
-		// Well, some...
-		static const double minFlux, maxFlux;
-		static const double logMinFlux, logMaxFlux;
-
+		double xMin, xMax, yMin, yMax;
+		static double minMu, maxMu;
 
 	public:
 
 		/* Implement undefined methods */
 		void fromPrior();
-
 		double perturb1(const std::vector<Star>& stars);
 		double perturb2(std::vector<Star>& stars); // Take stars along for the ride
 
@@ -35,7 +32,7 @@ class Ignorance:public Hyperparameters
 		// for a star given the hyperparameters
 		double _logp(const Star& star) const;
 
-		friend std::ostream& operator << (std::ostream& out, const Ignorance& i);
+		friend std::ostream& operator << (std::ostream& out, const Uniform& i);
 
 };
 

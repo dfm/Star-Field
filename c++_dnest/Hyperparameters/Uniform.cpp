@@ -6,12 +6,15 @@
 using namespace std;
 using namespace DNest;
 
+const double Uniform::logMinOnFraction = log(1E-3);
+const double Uniform::logMaxOnFraction = log(1.);
 const double Uniform::logMinMu = log(1E-3);
 const double Uniform::logMaxMu = log(1E3);
 
 void Uniform::fromPrior()
 {
-	onFraction = randomU();
+	onFraction = exp(logMinOnFraction +
+			(logMaxOnFraction - logMinOnFraction)*randomU());
 	mu = exp(logMinMu + (logMaxMu - logMinMu)*randomU());
 }
 
@@ -22,14 +25,19 @@ double Uniform::perturb()
 	if(which == 0)
 	{
 		mu = log(mu);
-		mu += pow(10., 1.5 - 6.*randomU())*randn();
+		mu += (logMaxMu - logMinMu)
+			*pow(10., 1.5 - 6.*randomU())*randn();
 		mu = mod(mu - logMinMu, logMaxMu - logMinMu) + logMinMu;
 		mu = exp(mu);
 	}
 	else
 	{
-		onFraction += pow(10., 1.5 - 6*randomU())*randn();
-		onFraction = mod(onFraction, 1.);
+		onFraction = log(onFraction);
+		onFraction += (logMaxOnFraction - logMinOnFraction)
+				*pow(10., 1.5 - 6*randomU())*randn();
+		onFraction = mod(onFraction - logMinOnFraction,
+			logMaxOnFraction - logMinOnFraction) + logMinOnFraction;
+		onFraction = exp(onFraction);
 	}
 
 	return 0.;

@@ -10,6 +10,7 @@
 class Uniform:public Hyperparameters
 {
 	private:
+		static const double logMinOnFraction, logMaxOnFraction;
 		static const double logMinMu, logMaxMu;
 
 		double onFraction; // Fraction of stars that are on

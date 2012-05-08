@@ -194,6 +194,12 @@ void StarFieldModel<HyperType>::print(ostream& out) const
 {
 	out<<staleness<<' ';
 	hyperparameters.print(out); out<<' ';
+	for(int i=0; i<maxNumStars; i++)
+		out<<stars[i].x<<' ';
+	for(int i=0; i<maxNumStars; i++)
+		out<<stars[i].y<<' ';
+	for(int i=0; i<maxNumStars; i++)
+		out<<stars[i].flux<<' ';
 	for(int i=0; i<Data::get_data().get_ni(); i++)
 		for(int j=0; j<Data::get_data().get_nj(); j++)
 			out<<mockImage(i, j)<<' ';

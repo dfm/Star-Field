@@ -16,13 +16,13 @@ void Uniform::fromPrior()
 	if(!Data::get_data().isLoaded())
 		cerr<<"WARNING: Data not loaded."<<endl;
 
-	double xMin = Data::get_data().get_xMin()
+	xMin = Data::get_data().get_xMin()
 			- 0.1*Data::get_data().get_xRange();
-	double xMax = Data::get_data().get_xMax()
+	xMax = Data::get_data().get_xMax()
 			+ 0.1*Data::get_data().get_xRange();
-	double yMin = Data::get_data().get_yMin()
+	yMin = Data::get_data().get_yMin()
 			- 0.1*Data::get_data().get_yRange();
-	double yMax = Data::get_data().get_yMax()
+	yMax = Data::get_data().get_yMax()
 			+ 0.1*Data::get_data().get_yRange();
 
 	mu = exp(log(minMu) + log(maxMu/minMu)*randomU());
@@ -90,7 +90,7 @@ double Uniform::perturbFlux(Star& star, double scale) const
 // for a star given the hyperparameters
 double Uniform::_logp(const Star& star) const
 {
-	return 0.;
+	return -log(mu) - star.flux/mu;
 }
 
 ostream& operator << (ostream& out, const Uniform& i)

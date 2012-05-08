@@ -35,7 +35,7 @@ void runLegacy(const Model* exampleModel, const string& levelsFile);	// Run lega
 
 int main(int argc, char** argv)
 {
-	Data::load_data("data_100stars.txt");
+	Data::load_data("SimulatedData/sparse.txt");
 
 	// What kind of model will we be running?
 	StarFieldModel<Uniform> exampleModel;

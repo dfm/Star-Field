@@ -5,7 +5,7 @@ maxNumStars = 200
 numHyperparams = 3 # Number of hyperparameters + 1 (staleness)
 
 sample = atleast_2d(loadtxt('sample.txt'))
-data = loadtxt('data_100stars.txt')
+data = loadtxt('SimulatedData/sparse.txt')
 
 params =   sample[:, 0:numHyperparams]
 catalogs = sample[:, numHyperparams:numHyperparams+3*maxNumStars]
@@ -23,13 +23,15 @@ for i in xrange(0, sample.shape[0]):
 	title('Data')
 	gca().set_xticks([])
 	gca().set_yticks([])
-	subplot(2,2,2)
-	img = histogram2d(xStars[i, :], yStars[i, :], weights=fStars[i, :],\
-				bins=256)[0].T[::-1]
-	imshow(img)
+	ax = subplot(2,2,2)
+	which = nonzero(fStars[i, :] > 0)[0]
+	plot(xStars[i,which], yStars[i,which], 'k.', markersize=3)
+	xlim([-1., 1.])
+	ylim([-1., 1.])
+	ax.set_aspect('equal')
 	gca().set_xticks([])
 	gca().set_yticks([])
-	title('Perfect Image ' + str(i+1))
+	title('Catalog ' + str(i+1))
 	subplot(2,2,3)
 	imshow(mock)
 	gca().set_xticks([])

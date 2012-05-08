@@ -46,12 +46,13 @@ double Uniform::perturb()
 void Uniform::transform(double u_x, double u_y, double u_f,
 				double& x, double& y, double& f) const
 {
+	double t = 1. - onFraction;
 	// Compute flux
-	if(u_f < onFraction)
+	if(u_f < t)
 		f = 0.;
 	else
 	{
-		double U = (u_f - onFraction)/(1. - onFraction); // U(0, 1)
+		double U = (u_f - t)/onFraction; // U(0, 1)
 		f = -mu*log(U);
 	}
 

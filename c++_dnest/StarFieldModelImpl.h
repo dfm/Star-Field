@@ -93,14 +93,8 @@ void StarFieldModel<HyperType>::fromPrior()
 template<class HyperType>
 void StarFieldModel<HyperType>::generateStars()
 {
-	int count = 0;
 	for(int i=0; i<maxNumStars; i++)
-	{
 		stars[i] = hyperparameters.generateStar(u_x[i], u_y[i], u_f[i]);
-		if(stars[i].flux > 0.)
-			count++;
-	}
-	cout<<count<<endl;
 }
 
 template<class HyperType>
@@ -108,7 +102,7 @@ double StarFieldModel<HyperType>::perturb()
 {
 	double logH = 0.;
 
-	if(randomU() < 0.9)
+	if(randomU() < 0.5)
 		logH = perturbHelper1();
 	else
 		logH = perturbHelper2();

@@ -8,23 +8,26 @@ def transform(u, frac_on=0.5, mu=1.0):
 	into an actual distribution of fluxes
 	"""
 	f = np.zeros(u.shape)
-	which = np.nonzero(u > frac_on)[0]
-	f[which] = -mu*np.log((u[which] - frac_on)/(1. - frac_on))
+	t = 1. - frac_on
+	which = np.nonzero(u > t)[0]
+	f[which] = -mu*np.log((u[which] - t)/frac_on)
 	return f
 
 if __name__ == '__main__':
 	"""
 	Simple main for testing
 	"""
-	N = 10
+	N = 1000
 	u = rng.rand(N)
-	f = transform(u)
+	f = transform(u, frac_on=0.1, mu=5.)
 
 	# Make some uniform positions
 	x = rng.rand(N)
 	y = rng.rand(N)
-	img = np.histogram2d(x, y, weights=f, bins=100)[0]
-	plt.imshow(img)
+	#img = np.histogram2d(x, y, weights=f, bins=100)[0]
+	#plt.imshow(img)
+	plt.hist(f[np.nonzero(f > 0.)[0]], 20)
+	print(f[np.nonzero(f > 0.)[0]].mean())
 	plt.show()
 
 

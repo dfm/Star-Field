@@ -170,6 +170,8 @@ double StarFieldModel<HyperType>::perturbHelper2()
 template<class HyperType>
 double StarFieldModel<HyperType>::perturbHelper3()
 {
+	double logH = 0.;
+
 	// Add or remove stars
 	int delta = (int)round(maxNumStars*pow(10.0, 1.5 - 6.0*randomU())*randn()); // Change in number of stars
 	int newNumStars = (int)stars.size() + delta;
@@ -185,11 +187,13 @@ double StarFieldModel<HyperType>::perturbHelper3()
 		if((int)stars.size() + delta > maxNumStars)
 			return 0;
 
+		logH -= -log((double)stars.size() + 1);
 		for(int i=0; i<delta; i++)
 		{
 			stars.push_back(hyperparameters.generateStar());
 			stars.back().incrementImage(mockImage, psf);
 		}
+		logH += -log((double)stars.size() + 1);
 	}
 	else
 	{
@@ -197,16 +201,18 @@ double StarFieldModel<HyperType>::perturbHelper3()
 		if((int)stars.size() + delta < 0)
 			return 0;
 
+		logH -= -log((double)stars.size() + 1);
 		for(int i=0; i<-delta; i++)
 		{
 			int which = randInt(stars.size());
 			stars[which].decrementImage(mockImage, psf);
 			stars.erase(stars.begin() + which);
 		}
+		logH += -log((double)stars.size() + 1);
 	}
 	staleness++;
 
-	return 0;
+	return logH;
 }
 
 template<class HyperType>

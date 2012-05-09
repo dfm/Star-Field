@@ -8,7 +8,7 @@ class PSF
 		static const double edge; // How many sigmas out to set PSF to zero
 
 	private:
-		double sigma1, sigma2;
+		double sigma1, sigma2, pr1, pr2; // pr = 1/sigma^2
 		double weight;
 
 		double preFactor1, preFactor2;

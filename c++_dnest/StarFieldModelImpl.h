@@ -102,7 +102,7 @@ double StarFieldModel<HyperType>::perturb()
 {
 	double logH = 0.;
 
-	if(randomU() < 0.5)
+	if(randomU() < 0.9)
 		logH = perturbHelper1();
 	else
 		logH = perturbHelper2();

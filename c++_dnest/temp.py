@@ -14,6 +14,10 @@ yStars = catalogs[:, maxNumStars:2*maxNumStars]
 fStars = catalogs[:, 2*maxNumStars:]
 images =   sample[:, numHyperparams+3*maxNumStars:]
 
+xCatalog = np.array([])
+yCatalog = np.array([])
+fCatalog = np.array([])
+
 ion()
 hold(False)
 for i in xrange(0, sample.shape[0]):
@@ -43,6 +47,16 @@ for i in xrange(0, sample.shape[0]):
 	gca().set_yticks([])
 	title('Residuals')
 	draw()
+
+	xCatalog = hstack([xCatalog, xStars[i,which]])
+	yCatalog = hstack([yCatalog, yStars[i,which]])
+	fCatalog = hstack([fCatalog, fStars[i,which]])
+
+	savefig('Frames/' + '%0.3d'%(i+1) + '.png', bbox_inches='tight')
+	print('Frames/' + '%0.3d'%(i+1) + '.png')
 ioff()
 show()
 
+img = histogram2d(xCatalog, yCatalog, bins=100, weights=fCatalog)[0].T[::-1]
+imshow(img)
+show()

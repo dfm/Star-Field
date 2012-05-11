@@ -1,7 +1,10 @@
 from pylab import *
-import time
+import time, os
 
 saveFrames = False # For making movies
+if saveFrames:
+	os.system('rm Frames/*.png')
+
 maxNumStars = 200
 numHyperparams = 3 # Number of hyperparameters + 1 (staleness)
 

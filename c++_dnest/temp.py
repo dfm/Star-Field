@@ -1,6 +1,7 @@
 from pylab import *
 import time
 
+saveFrames = False # For making movies
 maxNumStars = 200
 numHyperparams = 3 # Number of hyperparameters + 1 (staleness)
 
@@ -29,7 +30,7 @@ for i in xrange(0, sample.shape[0]):
 	gca().set_yticks([])
 	ax = subplot(2,2,2)
 	which = nonzero(fStars[i, :] > 0)[0]
-	plot(xStars[i,which], yStars[i,which], 'k.', markersize=3)
+	plot(xStars[i,which], yStars[i,which], 'k.', markersize=1)
 	xlim([-1., 1.])
 	ylim([-1., 1.])
 	ax.set_aspect('equal')
@@ -52,8 +53,9 @@ for i in xrange(0, sample.shape[0]):
 	yCatalog = hstack([yCatalog, yStars[i,which]])
 	fCatalog = hstack([fCatalog, fStars[i,which]])
 
-	savefig('Frames/' + '%0.3d'%(i+1) + '.png', bbox_inches='tight')
-	print('Frames/' + '%0.3d'%(i+1) + '.png')
+	if saveFrames:
+		savefig('Frames/' + '%0.4d'%(i+1) + '.png', bbox_inches='tight')
+		print('Frames/' + '%0.4d'%(i+1) + '.png')
 ioff()
 show()
 

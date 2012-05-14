@@ -1,101 +1,72 @@
 #include "Uniform.h"
-#include "RandomNumberGenerator.h"
-#include "Utils.h"
-#include "../Data.h"
+#include <Utils.h>
+#include <RandomNumberGenerator.h>
 #include <cmath>
-#include <iostream>
 
 using namespace std;
 using namespace DNest;
 
-double Uniform::minMu = 1E-3;
-double Uniform::maxMu = 1E3;
+const double Uniform::logMinOnFraction = log(1E-3);
+const double Uniform::logMaxOnFraction = log(1.);
+const double Uniform::logMinMu = log(1E-3);
+const double Uniform::logMaxMu = log(1E3);
 
 void Uniform::fromPrior()
 {
-	if(!Data::get_data().isLoaded())
-		cerr<<"WARNING: Data not loaded."<<endl;
-
-	xMin = Data::get_data().get_xMin()
-			- 0.1*Data::get_data().get_xRange();
-	xMax = Data::get_data().get_xMax()
-			+ 0.1*Data::get_data().get_xRange();
-	yMin = Data::get_data().get_yMin()
-			- 0.1*Data::get_data().get_yRange();
-	yMax = Data::get_data().get_yMax()
-			+ 0.1*Data::get_data().get_yRange();
-
-	mu = exp(log(minMu) + log(maxMu/minMu)*randomU());
+	onFraction = exp(logMinOnFraction +
+			(logMaxOnFraction - logMinOnFraction)*randomU());
+	mu = exp(logMinMu + (logMaxMu - logMinMu)*randomU());
 }
 
-double Uniform::perturb1(const vector<Star>& stars)
+double Uniform::perturb()
 {
-	double logH = -logp(stars);
-	double scale = pow(10., 1.5 - 6.*randomU());
+	int which = randInt(2);
 
-	mu = log(mu);
-	mu += log(maxMu/minMu)*scale*randn();
-	mu = mod(mu - log(minMu), log(maxMu/minMu)) + log(minMu);
-	mu = exp(mu);
-
-	logH += logp(stars);
-	return logH;
-}
-
-double Uniform::perturb2(std::vector<Star>& stars)
-{
-	double scale = pow(10., 1.5 - 6.*randomU());
-
-	double ratio = 1.0/mu;
-	mu = log(mu);
-	mu += log(maxMu/minMu)*scale*randn();
-	mu = mod(mu - log(minMu), log(maxMu/minMu)) + log(minMu);
-	mu = exp(mu);
-	ratio *= mu;
-	for(size_t i=0; i<stars.size(); i++)
-		stars[i].flux *= ratio;
+	if(which == 0)
+	{
+		mu = log(mu);
+		mu += (logMaxMu - logMinMu)
+			*pow(10., 1.5 - 6.*randomU())*randn();
+		mu = mod(mu - logMinMu, logMaxMu - logMinMu) + logMinMu;
+		mu = exp(mu);
+	}
+	else
+	{
+		onFraction = log(onFraction);
+		onFraction += (logMaxOnFraction - logMinOnFraction)
+				*pow(10., 1.5 - 6*randomU())*randn();
+		onFraction = mod(onFraction - logMinOnFraction,
+			logMaxOnFraction - logMinOnFraction) + logMinOnFraction;
+		onFraction = exp(onFraction);
+	}
 
 	return 0.;
 }
 
-// Generate a star from the prior
-// given the hyperparameters
-Star Uniform::generateStar() const
+void Uniform::transform(double u_x, double u_y, double u_f,
+				double& x, double& y, double& f) const
 {
-	double x = xMin + (xMax - xMin)*randomU();
-	double y = yMin + (yMax - yMin)*randomU();
-	double flux = -mu*log(randomU());
-	return Star(x, y, flux);
+	double t = 1. - onFraction;
+	// Compute flux
+	if(u_f < t)
+		f = 0.;
+	else
+	{
+		double U = (u_f - t)/onFraction; // U(0, 1)
+		f = -mu*log(U);
+	}
+
+	// Compute position
+	x = (Data::get_data().get_xMin() - 0.1*Data::get_data().get_xRange())
+		 + 1.2*Data::get_data().get_xRange()*u_x;
+	y = (Data::get_data().get_yMin() - 0.1*Data::get_data().get_yRange())
+		 + 1.2*Data::get_data().get_yRange()*u_y;
 }
 
-double Uniform::perturbPosition(Star& star, double scale) const
+void Uniform::print(ostream& out) const
 {
-	star.x += (xMax - xMin)*scale*randn();
-	star.x = mod(star.x - xMin, xMax - xMin) + xMin;
-	star.y += (yMax - yMin)*scale*randn();
-	star.y = mod(star.y - yMin, yMax - yMin) + yMin;
-	return 0.;
+	out<<onFraction<<' '<<mu;
 }
 
-double Uniform::perturbFlux(Star& star, double scale) const
-{
-	star.flux = 1. - exp(-star.flux/mu);
-	star.flux += scale*randn();
-	star.flux = mod(star.flux, 1.0);
-	star.flux = -mu*log(1. - star.flux);
-	return 0.;
-}
 
-// Evaluate the probability density
-// for a star given the hyperparameters
-double Uniform::_logp(const Star& star) const
-{
-	return -log(mu) - star.flux/mu;
-}
-
-ostream& operator << (ostream& out, const Uniform& i)
-{
-	out<<i.mu;
-	return out;
-}
 

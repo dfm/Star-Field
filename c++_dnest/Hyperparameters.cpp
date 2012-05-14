@@ -1,12 +1,9 @@
 #include "Hyperparameters.h"
 
-using namespace std;
-
-double Hyperparameters::logp(const vector<Star>& stars) const
+Star Hyperparameters::generateStar(double u_x, double u_y, double u_f) const
 {
-	double result = 0.0;
-	for(size_t i=0; i<stars.size(); i++)
-		result += _logp(stars[i]);
-	return result;
+	double x, y, f;
+	transform(u_x, u_y, u_f, x, y, f);
+	return Star(x, y, f);
 }
 

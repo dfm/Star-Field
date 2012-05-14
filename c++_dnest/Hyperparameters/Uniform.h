@@ -5,35 +5,33 @@
 #include <ostream>
 
 /*
-* Stars can be anywhere
+* Stars can be anywhere, but their fluxes are tied together
 */
 class Uniform:public Hyperparameters
 {
 	private:
-		double mu; // Mean flux
+		static const double logMinOnFraction, logMaxOnFraction;
+		static const double logMinMu, logMaxMu;
 
-		double xMin, xMax, yMin, yMax;
-		static double minMu, maxMu;
+		double onFraction; // Fraction of stars that are on
+		double mu; // Mean flux of stars
 
 	public:
-
-		/* Implement undefined methods */
+		// Generate hyperparameters from the prior
 		void fromPrior();
-		double perturb1(const std::vector<Star>& stars);
-		double perturb2(std::vector<Star>& stars); // Take stars along for the ride
 
-		// Generate a star from the prior
-		// given the hyperparameters
-		Star generateStar() const;
-		double perturbPosition(Star& star, double scale) const;
-		double perturbFlux(Star& star, double scale) const;
+		// Metropolis-Hastings proposal
+		double perturb();
 
-		// Evaluate the probability density
-		// for a star given the hyperparameters
-		double _logp(const Star& star) const;
+		/*
+		* Transform U(0, 1) latent variables into positions 
+		* and fluxes
+		*/
+		void transform(double u_x, double u_y, double u_f,
+				double& x, double& y, double& f) const;
 
-		friend std::ostream& operator << (std::ostream& out, const Uniform& i);
-
+		/* Print the hyperparameters */
+		void print(std::ostream& out) const;
 };
 
 #endif

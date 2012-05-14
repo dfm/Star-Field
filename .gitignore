@@ -11,4 +11,12 @@
 *.o
 main
 libstarfield.a
+*.orig
+logfile
+posterior_sample.txt
+Runs/
+sample.txt
+weights.txt
+sample_info.txt
+levels.txt
 

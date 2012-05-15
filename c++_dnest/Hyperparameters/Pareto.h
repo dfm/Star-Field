@@ -17,8 +17,6 @@ class Pareto:public Hyperparameters
 		double fMin;  // Minimum flux of stars
 		double alpha; // Slope
 
-		int last;
-
 	public:
 		// Generate hyperparameters from the prior
 		void fromPrior();

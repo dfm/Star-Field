@@ -16,7 +16,7 @@ void Pareto::fromPrior()
 	onFraction = exp(logMinOnFraction +
 			(logMaxOnFraction - logMinOnFraction)*randomU());
 	fMin = exp(logMinFMin + (logMaxFMin - logMinFMin)*randomU());
-	alpha = 5*randomU();
+	alpha = 1. + 4*randomU();
 }
 
 double Pareto::perturb()
@@ -30,7 +30,6 @@ double Pareto::perturb()
 			*pow(10., 1.5 - 6.*randomU())*randn();
 		fMin = mod(fMin - logMinFMin, logMaxFMin - logMinFMin) + logMinFMin;
 		fMin = exp(fMin);
-		last = 0;
 	}
 	else if(which == 1)
 	{
@@ -40,13 +39,11 @@ double Pareto::perturb()
 		onFraction = mod(onFraction - logMinOnFraction,
 			logMaxOnFraction - logMinOnFraction) + logMinOnFraction;
 		onFraction = exp(onFraction);
-		last = 1;
 	}
 	else
 	{
-		alpha += 5*pow(10., 1.5 - 6.*randomU())*randn();
-		alpha = mod(alpha, 5.);
-		last = 2;
+		alpha += 4*pow(10., 1.5 - 6.*randomU())*randn();
+		alpha = mod(alpha - 1., 4.) + 1.;
 	}
 
 	return 0.;

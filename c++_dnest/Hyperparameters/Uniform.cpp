@@ -52,8 +52,8 @@ void Uniform::transform(double u_x, double u_y, double u_f,
 		f = 0.;
 	else
 	{
-		double U = 1. - (u_f - t)/onFraction; // U(0, 1)
-		f = -mu*log(U);
+		double U = (u_f - t)/onFraction; // U(0, 1)
+		f = -mu*log(1. - U); // Must use CDF not 1-CDF
 	}
 
 	// Compute position

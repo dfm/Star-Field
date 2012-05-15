@@ -10,13 +10,17 @@ def transform(u, frac_on=0.5, mu=1.0):
 	f = np.zeros(u.shape)
 	t = 1. - frac_on
 	which = np.nonzero(u > t)[0]
-	f[which] = -mu*np.log((u[which] - t)/frac_on)
+	f[which] = -mu*np.log(1. - (u[which] - t)/frac_on)
 	return f
 
 if __name__ == '__main__':
 	"""
 	Simple main for testing
 	"""
+#	u = np.linspace(0, 1, 1001)
+#	plt.plot(u, transform(u, frac_on = 0.75))
+#	plt.show()
+
 	N = 1000
 	u = rng.rand(N)
 	f = transform(u, frac_on=0.1, mu=5.)

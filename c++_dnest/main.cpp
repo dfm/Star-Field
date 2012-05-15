@@ -19,7 +19,7 @@
 
 #include <iostream>
 #include "StarFieldModel.h"
-#include "Hyperparameters/Uniform.h"
+#include "Hyperparameters/Pareto.h"
 #include "MultiSampler.h"
 #include "RandomNumberGenerator.h"
 #include "DNestSampler.h"
@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 	Data::load_data("SimulatedData/sparse.txt");
 
 	// What kind of model will we be running?
-	StarFieldModel<Uniform> exampleModel;
+	StarFieldModel<Pareto> exampleModel;
 
 	// Which kind of sampler, and should we pre-load level structure?
 	bool legacy = false;

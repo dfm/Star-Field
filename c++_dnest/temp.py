@@ -6,7 +6,7 @@ if saveFrames:
 	os.system('rm Frames/*.png')
 
 maxNumStars = 200
-numHyperparams = 3 # Number of hyperparameters + 1 (staleness)
+numHyperparams = 4 # Number of hyperparameters + 1 (staleness)
 
 sample = atleast_2d(loadtxt('sample.txt'))
 data = loadtxt('SimulatedData/sparse.txt')
@@ -52,6 +52,7 @@ for i in xrange(0, sample.shape[0]):
 	title('Residuals')
 	draw()
 
+	print(i+1, mock.min())
 	xCatalog = hstack([xCatalog, xStars[i,which]])
 	yCatalog = hstack([yCatalog, yStars[i,which]])
 	fCatalog = hstack([fCatalog, fStars[i,which]])

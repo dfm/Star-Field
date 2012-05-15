@@ -5,7 +5,7 @@
 30000	# new level interval
 30000	# regularisation (C in the paper)
 100000	# save interval
-600	# maximum number of levels
+200	# maximum number of levels
 1	# Backtracking scale length (lambda in the paper)
 100	# Strength of effect to force histogram to equal push. 0-10 is best. (beta in the paper)
 1	# Delete particles

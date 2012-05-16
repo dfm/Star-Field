@@ -15,9 +15,11 @@
 \author[1,2]{Brendon J. Brewer}
 \author[3]{David W. Hogg}
 \author[3]{Daniel Foreman-Mackey}
-\affil[1]{UCSB}
-\affil[2]{Auckland}
-\affil[3]{NYU}
+\affil[1]{\small Dept. of Physics, University of California, Santa Barbara, CA 93106, USA}
+\affil[2]{Department of Statistics, University of Auckland, Private Bag 92019, Auckland, New Zealand
+}
+\affil[3]{Center for Cosmology and Particle Physics, Department of Physics, New York University, 4 Washington Place, New York, NY, 10003, USA
+}
 
 \date{{\bf Title and author order subject to change} \\
 {\bf Also nag me if you prefer American English}}
@@ -53,6 +55,8 @@ others. Finally, the positions and fluxes of the stars come independently from
 a common distribution. If we knew the spatial distribution and the luminosity
 function of the stars, then the location and flux of a particular star would not
 tell us anything about the location and flux of another star.
+
+\citep{massinf}
 
 \section{Particular Models}
 A model for the spatial distribution corresponds to a choice of functional forms
@@ -109,6 +113,21 @@ Nested Sampling is good because it is invariant under monotonic transformations
 of the likelihood function. i.e. the exploration only depends on things like
 whether one point is better than another, and not on how much better it is.
 
+\subsection{Improving the Efficiency of Reversible Jump}
+Instead of parameterising by $N$ and the positions and fluxes, what if we have
+$3N_{\rm max}$ latent variables $\theta$ that always exist, and transform these
+into
+positions and fluxes by a transformation $f$:
+\begin{eqnarray}
+\{\mathbf{x}, \mathbf{y}, \mathbf{f}\} &=& f(\theta)
+\end{eqnarray}
+The transformation can be parameterised by various parameters of its own, such
+that a known fraction of the fluxes end up being nonzero, etc. This could have
+various advantages, most notably: when new stars are added, they are added with
+low fluxes. It also turns the variable dimension problem into a fixed dimension
+one, so emcee, MultiNest or similar will now work, although the multimodality problem will
+still exist.
+
 \subsubsection{Proposal Distributions}
 
 \begin{table}
@@ -140,29 +159,16 @@ are of order $10^{-6}$ times the prior width.\label{proposals}}
 
 See Table~\ref{proposals} for a list of current proposal distributions.
 
-\subsection{Future Possibilities}
-{\bf Hogg}: {\it I think this problem is important enough and general enough
-that we should spend some time working on some ideas there.  If we can sample
-over image explanations, our powers in astronomy will be awesome
-beyond our wildest imaginings.}
+%\subsection{Future Possibilities}
+%{\bf Hogg}: {\it I think this problem is important enough and general enough
+%that we should spend some time working on some ideas there.  If we can sample
+%over image explanations, our powers in astronomy will be awesome
+%beyond our wildest imaginings.}
 
-\subsection{Genetic Moves}
-Here I will sketch some ideas...
+%\subsection{Genetic Moves}
+%Here I will sketch some ideas...
 
-\subsection{Improving the Efficiency of Reversible Jump}
-Instead of parameterising by $N$ and the positions and fluxes, what if we have
-$3N_{\rm max}$ latent variables $\theta$ that always exist, and transform these
-into
-positions and fluxes by a transformation $f$:
-\begin{eqnarray}
-\{\mathbf{x}, \mathbf{y}, \mathbf{f}\} &=& f(\theta)
-\end{eqnarray}
-The transformation can be parameterised by various parameters of its own, such
-that a known fraction of the fluxes end up being nonzero, etc. This could have
-various advantages, most notably: when new stars are added, they are added with
-low fluxes. It also turns the variable dimension problem into a fixed dimension
-one, so emcee, MultiNest or similar will now work, although the multimodality problem will
-still exist.
+
 
 
 \begin{thebibliography}{99}
@@ -176,6 +182,9 @@ Cs{\'a}nyi G., 2011, Statistics and Computing, 21, 4, 649-656. arXiv:0912.2380
 \bibitem[Mackay(2003)]{mackay} Mackay, D.~J.~C., 2003, Information Theory,
 Inference and Learning Algorithms, Cambridge University Press, UK.
 
+\bibitem[\protect\citeauthoryear{Skilling}{1998}]{massinf} 
+Skilling J., 1998, Massive Inference and Maximum Entropy, in Maximum Entropy 
+and Bayesian Methods, Kluwer Academic Publishers, Dordrecht/Boston/London p.14
 \end{thebibliography}
 
 \end{document}

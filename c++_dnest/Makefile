@@ -1,4 +1,4 @@
-OPTIONS = -O2 -Wall -Wextra -pedantic -ansi -pthread
+OPTIONS = -O2 -Wall -Wextra -pedantic -ansi -pthread -DNDEBUG
 LIBS = -lgsl -lgslcblas -ldnest -pthread -lboost_thread -lboost_program_options
 
 default:

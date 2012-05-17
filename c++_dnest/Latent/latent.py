@@ -11,8 +11,8 @@ def transform(u, frac_on=0.5, mu=1.0):
 	t = 1. - frac_on
 	which = np.nonzero(u > t)[0]
 	U = (u[which] - t)/frac_on
-	#f[which] = -mu*np.log(1. - U) # exponential
-	f[which] = 1.*(1. - U)**(-1./mu) # Pareto
+	f[which] = -mu*np.log(1. - U) # exponential
+	#f[which] = 1.*(1. - U)**(-1./mu) # Pareto
 	return f
 
 if __name__ == '__main__':
@@ -20,7 +20,10 @@ if __name__ == '__main__':
 	Simple main for testing
 	"""
 	u = np.linspace(0, 1, 1001)
-	plt.plot(u, transform(u, frac_on = 0.75, mu=2.))
+	plt.plot(u, transform(u, frac_on = 0.75, mu=1.), linewidth=2)
+	plt.title('Transformation', fontsize=14)
+	plt.xlabel('Latent Uniform Variable', fontsize=14)
+	plt.ylabel('Flux of Star', fontsize=14)
 	plt.show()
 
 	N = 1000

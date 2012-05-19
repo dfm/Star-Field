@@ -1,5 +1,5 @@
-OPTIONS = -O2 -Wall -Wextra -pedantic -ansi -pthread -DNDEBUG
-LIBS = -lgsl -lgslcblas -ldnest -pthread -lboost_thread -lboost_program_options
+OPTIONS = -O2 -Wall -Wextra -pedantic -ansi -DNDEBUG
+LIBS = -lgsl -lgslcblas -ldnest3
 
 default:
 	g++ $(OPTIONS) -c *.cpp Hyperparameters/*.cpp

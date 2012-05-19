@@ -4,7 +4,7 @@
 #include <cmath>
 
 using namespace std;
-using namespace DNest;
+using namespace DNest3;
 
 const double Uniform::logMinOnFraction = log(1E-3);
 const double Uniform::logMaxOnFraction = log(1.);

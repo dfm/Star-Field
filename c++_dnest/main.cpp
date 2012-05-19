@@ -21,13 +21,14 @@
 #include "Start.h"
 #include "Data.h"
 #include "StarFieldModel.h"
+#include "Hyperparameters/Pareto.h"
 
 using namespace std;
 
 int main(int argc, char** argv)
 {
-	Data::get_data().load("SimulatedData/sparse.txt");
-	DNest3::start<StarFieldModel>(argc, argv);
+	Data::load_data("SimulatedData/sparse.txt");
+	DNest3::start< StarFieldModel<Pareto> >(argc, argv);
 	return 0;
 }
 

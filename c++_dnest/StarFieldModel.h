@@ -54,20 +54,16 @@ class StarFieldModel:public DNest3::Model
 		StarFieldModel();
 
 		// Generate the point from the prior
-		virtual void fromPrior() = 0;
+		void fromPrior();
 
 		// Metropolis-Hastings proposals
-		virtual double perturb() = 0;
+		double perturb();
 
 		// Likelihood function
-		virtual double logLikelihood() const = 0;
+		double logLikelihood() const;
 
 		// Print to stream
-		virtual void print(std::ostream& out) const = 0;
-
-		// Optional: return string with column information
-		// This will become the header for sample.txt
-		virtual std::string description() const;
+		void print(std::ostream& out) const;
 };
 
 #include "StarFieldModelImpl.h"

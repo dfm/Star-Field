@@ -42,7 +42,7 @@ StarFieldModel<HyperType>::StarFieldModel()
 ,staleness(0)
 {
 	if(!Data::get_data().isLoaded())
-		cerr<<"WARNING: Data not loaded."<<endl;
+		std::cerr<<"WARNING: Data not loaded."<<std::endl;
 	psf.set(1.0*Data::get_data().get_dx(), 5.0*Data::get_data().get_dx(), 0.5);
 }
 
@@ -52,9 +52,9 @@ void StarFieldModel<HyperType>::fromPrior()
 	hyperparameters.fromPrior();
 	for(int i=0; i<maxNumStars; i++)
 	{
-		u_x[i] = randomU();
-		u_y[i] = randomU();
-		u_f[i] = randomU();
+		u_x[i] = DNest3::randomU();
+		u_y[i] = DNest3::randomU();
+		u_f[i] = DNest3::randomU();
 	}
 	generateStars();
 	calculateMockImage();
@@ -72,7 +72,7 @@ double StarFieldModel<HyperType>::perturb()
 {
 	double logH = 0.;
 
-	if(randomU() < 0.9)
+	if(DNest3::randomU() < 0.9)
 		logH = perturbHelper1();
 	else
 		logH = perturbHelper2();
@@ -86,18 +86,18 @@ double StarFieldModel<HyperType>::perturb()
 template<class HyperType>
 double StarFieldModel<HyperType>::perturbHelper1()
 {
-	double chance = pow(10., 0.5 - 4.*randomU());
-	double scale = pow(10., 1.5 - 6.*randomU());
-	int which = randInt(2);
+	double chance = pow(10., 0.5 - 4.*DNest3::randomU());
+	double scale = pow(10., 1.5 - 6.*DNest3::randomU());
+	int which = DNest3::randInt(2);
 	if(which == 0)
 	{
 		for(int i=0; i<maxNumStars; i++)
 		{
-			if(randomU() <= chance)
+			if(DNest3::randomU() <= chance)
 			{
 				stars[i].decrementImage(mockImage, psf);
-				u_x[i] = mod(u_x[i] + scale*randn(), 1.);
-				u_y[i] = mod(u_y[i] + scale*randn(), 1.);
+				u_x[i] = DNest3::mod(u_x[i] + scale*DNest3::randn(), 1.);
+				u_y[i] = DNest3::mod(u_y[i] + scale*DNest3::randn(), 1.);
 				stars[i] = hyperparameters.
 					generateStar(u_x[i], u_y[i], u_f[i]);
 				stars[i].incrementImage(mockImage, psf);
@@ -108,10 +108,10 @@ double StarFieldModel<HyperType>::perturbHelper1()
 	{
 		for(int i=0; i<maxNumStars; i++)
 		{
-			if(randomU() <= chance)
+			if(DNest3::randomU() <= chance)
 			{
 				stars[i].decrementImage(mockImage, psf);
-				u_f[i] = mod(u_f[i] + scale*randn(), 1.);
+				u_f[i] = DNest3::mod(u_f[i] + scale*DNest3::randn(), 1.);
 				stars[i] = hyperparameters.
 					generateStar(u_x[i], u_y[i], u_f[i]);
 				stars[i].incrementImage(mockImage, psf);
@@ -141,7 +141,7 @@ void StarFieldModel<HyperType>::calculateMockImage()
 }
 
 template<class HyperType>
-double StarFieldModel<HyperType>::calculateLogLikelihood() const
+double StarFieldModel<HyperType>::logLikelihood() const
 {
 	double logL = 0.;
 

@@ -30,7 +30,7 @@
 #include "Hyperparameters.h"
 
 template<class HyperType>
-class StarFieldModel:public DNest::Model
+class StarFieldModel:public DNest3::Model
 {
 	private:
 		static PSF psf;
@@ -52,16 +52,22 @@ class StarFieldModel:public DNest::Model
 
 	public:
 		StarFieldModel();
-		~StarFieldModel();
-		Model* factory() const;
-		Model* clone() const;
-		void copyFrom(const Model* other);
 
-		void fromPrior();
-		void calculateLogLikelihood();
-		double perturb();
-		double getValue();
-		void print(std::ostream& out) const;
+		// Generate the point from the prior
+		virtual void fromPrior() = 0;
+
+		// Metropolis-Hastings proposals
+		virtual double perturb() = 0;
+
+		// Likelihood function
+		virtual double logLikelihood() const = 0;
+
+		// Print to stream
+		virtual void print(std::ostream& out) const = 0;
+
+		// Optional: return string with column information
+		// This will become the header for sample.txt
+		virtual std::string description() const;
 };
 
 #include "StarFieldModelImpl.h"

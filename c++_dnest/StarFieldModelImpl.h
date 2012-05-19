@@ -22,9 +22,6 @@
 #include "RandomNumberGenerator.h"
 #include <cmath>
 
-using namespace std;
-using namespace DNest;
-
 template<class HyperType>
 const double StarFieldModel<HyperType>::noiseSigma = 30.;
 
@@ -50,30 +47,6 @@ StarFieldModel<HyperType>::StarFieldModel()
 }
 
 template<class HyperType>
-StarFieldModel<HyperType>::~StarFieldModel()
-{
-
-}
-
-template<class HyperType>
-Model* StarFieldModel<HyperType>::factory() const
-{
-	return new StarFieldModel<HyperType>;
-}
-
-template<class HyperType>
-Model* StarFieldModel<HyperType>::clone() const
-{
-	return new StarFieldModel<HyperType>(*this);
-}
-
-template<class HyperType>
-void StarFieldModel<HyperType>::copyFrom(const Model* other)
-{
-	*this = *((StarFieldModel<HyperType>*)other);
-}
-
-template<class HyperType>
 void StarFieldModel<HyperType>::fromPrior()
 {
 	hyperparameters.fromPrior();
@@ -85,9 +58,6 @@ void StarFieldModel<HyperType>::fromPrior()
 	}
 	generateStars();
 	calculateMockImage();
-
-	Model::fromPrior();
-	calculateLogLikelihood();
 }
 
 template<class HyperType>
@@ -110,8 +80,6 @@ double StarFieldModel<HyperType>::perturb()
 	if(staleness >= 1000)
 		calculateMockImage();
 
-	Model::perturb();
-	calculateLogLikelihood();
 	return logH;
 }
 
@@ -173,9 +141,9 @@ void StarFieldModel<HyperType>::calculateMockImage()
 }
 
 template<class HyperType>
-void StarFieldModel<HyperType>::calculateLogLikelihood()
+double StarFieldModel<HyperType>::calculateLogLikelihood() const
 {
-	logl.logl = 0.0;
+	double logL = 0.;
 
 	double var;
 	for(int i=0; i<Data::get_data().get_ni(); i++)
@@ -183,14 +151,16 @@ void StarFieldModel<HyperType>::calculateLogLikelihood()
 		{
 			var = pow(noiseSigma, 2)
 				+ pow(noiseCoeff*mockImage(i, j), 2);
-			logl.logl += -0.5*(2*M_PI*var) 
+			logL += -0.5*(2*M_PI*var) 
 				- 0.5*pow(Data::get_data()(i, j)
 				- mockImage(i, j), 2)/var;
 		}
+
+	return logL;
 }
 
 template<class HyperType>
-void StarFieldModel<HyperType>::print(ostream& out) const
+void StarFieldModel<HyperType>::print(std::ostream& out) const
 {
 	out<<staleness<<' ';
 	hyperparameters.print(out); out<<' ';
@@ -204,5 +174,4 @@ void StarFieldModel<HyperType>::print(ostream& out) const
 		for(int j=0; j<Data::get_data().get_nj(); j++)
 			out<<mockImage(i, j)<<' ';
 }
-
 

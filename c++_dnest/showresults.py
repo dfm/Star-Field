@@ -179,5 +179,5 @@ savetxt("posterior_sample.txt", posterior_sample)
 ioff()
 show()
 
-import temp
+import display
 

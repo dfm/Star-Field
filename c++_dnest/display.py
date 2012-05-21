@@ -52,7 +52,7 @@ for i in xrange(0, sample.shape[0]):
 	title('Residuals')
 	draw()
 
-	print(i+1, mock.min())
+	print(i+1, ((((data - mock)/30.)**2).sum()/10000. - 1.)/(sqrt(2.)/100.))
 	xCatalog = hstack([xCatalog, xStars[i,which]])
 	yCatalog = hstack([yCatalog, yStars[i,which]])
 	fCatalog = hstack([fCatalog, fStars[i,which]])

@@ -13,11 +13,17 @@ class Pareto:public Hyperparameters
 		double minLogMu, maxLogMu, rangeLogMu;
 		double xMin, xMax, yMin, yMax;
 
-		double mu; // Mean flux of stars
+		double mu; // Minimum flux of stars
+		double alpha; // Slope
+
+		// These are useful for perturbStar1 and 2
+		double perturbMu();
+		double perturbAlpha();
 
 		// These are useful for perturbStar2
 		double fluxCDF(double f) const;
 		double fluxInvCDF(double u) const;
+		double fluxLogPDF(double f) const;
 
 	public:
 		Pareto();

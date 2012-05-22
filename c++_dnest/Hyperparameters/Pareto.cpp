@@ -24,42 +24,62 @@ Pareto::Pareto()
 void Pareto::fromPrior()
 {
 	mu = exp(minLogMu + rangeLogMu*randn());
+	alpha = 1. + 4.*randomU();
+}
+
+double Pareto::perturbMu()
+{
+	double logH = 0.;
+	mu = log(mu);
+	mu += rangeLogMu*pow(10., 1.5 - 6.*randomU())*randn();
+	mu = mod(mu - minLogMu, rangeLogMu) + minLogMu;
+	mu = exp(mu);
+	return logH;
+}
+
+double Pareto::perturbAlpha()
+{
+	double logH = 0.;
+	alpha += 4.*pow(10., 1.5 - 6.*randomU())*randn();
+	alpha = mod(alpha - 1., 4.) + 1.;
+	return logH;
 }
 
 double Pareto::perturb1(vector<Star>& stars)
 {
 	double logH = 0.;
-	double proposal = log(mu);
-	proposal += rangeLogMu*pow(10., 1.5 - 6.*randomU())*randn();
-	proposal = mod(proposal - minLogMu, rangeLogMu) + minLogMu;
-	proposal = exp(proposal);
 
-	double ratio = proposal/mu;
 	for(size_t i=0; i<stars.size(); i++)
-		stars[i].flux *= ratio;
-	mu = proposal;
+		stars[i].flux = fluxCDF(stars[i].flux);
 
+	int which = randInt(2);
+	if(which == 0)
+		logH += perturbMu();
+	else if(which == 1)
+		logH += perturbAlpha();
+
+	for(size_t i=0; i<stars.size(); i++)
+		stars[i].flux = fluxInvCDF(stars[i].flux);
+	
 	return logH;
 }
 
 double Pareto::perturb2(const vector<Star>& stars)
 {
 	double logH = 0.;
-	double proposal = log(mu);
-	proposal += rangeLogMu*pow(10., 1.5 - 6.*randomU())*randn();
-	proposal = mod(proposal - minLogMu, rangeLogMu) + minLogMu;
-	proposal = exp(proposal);
 
-	double logMu1 = log(mu);
-	double logMu2 = log(proposal);
 	for(size_t i=0; i<stars.size(); i++)
-	{
-		if(stars[i].flux < 0.)
-			cerr<<"# Warning: Negative flux star."<<endl;
-		logH -= -logMu1 - stars[i].flux/mu;
-		logH += -logMu2 - stars[i].flux/proposal;
-	}
-	mu = proposal;
+		logH -= fluxLogPDF(stars[i].flux);
+
+	int which = randInt(2);
+	if(which == 0)
+		logH += perturbMu();
+	else if(which == 1)
+		logH += perturbAlpha();
+
+	for(size_t i=0; i<stars.size(); i++)
+		logH += fluxLogPDF(stars[i].flux);
+	
 	return logH;
 }
 
@@ -72,19 +92,17 @@ Star Pareto::generateStar() const
 {
 	double x = xMin + (xMax - xMin)*randomU();
 	double y = yMin + (yMax - yMin)*randomU();
-	double f = -mu*log(randomU());
+	double f = fluxInvCDF(randomU());
 	return Star(x, y, f);
 }
 
 double Pareto::perturbStar1(Star& star, double scale) const
 {
 	double logH = 0.;
-
 	star.x += (xMax - xMin)*scale*randn();
 	star.y += (yMax - yMin)*scale*randn();
 	star.x = mod(star.x - xMin, xMax - xMin) + xMin;
 	star.y = mod(star.y - yMin, yMax - yMin) + yMin;
-
 	return logH;
 }
 
@@ -102,11 +120,18 @@ double Pareto::perturbStar2(Star& star, double scale) const
 
 double Pareto::fluxCDF(double f) const
 {
-	return 1. - exp(-f/mu);
+	return 1. - pow(f/mu, alpha);
 }
 
 double Pareto::fluxInvCDF(double u) const
 {
-	return -mu*log(1. - u);
+	return mu*pow(1. - u, -1./alpha);
+}
+
+double Pareto::fluxLogPDF(double f) const
+{
+	if(f < mu)
+		return -1E300;
+	return log(alpha) + alpha*log(mu) - (alpha + 1.)*log(f);
 }
 

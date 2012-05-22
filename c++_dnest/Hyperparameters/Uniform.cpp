@@ -72,7 +72,7 @@ Star Uniform::generateStar() const
 {
 	double x = xMin + (xMax - xMin)*randomU();
 	double y = yMin + (yMax - yMin)*randomU();
-	double f = -mu*log(randomU());
+	double f = fluxInvCDF(randomU());
 	return Star(x, y, f);
 }
 

@@ -34,8 +34,8 @@ class Hyperparameters
 		// Generate a star
 		virtual Star generateStar() const = 0;
 
-		// Evaluate the density
-		virtual double logp(const Star& star) const = 0;
+		// Perturb a star
+		virtual double perturbStar(Star& star, double scale) const = 0;
 
 };
 

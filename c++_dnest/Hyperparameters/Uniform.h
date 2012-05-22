@@ -11,6 +11,7 @@ class Uniform:public Hyperparameters
 {
 	private:
 		double minLogMu, maxLogMu, rangeLogMu;
+		double xMin, xMax, yMin, yMax;
 
 		double mu; // Mean flux of stars
 
@@ -32,9 +33,8 @@ class Uniform:public Hyperparameters
 		// Generate a star
 		Star generateStar() const;
 
-		// Evaluate the density
-		double logp(const Star& star) const;
-
+		// Perturb a star
+		double perturbStar(Star& star, double scale) const;
 };
 
 #endif

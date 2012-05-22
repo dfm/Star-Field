@@ -127,32 +127,23 @@ template<class HyperType>
 double StarFieldModel<HyperType>::perturb3()
 {
 	double logH = 0.;
-	int which = DNest3::randInt(1);
 
 	double chance = pow(10., 0.5 - 4.*DNest3::randomU());
 	double scale = pow(10., 1.5 - 6.*DNest3::randomU());
 
-	if(which == 0)
+	// Positions
+	for(int i=0; i<numStars; i++)
 	{
-		// Positions
-		for(int i=0; i<numStars; i++)
+		if(DNest3::randomU() <= chance)
 		{
-			if(DNest3::randomU() <= chance)
-			{
-				if(chance < 1.)
-					stars[i].decrementImage(mockImage, psf);
-				logH -= hyperparameters.logp(stars[i]);
-				stars[i].x += scale*randn();
-				stars[i].y += scale*randn();
-				logH += hyperparameters.logp(stars[i]);
-				if(chance < 1.)
-					stars[i].incrementImage(mockImage, psf);
-			}
-		}
-	}
-	else
-	{
+			if(chance < 1.)
+				stars[i].decrementImage(mockImage, psf);
 
+			logH += hyperparameters.perturbStar(stars[i], scale);
+
+			if(chance < 1.)
+				stars[i].incrementImage(mockImage, psf);
+		}
 	}
 
 	if(chance < 1.)

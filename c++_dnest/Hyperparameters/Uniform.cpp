@@ -12,7 +12,13 @@ Uniform::Uniform()
 ,maxLogMu(log(1E3))
 ,rangeLogMu(maxLogMu - minLogMu)
 {
+	if(!Data::get_data().isLoaded())
+		cerr<<"# Error. No data has been loaded."<<endl;
 
+	xMin = Data::get_data().get_xMin() - 0.1*Data::get_data().get_xRange();
+	xMax = Data::get_data().get_xMax() + 0.1*Data::get_data().get_xRange();
+	yMin = Data::get_data().get_yMin() - 0.1*Data::get_data().get_yRange();
+	yMax = Data::get_data().get_yMax() + 0.1*Data::get_data().get_yRange();
 }
 
 void Uniform::fromPrior()
@@ -64,28 +70,30 @@ void Uniform::print(ostream& out) const
 
 Star Uniform::generateStar() const
 {
-	double xMin = Data::get_data().get_xMin() - 0.1*Data::get_data().get_xRange();
-	double xMax = Data::get_data().get_xMax() + 0.1*Data::get_data().get_xRange();
-	double yMin = Data::get_data().get_yMin() - 0.1*Data::get_data().get_yRange();
-	double yMax = Data::get_data().get_yMax() + 0.1*Data::get_data().get_yRange();
 	double x = xMin + (xMax - xMin)*randomU();
 	double y = yMin + (yMax - yMin)*randomU();
 	double f = -mu*log(randomU());
 	return Star(x, y, f);
 }
 
-double Uniform::logp(const Star& star) const
+double Uniform::perturbStar(Star& star, double scale) const
 {
-	double xMin = Data::get_data().get_xMin() - 0.1*Data::get_data().get_xRange();
-	double xMax = Data::get_data().get_xMax() + 0.1*Data::get_data().get_xRange();
-	double yMin = Data::get_data().get_yMin() - 0.1*Data::get_data().get_yRange();
-	double yMax = Data::get_data().get_yMax() + 0.1*Data::get_data().get_yRange();
-
-	if(star.flux < 0. || star.x < xMin || star.x > xMax
-		|| star.y < yMin || star.y > yMax)
-		result = -1E300;
+	double logH = 0.;
+	int which = randInt(2);
+	if(which == 0)
+	{
+		star.x += (xMax - xMin)*scale*randn();
+		star.y += (yMax - yMin)*scale*randn();
+		star.x = mod(star.x - xMin, xMax - xMin) + xMin;
+		star.y = mod(star.y - yMin, yMax - yMin) + yMin;
+	}
 	else
-		result = -log(mu) - star.flux/mu;
-	return result;
+	{
+		double u = 1. - exp(-star.flux/mu);
+		u += scale*randn();
+		u = mod(u, 1.);
+		star.flux = -mu*log(1. - u);
+	}
+	return logH;
 }
 

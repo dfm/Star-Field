@@ -16,8 +16,6 @@
     along with DNest.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-#include "StarFieldModel.h"
 #include "Utils.h"
 #include "RandomNumberGenerator.h"
 #include <cmath>
@@ -36,9 +34,7 @@ PSF StarFieldModel<HyperType>::psf;
 
 template<class HyperType>
 StarFieldModel<HyperType>::StarFieldModel()
-:u_x(maxNumStars), u_y(maxNumStars), u_f(maxNumStars)
-,stars(maxNumStars)
-,mockImage(Data::get_data().get_ni(), Data::get_data().get_nj())
+:mockImage(Data::get_data().get_ni(), Data::get_data().get_nj())
 ,staleness(0)
 {
 	if(!Data::get_data().isLoaded())
@@ -50,21 +46,11 @@ template<class HyperType>
 void StarFieldModel<HyperType>::fromPrior()
 {
 	hyperparameters.fromPrior();
-	for(int i=0; i<maxNumStars; i++)
-	{
-		u_x[i] = DNest3::randomU();
-		u_y[i] = DNest3::randomU();
-		u_f[i] = DNest3::randomU();
-	}
-	generateStars();
+	numStars = DNest3::randInt(maxNumStars + 1);
+	stars.clear();
+	for(int i=0; i<numStars; i++)
+		stars.push_back(hyperparameters.generateStar());
 	calculateMockImage();
-}
-
-template<class HyperType>
-void StarFieldModel<HyperType>::generateStars()
-{
-	for(int i=0; i<maxNumStars; i++)
-		stars[i] = hyperparameters.generateStar(u_x[i], u_y[i], u_f[i]);
 }
 
 template<class HyperType>

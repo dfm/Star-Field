@@ -152,8 +152,8 @@ double StarFieldModel<HyperType>::logLikelihood() const
 template<class HyperType>
 void StarFieldModel<HyperType>::print(std::ostream& out) const
 {
+	out<<numStars<<' '<<staleness<<' ';
 	hyperparameters.print(out); out<<' ';
-	out<<staleness<<' ';
 
 	// Print x, pad with zeros
 	for(int i=0; i<numStars; i++)

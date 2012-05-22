@@ -76,9 +76,16 @@ Star Uniform::generateStar() const
 
 double Uniform::logp(const Star& star) const
 {
-	double result = -log(mu) - star.flux/mu;
-	if(star.flux < 0.)
-		cerr<<"# Warning: A star with negative flux."<<endl;
+	double xMin = Data::get_data().get_xMin() - 0.1*Data::get_data().get_xRange();
+	double xMax = Data::get_data().get_xMax() + 0.1*Data::get_data().get_xRange();
+	double yMin = Data::get_data().get_yMin() - 0.1*Data::get_data().get_yRange();
+	double yMax = Data::get_data().get_yMax() + 0.1*Data::get_data().get_yRange();
+
+	if(star.flux < 0. || star.x < xMin || star.x > xMax
+		|| star.y < yMin || star.y > yMax)
+		result = -1E300;
+	else
+		result = -log(mu) - star.flux/mu;
 	return result;
 }
 

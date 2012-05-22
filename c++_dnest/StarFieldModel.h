@@ -48,6 +48,7 @@ class StarFieldModel:public DNest3::Model
 		void calculateMockImage();
 		double perturb1();
 		double perturb2();
+		double perturb3();
 
 	public:
 		StarFieldModel();

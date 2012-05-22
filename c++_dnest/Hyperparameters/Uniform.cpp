@@ -39,29 +39,30 @@ double Uniform::perturbMu()
 double Uniform::perturb1(vector<Star>& stars)
 {
 	double logH = 0.;
-	double old = mu;
-	logH += perturbMu();
-	double ratio = mu/old;
+
 	for(size_t i=0; i<stars.size(); i++)
-		stars[i].flux *= ratio;
+		stars[i].flux = fluxCDF(stars[i].flux);
+
+	logH += perturbMu();
+
+	for(size_t i=0; i<stars.size(); i++)
+		stars[i].flux = fluxInvCDF(stars[i].flux);
+
 	return logH;
 }
 
 double Uniform::perturb2(const vector<Star>& stars)
 {
 	double logH = 0.;
-	double old = mu;
+
+	for(size_t i=0; i<stars.size(); i++)
+		logH -= fluxLogPDF(stars[i].flux);
+
 	logH += perturbMu();
 
-	double logMu1 = log(old);
-	double logMu2 = log(mu);
 	for(size_t i=0; i<stars.size(); i++)
-	{
-		if(stars[i].flux < 0.)
-			cerr<<"# Warning: Negative flux star."<<endl;
-		logH -= -logMu1 - stars[i].flux/old;
-		logH += -logMu2 - stars[i].flux/mu;
-	}
+		logH += fluxLogPDF(stars[i].flux);
+
 	return logH;
 }
 
@@ -110,5 +111,12 @@ double Uniform::fluxCDF(double f) const
 double Uniform::fluxInvCDF(double u) const
 {
 	return -mu*log(1. - u);
+}
+
+double Uniform::fluxLogPDF(double f) const
+{
+	if(f < 0.)
+		return -1E300;
+	return -log(mu) - f/mu;
 }
 

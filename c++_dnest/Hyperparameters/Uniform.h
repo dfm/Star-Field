@@ -21,6 +21,7 @@ class Uniform:public Hyperparameters
 		// These are useful for perturbStar2
 		double fluxCDF(double f) const;
 		double fluxInvCDF(double u) const;
+		double fluxLogPDF(double f) const;
 
 	public:
 		Uniform();

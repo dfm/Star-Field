@@ -74,3 +74,11 @@ Star Uniform::generateStar() const
 	return Star(x, y, f);
 }
 
+double Uniform::logp(const Star& star) const
+{
+	double result = -log(mu) - star.flux/mu;
+	if(star.flux < 0.)
+		cerr<<"# Warning: A star with negative flux."<<endl;
+	return result;
+}
+

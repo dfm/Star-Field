@@ -32,6 +32,9 @@ class Uniform:public Hyperparameters
 		// Generate a star
 		Star generateStar() const;
 
+		// Evaluate the density
+		double logp(const Star& star) const;
+
 };
 
 #endif

@@ -19,7 +19,7 @@ class Hyperparameters
 	public:
 
 		// Generate a star
-		Star generateStar(double u_x, double u_y, double u_f) const;
+		Star generateStar() const;
 
 		/* Stuff that derived classes must implement */
 
@@ -29,12 +29,8 @@ class Hyperparameters
 		// Metropolis-Hastings proposal
 		virtual double perturb() = 0;
 
-		/*
-		* Transform U(0, 1) latent variables into positions 
-		* and fluxes
-		*/
-		virtual void transform(double u_x, double u_y, double u_f,
-				double& x, double& y, double& f) const = 0;
+		// Metropolis-Hastings proposal with stars
+		virtual double perturb(std::vector<Star>& stars) = 0;
 
 		/* Print the hyperparameters */
 		virtual void print(std::ostream& out) const = 0;

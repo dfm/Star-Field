@@ -58,62 +58,6 @@ double StarFieldModel<HyperType>::perturb()
 {
 	double logH = 0.;
 
-	if(DNest3::randomU() < 0.9)
-		logH = perturbHelper1();
-	else
-		logH = perturbHelper2();
-
-	if(staleness >= 1000)
-		calculateMockImage();
-
-	return logH;
-}
-
-template<class HyperType>
-double StarFieldModel<HyperType>::perturbHelper1()
-{
-	double chance = pow(10., 0.5 - 4.*DNest3::randomU());
-	double scale = pow(10., 1.5 - 6.*DNest3::randomU());
-	int which = DNest3::randInt(2);
-	if(which == 0)
-	{
-		for(int i=0; i<maxNumStars; i++)
-		{
-			if(DNest3::randomU() <= chance)
-			{
-				stars[i].decrementImage(mockImage, psf);
-				u_x[i] = DNest3::mod(u_x[i] + scale*DNest3::randn(), 1.);
-				u_y[i] = DNest3::mod(u_y[i] + scale*DNest3::randn(), 1.);
-				stars[i] = hyperparameters.
-					generateStar(u_x[i], u_y[i], u_f[i]);
-				stars[i].incrementImage(mockImage, psf);
-			}
-		}
-	}
-	else if(which == 1)
-	{
-		for(int i=0; i<maxNumStars; i++)
-		{
-			if(DNest3::randomU() <= chance)
-			{
-				stars[i].decrementImage(mockImage, psf);
-				u_f[i] = DNest3::mod(u_f[i] + scale*DNest3::randn(), 1.);
-				stars[i] = hyperparameters.
-					generateStar(u_x[i], u_y[i], u_f[i]);
-				stars[i].incrementImage(mockImage, psf);
-			}		
-		}
-	}
-	staleness++;
-	return 0.;
-}
-
-template<class HyperType>
-double StarFieldModel<HyperType>::perturbHelper2()
-{
-	double logH = hyperparameters.perturb();
-	generateStars();
-	calculateMockImage();
 	return logH;
 }
 
@@ -148,14 +92,27 @@ double StarFieldModel<HyperType>::logLikelihood() const
 template<class HyperType>
 void StarFieldModel<HyperType>::print(std::ostream& out) const
 {
-	out<<staleness<<' ';
 	hyperparameters.print(out); out<<' ';
-	for(int i=0; i<maxNumStars; i++)
+	out<<staleness<<' ';
+
+	// Print x, pad with zeros
+	for(int i=0; i<numStars; i++)
 		out<<stars[i].x<<' ';
-	for(int i=0; i<maxNumStars; i++)
+	for(int i=numStars; i<maxNumStars; i++)
+		out<<0<<' ';
+
+	// Print y, pad with zeros
+	for(int i=0; i<numStars; i++)
 		out<<stars[i].y<<' ';
-	for(int i=0; i<maxNumStars; i++)
+	for(int i=numStars; i<maxNumStars; i++)
+		out<<0<<' ';
+
+	// Print flux, pad with zeros
+	for(int i=0; i<numStars; i++)
 		out<<stars[i].flux<<' ';
+	for(int i=numStars; i<maxNumStars; i++)
+		out<<0<<' ';
+
 	for(int i=0; i<Data::get_data().get_ni(); i++)
 		for(int j=0; j<Data::get_data().get_nj(); j++)
 			out<<mockImage(i, j)<<' ';

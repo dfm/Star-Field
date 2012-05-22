@@ -57,7 +57,67 @@ template<class HyperType>
 double StarFieldModel<HyperType>::perturb()
 {
 	double logH = 0.;
+	int which = DNest3::randInt(2);
+	if(which == 0)
+		logH = perturb1();
+	else if(which == 1)
+		logH = perturb2();
 
+	return logH;
+}
+
+template<class HyperType>
+double StarFieldModel<HyperType>::perturb1()
+{
+	double logH = 0.;
+
+	// Make a proposal for the new number of stars
+	int diff = static_cast<int>
+			(round(maxNumStars*pow(10., 1.5 - 6.*DNest3::randomU())*DNest3::randn()));
+	if(diff == 0)
+		diff = (DNest3::randomU() <= 0.5)?(-1):(1);
+	int proposal = numStars + diff;
+	proposal = DNest3::mod(proposal, maxNumStars + 1);
+	int actual_diff = proposal - numStars;
+
+	if(actual_diff > 0)
+	{
+		for(int i=0; i<actual_diff; i++)
+		{
+			Star star = hyperparameters.generateStar();
+			star.incrementImage(mockImage, psf);
+			stars.push_back(star);
+			numStars++;
+		}
+	}
+	else if(actual_diff < 0)
+	{
+		int which;
+		for(int i=0; i<-actual_diff; i++)
+		{
+			which = DNest3::randInt(numStars);
+			stars[which].decrementImage(mockImage, psf);
+			stars.erase(stars.begin() + which);
+			numStars--;
+		}
+	}
+
+	staleness++;
+	return logH;
+}
+
+template<class HyperType>
+double StarFieldModel<HyperType>::perturb2()
+{
+	double logH = 0.;
+	int which = DNest3::randInt(2);
+	if(which == 0)
+	{
+		logH = hyperparameters.perturb1(stars);
+		calculateMockImage();
+	}
+	else
+		logH = hyperparameters.perturb2(stars);
 	return logH;
 }
 

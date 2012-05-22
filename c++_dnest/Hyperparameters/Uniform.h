@@ -10,7 +10,7 @@
 class Uniform:public Hyperparameters
 {
 	private:
-		const double minLogMu, maxLogMu, rangeLogMu;
+		double minLogMu, maxLogMu, rangeLogMu;
 
 		double mu; // Mean flux of stars
 

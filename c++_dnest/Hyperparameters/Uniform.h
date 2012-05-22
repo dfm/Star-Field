@@ -15,6 +15,9 @@ class Uniform:public Hyperparameters
 
 		double mu; // Mean flux of stars
 
+		// These are useful for perturbStar1 and 2
+		double perturbMu();
+
 		// These are useful for perturbStar2
 		double fluxCDF(double f) const;
 		double fluxInvCDF(double u) const;

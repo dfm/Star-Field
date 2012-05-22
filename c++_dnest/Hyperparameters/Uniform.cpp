@@ -26,40 +26,42 @@ void Uniform::fromPrior()
 	mu = exp(minLogMu + rangeLogMu*randn());
 }
 
+double Uniform::perturbMu()
+{
+	double logH = 0.;
+	mu = log(mu);
+	mu += rangeLogMu*pow(10., 1.5 - 6.*randomU())*randn();
+	mu = mod(mu - minLogMu, rangeLogMu) + minLogMu;
+	mu = exp(mu);
+	return logH;
+}
+
 double Uniform::perturb1(vector<Star>& stars)
 {
 	double logH = 0.;
-	double proposal = log(mu);
-	proposal += rangeLogMu*pow(10., 1.5 - 6.*randomU())*randn();
-	proposal = mod(proposal - minLogMu, rangeLogMu) + minLogMu;
-	proposal = exp(proposal);
-
-	double ratio = proposal/mu;
+	double old = mu;
+	logH += perturbMu();
+	double ratio = mu/old;
 	for(size_t i=0; i<stars.size(); i++)
 		stars[i].flux *= ratio;
-	mu = proposal;
-
 	return logH;
 }
 
 double Uniform::perturb2(const vector<Star>& stars)
 {
 	double logH = 0.;
-	double proposal = log(mu);
-	proposal += rangeLogMu*pow(10., 1.5 - 6.*randomU())*randn();
-	proposal = mod(proposal - minLogMu, rangeLogMu) + minLogMu;
-	proposal = exp(proposal);
+	double old = mu;
+	logH += perturbMu();
 
-	double logMu1 = log(mu);
-	double logMu2 = log(proposal);
+	double logMu1 = log(old);
+	double logMu2 = log(mu);
 	for(size_t i=0; i<stars.size(); i++)
 	{
 		if(stars[i].flux < 0.)
 			cerr<<"# Warning: Negative flux star."<<endl;
-		logH -= -logMu1 - stars[i].flux/mu;
-		logH += -logMu2 - stars[i].flux/proposal;
+		logH -= -logMu1 - stars[i].flux/old;
+		logH += -logMu2 - stars[i].flux/mu;
 	}
-	mu = proposal;
 	return logH;
 }
 

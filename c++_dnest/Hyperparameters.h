@@ -17,10 +17,6 @@ class Hyperparameters
 		// Parameters go here when you inherit
 
 	public:
-
-		// Generate a star
-		Star generateStar() const;
-
 		/* Stuff that derived classes must implement */
 
 		// Generate hyperparameters from the prior
@@ -34,6 +30,10 @@ class Hyperparameters
 
 		/* Print the hyperparameters */
 		virtual void print(std::ostream& out) const = 0;
+
+		// Generate a star
+		virtual Star generateStar() const = 0;
+
 };
 
 #endif

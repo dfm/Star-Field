@@ -92,11 +92,21 @@ double Uniform::perturbStar2(Star& star, double scale) const
 {
 	double logH = 0.;
 
-	double u = 1. - exp(-star.flux/mu);
+	double u = fluxCDF(star.flux);
 	u += scale*randn();
 	u = mod(u, 1.);
-	star.flux = -mu*log(1. - u);
+	star.flux = fluxInvCDF(u);
 
 	return logH;
+}
+
+double Uniform::fluxCDF(double f) const
+{
+	return 1. - exp(-f/mu);
+}
+
+double Uniform::fluxInvCDF(double u) const
+{
+	return -mu*log(1. - u);
 }
 

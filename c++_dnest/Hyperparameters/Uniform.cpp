@@ -57,11 +57,20 @@ double Uniform::perturb2(const vector<Star>& stars)
 	return logH;
 }
 
-
 void Uniform::print(ostream& out) const
 {
 	out<<mu;
 }
 
-
+Star Uniform::generateStar() const
+{
+	double xMin = Data::get_data().get_xMin() - 0.1*Data::get_data().get_xRange();
+	double xMax = Data::get_data().get_xMax() + 0.1*Data::get_data().get_xRange();
+	double yMin = Data::get_data().get_yMin() - 0.1*Data::get_data().get_yRange();
+	double yMax = Data::get_data().get_yMax() + 0.1*Data::get_data().get_yRange();
+	double x = xMin + (xMax - xMin)*randomU();
+	double y = yMin + (yMax - yMin)*randomU();
+	double f = -mu*log(randomU());
+	return Star(x, y, f);
+}
 

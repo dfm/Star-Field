@@ -9,7 +9,7 @@ maxNumStars = 200
 numHyperparams = 3	# Number of parameters before catalog begins
 			# maxNumStars, staleness, hyperparameters
 
-sample = atleast_2d(loadtxt('sample.txt'))
+sample = atleast_2d(loadtxt('posterior_sample.txt'))
 data = loadtxt('SimulatedData/sparse.txt')
 
 params =   sample[:, 0:numHyperparams]

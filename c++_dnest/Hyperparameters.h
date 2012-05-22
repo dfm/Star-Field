@@ -22,9 +22,6 @@ class Hyperparameters
 		// Generate hyperparameters from the prior
 		virtual void fromPrior() = 0;
 
-		// Metropolis-Hastings proposal
-		virtual double perturb() = 0;
-
 		// Metropolis-Hastings proposal with stars
 		virtual double perturb(std::vector<Star>& stars) = 0;
 

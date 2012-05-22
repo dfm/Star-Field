@@ -2,75 +2,67 @@
 #include <Utils.h>
 #include <RandomNumberGenerator.h>
 #include <cmath>
+#include <iostream>
 
 using namespace std;
 using namespace DNest3;
 
-const double Pareto::logMinOnFraction = log(1E-3);
-const double Pareto::logMaxOnFraction = log(1.);
-const double Pareto::logMinFMin = log(1E-3);
-const double Pareto::logMaxFMin = log(1E3);
+Pareto::Pareto()
+:minLogMu(log(1E-3))
+,maxLogMu(log(1E3))
+,rangeLogMu(maxLogMu - minLogMu)
+{
+
+}
 
 void Pareto::fromPrior()
 {
-	onFraction = exp(logMinOnFraction +
-			(logMaxOnFraction - logMinOnFraction)*randomU());
-	fMin = exp(logMinFMin + (logMaxFMin - logMinFMin)*randomU());
-	alpha = 1. + 4*randomU();
+	mu = exp(minLogMu + rangeLogMu*randn());
+	alpha = 1. + 4.*randomU();
 }
 
-double Pareto::perturb()
+double Pareto::perturb1(vector<Star>& stars)
 {
-	int which = randInt(3);
+	double logH = 0.;
+	double proposal = log(mu);
+	proposal += rangeLogMu*pow(10., 1.5 - 6.*randomU())*randn();
+	proposal = mod(proposal - minLogMu, rangeLogMu) + minLogMu;
+	proposal = exp(proposal);
 
-	if(which == 0)
-	{
-		fMin = log(fMin);
-		fMin += (logMaxFMin - logMinFMin)
-			*pow(10., 1.5 - 6.*randomU())*randn();
-		fMin = mod(fMin - logMinFMin, logMaxFMin - logMinFMin) + logMinFMin;
-		fMin = exp(fMin);
-	}
-	else if(which == 1)
-	{
-		onFraction = log(onFraction);
-		onFraction += (logMaxOnFraction - logMinOnFraction)
-				*pow(10., 1.5 - 6*randomU())*randn();
-		onFraction = mod(onFraction - logMinOnFraction,
-			logMaxOnFraction - logMinOnFraction) + logMinOnFraction;
-		onFraction = exp(onFraction);
-	}
-	else
-	{
-		alpha += 4*pow(10., 1.5 - 6.*randomU())*randn();
-		alpha = mod(alpha - 1., 4.) + 1.;
-	}
+	double ratio = proposal/mu;
+	for(size_t i=0; i<stars.size(); i++)
+		stars[i].flux *= ratio;
+	mu = proposal;
 
-	return 0.;
+	return logH;
 }
 
-void Pareto::transform(double u_x, double u_y, double u_f,
-				double& x, double& y, double& f) const
+double Pareto::perturb2(const vector<Star>& stars)
 {
-	double t = 1. - onFraction;
-	// Compute flux
-	if(u_f < t)
-		f = 0.;
-	else
-	{
-		double U = (u_f - t)/onFraction; // U(0, 1)
-		f = fMin*pow(1. - U, -1./alpha); // Must use CDF not 1-CDF
-	}
+	double logH = 0.;
+	double proposal = log(mu);
+	proposal += rangeLogMu*pow(10., 1.5 - 6.*randomU())*randn();
+	proposal = mod(proposal - minLogMu, rangeLogMu) + minLogMu;
+	proposal = exp(proposal);
 
-	// Compute position
-	x = (Data::get_data().get_xMin() - 0.1*Data::get_data().get_xRange())
-		 + 1.2*Data::get_data().get_xRange()*u_x;
-	y = (Data::get_data().get_yMin() - 0.1*Data::get_data().get_yRange())
-		 + 1.2*Data::get_data().get_yRange()*u_y;
+	double logMu1 = log(mu);
+	double logMu2 = log(proposal);
+	for(size_t i=0; i<stars.size(); i++)
+	{
+		if(stars[i].flux < 0.)
+			cerr<<"# Warning: Negative flux star."<<endl;
+		logH -= -logMu1 - stars[i].flux/mu;
+		logH += -logMu2 - stars[i].flux/proposal;
+	}
+	mu = proposal;
+	return logH;
 }
+
 
 void Pareto::print(ostream& out) const
 {
-	out<<onFraction<<' '<<fMin<<' '<<alpha;
+	out<<mu<<' '<<alpha;
 }
+
+
 

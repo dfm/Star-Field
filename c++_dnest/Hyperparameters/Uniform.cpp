@@ -76,24 +76,27 @@ Star Uniform::generateStar() const
 	return Star(x, y, f);
 }
 
-double Uniform::perturbStar(Star& star, double scale) const
+double Uniform::perturbStar1(Star& star, double scale) const
 {
 	double logH = 0.;
-	int which = randInt(2);
-	if(which == 0)
-	{
-		star.x += (xMax - xMin)*scale*randn();
-		star.y += (yMax - yMin)*scale*randn();
-		star.x = mod(star.x - xMin, xMax - xMin) + xMin;
-		star.y = mod(star.y - yMin, yMax - yMin) + yMin;
-	}
-	else
-	{
-		double u = 1. - exp(-star.flux/mu);
-		u += scale*randn();
-		u = mod(u, 1.);
-		star.flux = -mu*log(1. - u);
-	}
+
+	star.x += (xMax - xMin)*scale*randn();
+	star.y += (yMax - yMin)*scale*randn();
+	star.x = mod(star.x - xMin, xMax - xMin) + xMin;
+	star.y = mod(star.y - yMin, yMax - yMin) + yMin;
+
+	return logH;
+}
+
+double Uniform::perturbStar2(Star& star, double scale) const
+{
+	double logH = 0.;
+
+	double u = 1. - exp(-star.flux/mu);
+	u += scale*randn();
+	u = mod(u, 1.);
+	star.flux = -mu*log(1. - u);
+
 	return logH;
 }
 

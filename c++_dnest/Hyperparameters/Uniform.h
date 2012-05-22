@@ -33,8 +33,11 @@ class Uniform:public Hyperparameters
 		// Generate a star
 		Star generateStar() const;
 
-		// Perturb a star
-		double perturbStar(Star& star, double scale) const;
+		// Perturb a star (position)
+		double perturbStar1(Star& star, double scale) const;
+
+		// Perturb a star (flux)
+		double perturbStar2(Star& star, double scale) const;
 };
 
 #endif

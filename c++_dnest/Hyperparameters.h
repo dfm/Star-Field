@@ -34,9 +34,11 @@ class Hyperparameters
 		// Generate a star
 		virtual Star generateStar() const = 0;
 
-		// Perturb a star
-		virtual double perturbStar(Star& star, double scale) const = 0;
+		// Perturb a star (position)
+		virtual double perturbStar1(Star& star, double scale) const = 0;
 
+		// Perturb a star (flux)
+		virtual double perturbStar2(Star& star, double scale) const = 0;
 };
 
 #endif

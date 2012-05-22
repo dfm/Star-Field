@@ -131,19 +131,42 @@ double StarFieldModel<HyperType>::perturb3()
 	double chance = pow(10., 0.5 - 4.*DNest3::randomU());
 	double scale = pow(10., 1.5 - 6.*DNest3::randomU());
 
-	// Positions
-	for(int i=0; i<numStars; i++)
+	int which = DNest3::randInt(2);
+
+	if(which == 0)
 	{
-		if(DNest3::randomU() <= chance)
+		// Positions
+		for(int i=0; i<numStars; i++)
 		{
-			if(chance < 1.)
-				stars[i].decrementImage(mockImage, psf);
+			if(DNest3::randomU() <= chance)
+			{
+				if(chance < 1.)
+					stars[i].decrementImage(mockImage, psf);
 
-			logH += hyperparameters.perturbStar(stars[i], scale);
+				logH += hyperparameters.perturbStar1(stars[i], scale);
 
-			if(chance < 1.)
-				stars[i].incrementImage(mockImage, psf);
+				if(chance < 1.)
+					stars[i].incrementImage(mockImage, psf);
+			}
 		}
+	}
+	else if(which == 1)
+	{
+		// Fluxes
+		for(int i=0; i<numStars; i++)
+		{
+			if(DNest3::randomU() <= chance)
+			{
+				if(chance < 1.)
+					stars[i].decrementImage(mockImage, psf);
+
+				logH += hyperparameters.perturbStar2(stars[i], scale);
+
+				if(chance < 1.)
+					stars[i].incrementImage(mockImage, psf);
+			}
+		}
+
 	}
 
 	if(chance < 1.)

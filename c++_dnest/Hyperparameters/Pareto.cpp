@@ -120,7 +120,7 @@ double Pareto::perturbStar2(Star& star, double scale) const
 
 double Pareto::fluxCDF(double f) const
 {
-	return 1. - pow(f/mu, alpha);
+	return 1. - pow(mu/f, alpha);
 }
 
 double Pareto::fluxInvCDF(double u) const

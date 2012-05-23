@@ -46,7 +46,11 @@ template<class HyperType>
 void StarFieldModel<HyperType>::fromPrior()
 {
 	hyperparameters.fromPrior();
-	numStars = DNest3::randInt(maxNumStars + 1);
+	do
+	{
+		numStars = DNest3::randInt(maxNumStars + 1);
+	}while(DNest3::randomU() >= 1./(numStars + 1.));
+
 	stars.clear();
 	for(int i=0; i<numStars; i++)
 		stars.push_back(hyperparameters.generateStar());
@@ -80,6 +84,9 @@ double StarFieldModel<HyperType>::perturb1()
 		diff = (DNest3::randomU() <= 0.5)?(-1):(1);
 	int proposal = numStars + diff;
 	proposal = DNest3::mod(proposal, maxNumStars + 1);
+	logH -= -log(numStars + 1.);
+	logH += -log(proposal + 1.);
+
 	int actual_diff = proposal - numStars;
 
 	if(actual_diff > 0)

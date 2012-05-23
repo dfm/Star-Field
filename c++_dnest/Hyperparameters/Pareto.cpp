@@ -85,7 +85,7 @@ double Pareto::perturb2(const vector<Star>& stars)
 
 void Pareto::print(ostream& out) const
 {
-	out<<mu;
+	out<<mu<<' '<<alpha;
 }
 
 Star Pareto::generateStar() const

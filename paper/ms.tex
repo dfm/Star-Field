@@ -1,5 +1,4 @@
 \documentclass[letterpaper, 11pt]{article}
-\usepackage{authblk}	% For nice author-affil lists
 \usepackage{graphicx}	% For figures
 \usepackage{natbib}	% For citet and citep
 \usepackage{amsmath}	% for \iint
@@ -10,57 +9,80 @@
 
 \renewcommand{\topfraction}{0.85} \renewcommand{\textfraction}{0.1} 
 \parindent=0cm
+\newcommand{\sparse}{\texttt{Sparse}}
+\newcommand{\cluster}{\texttt{Cluster}}
+\newcommand{\crowded}{\texttt{Crowded}}
 
-\title{Probabilistic Catalogues from Crowded Star Fields}
-\author[1,2]{Brendon J. Brewer}
-\author[3]{David W. Hogg}
-\author[3]{Daniel Foreman-Mackey}
-\affil[1]{\small Dept. of Physics, University of California, Santa Barbara, CA 93106, USA}
-\affil[2]{Department of Statistics, University of Auckland, Private Bag 92019, Auckland, New Zealand
+\title{Probabilistic Catalogs from Crowded Star Fields}
+\author{Brendon J. Brewer$^{1, 2}$, David W. Hogg$^{3}$,
+and Daniel Foreman-Mackey$^{3}$ \\
+\\
+\small
+$^1$ Department of Physics, University of California, Santa Barbara,\\
+\small
+CA 93106, USA \\
+\small
+$^2$ Department of Statistics, University of Auckland,\\
+\small
+Private Bag 92019, Auckland, New Zealand \\
+\small
+$^3$ Center for Cosmology and Particle Physics, Department of Physics,
+New York University,\\
+\small
+4 Washington Place, New York, NY, 10003, USA
 }
-\affil[3]{Center for Cosmology and Particle Physics, Department of Physics, New York University, 4 Washington Place, New York, NY, 10003, USA
-}
-
-\date{{\bf Title and author order subject to change} \\
-{\bf Also nag me if you prefer American English}}
 
 \begin{document}
 \maketitle
 
 \section{Introduction}
 
+
+\section{Probabilistic Catalogs}
+
 \section{The Unknown Parameters}
 There are $N$ stars in the field, where $N$ is unknown. Each star has an unknown
 position $(x,y)$ in the plane of the sky, and an unknown flux $f$. We also
-parameterise the {\it distribution} of positions by parameters $\alpha$,
-and we parameterise the distribution of fluxes (aka the {\it luminosity
+parameterize the {\it spatial distribution} of the stars by parameters
+$\alpha$, and the distribution of fluxes (commonly known as the {\it luminosity
 function}) by parameters $\beta$. In summary, the unknown parameters are:
 \begin{eqnarray}
 \theta = \left\{N, \alpha, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
 \left\{f_i\right\}_{i=1}^N\right\}
 \end{eqnarray}
-
-The prior probability distribution for the unknown parameters can be factorised
+The prior probability distribution for the unknown parameters can be factorized
 using the product rule. With a variety of independence assumptions, the prior
 can be written as:
 \begin{eqnarray}
 p(\theta) = p(N)p(\alpha)p(\beta)\prod_{i=1}^N p(x_i, y_i | \alpha)
 p(f_i | \beta) 
 \end{eqnarray}
-
 Here, we have assumed that the luminosity function does not depend on position.
 We have also assumed independence of $N$, $\alpha$ and $\beta$, which means that
 learning the value of one would not tell us anything about the values of the
 others. Finally, the positions and fluxes of the stars come independently from
 a common distribution. If we knew the spatial distribution and the luminosity
-function of the stars, then the location and flux of a particular star would not
-tell us anything about the location and flux of another star.
+function of the stars, then the location and flux of a particular star would
+not tell us anything about the location and flux of another star.
 
-\citep{massinf}
+\section{Specific Models}
+A model for the spatial distribution corresponds to a choice of functional
+forms for the distributions $p(x_i, y_i | \alpha)$ and $p(f_i | \beta)$.
+In this paper we discuss three test cases, named \sparse, \cluster
+and \crowded. For the generation of the simulated
+images, we used the following assumptions:
 
-\section{Particular Models}
-A model for the spatial distribution corresponds to a choice of functional forms
-for the distributions $p(x_i, y_i | \alpha)$ and $p(f_i | \beta)$.
+\begin{table}
+\begin{center}
+\begin{tabular}{ccccc}
+Test Case & Parameter & Value \\
+\hline
+\sparse \\
+\cluster \\
+\crowded
+\end{tabular}
+\end{center}
+\end{table}
 
 \subsection{Toy Model}
 For the first implementation I wrote at NYU, I used the following model and
@@ -88,7 +110,7 @@ $\sigma$ with max value $\sim$ image size.
 \section{Pixel Convolved PSF}
 Consider a ``true image'' $f_0(x, y)$ with infinite resolution. We now model how
 this image gives rise to the observed data. First, it is convolved with a
-PSF $g(\delta_x, \delta_y)$ (assumed normalised to 1) to give the blurred image:
+PSF $g(\delta_x, \delta_y)$ (assumed normalized to 1) to give the blurred image:
 \begin{eqnarray}
 f_{\rm{blurred}}(x, y) &=& \iint f_0(x-\delta_x, y-\delta_y)
 g(\delta_x, \delta_y) \, d\delta_x \, d\delta_y \label{blur}
@@ -121,7 +143,7 @@ positions and fluxes by a transformation $f$:
 \begin{eqnarray}
 \{\mathbf{x}, \mathbf{y}, \mathbf{f}\} &=& f(\theta)
 \end{eqnarray}
-The transformation can be parameterised by various parameters of its own, such
+The transformation can be parameterized by various parameters of its own, such
 that a known fraction of the fluxes end up being nonzero, etc. This could have
 various advantages, most notably: when new stars are added, they are added with
 low fluxes. It also turns the variable dimension problem into a fixed dimension

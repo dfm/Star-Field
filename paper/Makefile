@@ -7,3 +7,6 @@ ms.dvi: ms.tex
 	latex ms
 	latex ms
 
+clean:
+	rm *.dvi *.pdf *.aux *.log
+

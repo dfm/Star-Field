@@ -5,8 +5,6 @@
 \usepackage{bbm}	% for blackboard bold numbers
 \usepackage[left=3cm,top=3cm,right=3cm]{geometry}
 
-\title{More than one Author with different Affiliations}
-
 \renewcommand{\topfraction}{0.85} \renewcommand{\textfraction}{0.1} 
 \parindent=0cm
 \newcommand{\sparse}{\texttt{Sparse}}
@@ -14,7 +12,7 @@
 \newcommand{\crowded}{\texttt{Crowded}}
 
 \title{Probabilistic Catalogs from Crowded Star Fields}
-\author{Brendon J. Brewer$^{1, 2}$, David W. Hogg$^{3}$,
+\author{Brendon J. Brewer$^{1, 2, ^*}$, David W. Hogg$^{3}$,
 and Daniel Foreman-Mackey$^{3}$ \\
 \\
 \small
@@ -22,14 +20,16 @@ $^1$ Department of Physics, University of California, Santa Barbara,\\
 \small
 CA 93106, USA \\
 \small
-$^2$ Department of Statistics, University of Auckland,\\
+$^2$ Department of Statistics, The University of Auckland,\\
 \small
-Private Bag 92019, Auckland, New Zealand \\
+Private Bag 92019, Auckland 1142, New Zealand \\
 \small
 $^3$ Center for Cosmology and Particle Physics, Department of Physics,
 New York University,\\
 \small
-4 Washington Place, New York, NY, 10003, USA
+4 Washington Place, New York, NY, 10003, USA\\
+\small
+$^*$\texttt{bj.brewer@auckland.ac.nz}
 }
 
 \begin{document}
@@ -37,8 +37,15 @@ New York University,\\
 
 \section{Introduction}
 
+A fundamental problem in astronomy is the construction of {\it catalogs} from
+raw image data. Essentially, the question being answered is ``given the image
+we have obtained, what objects are present in the field and what are their
+properties?''.
 
 \section{Probabilistic Catalogs}
+
+
+
 \begin{itemize}
 \item Catalogs as models for what's out there \\
 \item Standard techniques for constructing catalogs, and under what
@@ -47,9 +54,10 @@ cicrumstances they stop working \\
 \end{itemize}
 
 \section{The Unknown Parameters}
-There are $N$ stars in the field, where $N$ is unknown. Each star has an unknown
+Our model makes the following assumptions. There are an unknown number of stars
+$N$ in the field. Each star has an unknown
 position $(x,y)$ in the plane of the sky, and an unknown flux $f$. We also
-parameterize the {\it spatial distribution} of the stars by parameters
+describe the {\it spatial distribution} of the stars by parameters
 $\alpha$, and the distribution of fluxes (commonly known as the {\it luminosity
 function}) by parameters $\beta$. In summary, the unknown parameters are:
 \begin{eqnarray}
@@ -71,7 +79,9 @@ a common distribution. If we knew the spatial distribution and the luminosity
 function of the stars, then the location and flux of a particular star would
 not tell us anything about the location and flux of another star.
 
-\section{Specific Models}
+\section{Simulated Data}
+
+
 A model for the spatial distribution corresponds to a choice of functional
 forms for the distributions $p(x_i, y_i | \alpha)$ and $p(f_i | \beta)$.
 In this paper we discuss three test cases, named \sparse, \cluster

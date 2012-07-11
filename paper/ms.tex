@@ -61,7 +61,40 @@ cicrumstances they stop working \\
 \item 
 \end{itemize}
 
-\section{The Unknown Parameters}
+\section{Bayesian Inference}
+We use Bayesian Inference. Suppose there exist unknown parameters (denoted
+collectively by $\theta$) and we expect to obtain some data $D$. Our prior
+knowledge (or uncertainty) about the parameters is modelled by a prior
+probability distribution:
+\begin{equation}
+p(\theta)
+\end{equation}
+We also model how the parameters give rise to the data, via a {\it sampling
+distribution}:
+\begin{equation}
+p(D|\theta)
+\end{equation}
+Despite the singular, the sampling distribution is actually a family of
+probability distributions, one for each possible value of $\theta$. Note that
+the sampling distribution is also an assertion of a prior state of knowledge.
+In this case it models our prior information about the fact that the parameters
+$\theta$ are going to influence the data in some way (otherwise this data
+would be irrelevant).
+
+When specific data $D^*$ are known, the prior gets updated to the posterior
+via Bayes' rule:
+\begin{eqnarray}
+p(\theta|D=D^*) &\propto& p(\theta)p(D|\theta)|_{D=D^*} \\
+&=& p(\theta)\mathcal{L}(\theta; D)
+\end{eqnarray}
+The modulating function is the {\it likelihood function}, which is the prior
+probability of obtaining the actual data set $D^*$ as a function of the
+parameters. As suggested by the above notation, it is obtained from the
+sampling distribution with the actual data substituted in.
+
+\section{The Specific Model for Stellar Fields}
+
+\subsection{The Unknown Parameters}
 Our model makes the following assumptions. There are an unknown number of stars
 $N$ in the field. Each star has an unknown
 position $(x,y)$ in the plane of the sky, and an unknown flux $f$. We also
@@ -87,7 +120,12 @@ a common distribution. If we knew the spatial distribution and the luminosity
 function of the stars, then the location and flux of a particular star would
 not tell us anything about the location and flux of another star.
 
-\section{Simulated Data}
+\subsection{The Sampling Distribution}
+
+
+\subsection{The Prior Distribution}
+
+{Simulated Data}
 
 
 A model for the spatial distribution corresponds to a choice of functional

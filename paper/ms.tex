@@ -40,11 +40,19 @@ $^*$\texttt{bj.brewer@auckland.ac.nz}
 A fundamental problem in astronomy is the construction of {\it catalogs} from
 raw image data. Essentially, the question being answered is ``given the image
 we have obtained, what objects are present in the field and what are their
-properties?''.
+properties?''. Standard tools include \texttt{SExtractor} \citep{sextractor}.
 
 \section{Probabilistic Catalogs}
 
 
+\citet{2011MNRAS.415.3462F} have attempted this, by replacing the complex
+$N$-component model with a single-component model, and using the
+single-component
+results to reconstruct what the $N$-component results would have been. However,
+this will not work well in situations where there is significant confusion
+(i.e. two or more sources overlap) and also does not allow for unknown $N$,
+which is the general situation. What we really need is a variable dimension
+sampler such as reversible jump MCMC \citep{rjmcmc}.
 
 \begin{itemize}
 \item Catalogs as models for what's out there \\
@@ -215,9 +223,17 @@ See Table~\ref{proposals} for a list of current proposal distributions.
 
 
 \begin{thebibliography}{99}
+\bibitem[Bertin and 
+Arnouts(1996)]{sextractor} Bertin, E., Arnouts, S.\ 1996.\ SExtractor: Software for source extraction.\ Astronomy and Astrophysics Supplement Series 117, 393-404.
+
 \bibitem[\protect\citeauthoryear{Brewer, P{\'a}rtay, 
 \& Cs{\'a}nyi}{2011}]{dnest} Brewer B.~J., P{\'a}rtay L.~B.,
 Cs{\'a}nyi G., 2011, Statistics and Computing, 21, 4, 649-656. arXiv:0912.2380
+
+\bibitem[Feroz et al.(2011)]{2011MNRAS.415.3462F} Feroz, F., Balan, S.~T., 
+Hobson, M.~P.\ 2011.\ Detecting extrasolar planets from stellar radial 
+velocities using Bayesian evidence.\ Monthly Notices of the Royal 
+Astronomical Society 415, 3462-3472. 
 
 \bibitem[\protect\citeauthoryear{Green}{1995}]{rjmcmc}
 Green, P.~J., 1995, Reversible Jump Markov Chain Monte Carlo Computation and Bayesian Model Determination, Biometrika 82 (4): 711–732.

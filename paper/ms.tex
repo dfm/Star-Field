@@ -38,12 +38,22 @@ $^*$\texttt{bj.brewer@auckland.ac.nz}
 \section{Introduction}
 
 A fundamental problem in astronomy is the construction of {\it catalogs} from
-raw image data. Essentially, the question being answered is ``given the image
-we have obtained, what objects are present in the field and what are their
-properties?''. Standard tools include \texttt{SExtractor} \citep{sextractor}.
+raw image data. {\bf The catalogs are then used for...}
+Standard tools for generating catalogs include \texttt{SExtractor}
+\citep{sextractor}, {\bf more refs}.
 
-\section{Probabilistic Catalogs}
+However, standard methods for constructing catalogs can have difficulty in some
+challenging situations. For example, when multiple sources overlap partially
+or completely, it can be difficult to determine how many sources are present,
+and how much flux belongs to each source. In principle, uncertainty should be
+taken into account -- instead of simply estimating the position and flux of each
+object, we should fully describe the fact that sometimes we are not certain of
+the position and flux of each source.
 
+Essentially, the creation of a catalog is an attempt to answer the question
+``given the image we have obtained, what objects are present in the field and
+what are their properties?''. This motivates a probabilistic (Bayesian)
+approach to making catalogs.
 
 \citet{2011MNRAS.415.3462F} have attempted this, by replacing the complex
 $N$-component model with a single-component model, and using the
@@ -52,17 +62,12 @@ results to reconstruct what the $N$-component results would have been. However,
 this will not work well in situations where there is significant confusion
 (i.e. two or more sources overlap) and also does not allow for unknown $N$,
 which is the general situation. What we really need is a variable dimension
-sampler such as reversible jump MCMC \citep{rjmcmc}.
-
-\begin{itemize}
-\item Catalogs as models for what's out there \\
-\item Standard techniques for constructing catalogs, and under what
-cicrumstances they stop working \\
-\item 
-\end{itemize}
+model, where $N$ is an unknown quantity to be inferred from the data.
+The computational implementation of these models will require tools such as reversible jump Markov Chain Monte Carlo \citep{rjmcmc}.
 
 \section{Bayesian Inference}
-We use Bayesian Inference. Suppose there exist unknown parameters (denoted
+To quantitatively model uncertainties, Bayesian Inference is the appropriate
+framework \citep{cox, jaynes, caticha}. Suppose there exist unknown parameters (denoted
 collectively by $\theta$) and we expect to obtain some data $D$. Our prior
 knowledge (or uncertainty) about the parameters is modelled by a prior
 probability distribution:
@@ -268,6 +273,12 @@ Arnouts(1996)]{sextractor} Bertin, E., Arnouts, S.\ 1996.\ SExtractor: Software 
 \& Cs{\'a}nyi}{2011}]{dnest} Brewer B.~J., P{\'a}rtay L.~B.,
 Cs{\'a}nyi G., 2011, Statistics and Computing, 21, 4, 649-656. arXiv:0912.2380
 
+\bibitem[Caticha(2009)]{caticha} Caticha, A.\ 2009.\ 
+Quantifying Rational Belief.\ American Institute of Physics Conference 
+Series 1193, 60-68. 
+
+\bibitem[Cox(1946)]{cox} Cox, R.~T., 1946, Probability, Frequency, and Reasonable Expectation. 1946. American Journal of Physics 14 14, 1-13.
+
 \bibitem[Feroz et al.(2011)]{2011MNRAS.415.3462F} Feroz, F., Balan, S.~T., 
 Hobson, M.~P.\ 2011.\ Detecting extrasolar planets from stellar radial 
 velocities using Bayesian evidence.\ Monthly Notices of the Royal 
@@ -275,6 +286,9 @@ Astronomical Society 415, 3462-3472.
 
 \bibitem[\protect\citeauthoryear{Green}{1995}]{rjmcmc}
 Green, P.~J., 1995, Reversible Jump Markov Chain Monte Carlo Computation and Bayesian Model Determination, Biometrika 82 (4): 711–732.
+
+\bibitem[Jaynes(2003)]{jaynes} Jaynes, E.~T., 2003, Probability Theory: The
+Logic of Science, ISBN 0521592712, Cambridge University Press, June 2003.
 
 \bibitem[Kelly et al.(2008)]{2008ApJ...682..874K} Kelly, B.~C., Fan, X., 
 \& Vestergaard, M.\ 2008, ApJ, 682, 874 

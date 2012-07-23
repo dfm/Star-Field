@@ -99,7 +99,7 @@ sampling distribution with the actual data substituted in.
 
 \section{The Specific Model for Stellar Fields}
 
-\subsection{The Unknown Parameters}
+\subsection{The Hypothesis Space and the Prior}
 Our model makes the following assumptions. There are an unknown number of stars
 $N$ in the field. Each star has an unknown
 position $(x,y)$ in the plane of the sky, and an unknown flux $f$. We also
@@ -123,7 +123,8 @@ learning the value of one would not tell us anything about the values of the
 others. Finally, the positions and fluxes of the stars come independently from
 a common distribution. If we knew the spatial distribution and the luminosity
 function of the stars, then the location and flux of a particular star would
-not tell us anything about the location and flux of another star.
+not tell us anything about the location and flux of another star. Really, this
+is just a way of implementing exchangeability.
 
 \subsection{The Sampling Distribution}
 The sampling distribution is a probabilistic model for the process that
@@ -161,7 +162,7 @@ mandatory!} Show the plot of it
 
 \begin{figure}
 \begin{center}
-\includegraphics{Figures/likelihood.eps}
+\includegraphics[scale=0.7]{Figures/likelihood.eps}
 \end{center}
 \end{figure}
 
@@ -200,22 +201,6 @@ posterior, and then assigning importance weights when you want the posterior.
 Nested Sampling is good because it is invariant under monotonic transformations
 of the likelihood function. i.e. the exploration only depends on things like
 whether one point is better than another, and not on how much better it is.
-
-\subsection{Improving the Efficiency of Reversible Jump}
-Instead of parameterising by $N$ and the positions and fluxes, what if we have
-$3N_{\rm max}$ latent variables $\theta$ that always exist, and transform these
-into
-positions and fluxes by a transformation $f$:
-\begin{eqnarray}
-\{\mathbf{x}, \mathbf{y}, \mathbf{f}\} &=& f(\theta)
-\end{eqnarray}
-The transformation can be parameterized by various parameters of its own, such
-that a known fraction of the fluxes end up being nonzero, etc. This could have
-various advantages, most notably: when new stars are added, they are added with
-low fluxes. It also turns the variable dimension problem into a fixed dimension
-one, so emcee, MultiNest or similar will now work, although the multimodality problem will
-still exist.
-
 
 \section{A More Realistic Model}
 \citep{2008ApJ...682..874K}
@@ -272,6 +257,41 @@ are of order $10^{-6}$ times the prior width.\label{proposals}}
 \end{table}
 
 See Table~\ref{proposals} for a list of current proposal distributions.
+
+\section{Broken Pareto Distribution}
+The Broken Pareto distribution is:
+\begin{eqnarray}
+p(x | \theta) &\propto&
+\left\{
+\begin{array}{lcr}
+0, & & x < x_0 \\
+x^{-\alpha_1 - 1}, & & x_0 \leq x \leq x_1 \\
+x^{-\alpha_2 - 1}, & & x > x_1
+\end{array}
+\right.
+\end{eqnarray}
+We will need the fully normalised version. Putting in two normalising constants:
+\begin{eqnarray}
+p(x | \theta) &=&
+\left\{
+\begin{array}{lcr}
+0, & & x < x_0 \\
+C_1x^{-\alpha_1 - 1}, & & x_0 \leq x \leq x_1 \\
+C_2x^{-\alpha_2 - 1}, & & x > x_1
+\end{array}
+\right.
+\end{eqnarray}
+The normalising constants can be obtained by enforcing the following
+constraints. The first constraint is that the total probability is unity:
+\begin{eqnarray}
+\int p(x|\theta) \, dx = 1
+\end{eqnarray}
+The second constraint is that the PDF should be continuous at $x=x_1$:
+\begin{eqnarray}
+C_1 x_1^{-\alpha_1 - 1} = C_2 x_1^{-\alpha_2 - 1}
+\end{eqnarray}
+
+
 
 %\subsection{Future Possibilities}
 %{\bf Hogg}: {\it I think this problem is important enough and general enough

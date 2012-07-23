@@ -291,8 +291,14 @@ Z_1^{-1} x_1^{-\alpha_1 - 1} &=& Z_2^{-1} x_1^{-\alpha_2 - 1} \\
 The second constraint is that the total probability is unity:
 \begin{eqnarray}
 \int p(x|\theta) \, dx &=& 1 \\
-\int_{x_0}^{x_1} Z_1^{-1}x^{-\alpha_1 - 1} \, dx
-+ \int_{x_1}^\infty Z_2^{-1}x^{-\alpha_2 - 1}\, dx &=& 1 \\
+\implies
+Z_1 &=& 
+\int_{x_0}^{x_1} x^{-\alpha_1 - 1} \, dx
++ x_1^{\alpha_2-\alpha_1} \int_{x_1}^\infty x^{-\alpha_2 - 1}\, dx \\
+&=& \left[-\frac{x^{-\alpha_1}}{\alpha_1}\right]_{x_0}^{x_1}
++ x_1^{\alpha_2-\alpha_1}\left[-\frac{x^{-\alpha_2}}{\alpha_2}\right]_{x_1}^\infty \\
+&=& \frac{x_0^{-\alpha_1} - x_1^{-\alpha_1}}{\alpha_1}
++ \frac{x_1^{-\alpha_1-\alpha_2}}{\alpha_2}
 \end{eqnarray}
 
 

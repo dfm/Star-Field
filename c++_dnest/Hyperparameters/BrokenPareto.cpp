@@ -40,6 +40,8 @@ double BrokenPareto::perturbMu()
 double BrokenPareto::perturbAlpha()
 {
 	double logH = 0.;
+	int which = randInt(2);
+
 	alpha += 4.*pow(10., 1.5 - 6.*randomU())*randn();
 	alpha = mod(alpha - 1., 4.) + 1.;
 	return logH;

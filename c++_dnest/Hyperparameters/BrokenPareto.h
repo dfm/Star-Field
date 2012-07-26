@@ -1,5 +1,5 @@
-#ifndef _BrokenPareto_
-#define _BrokenPareto_
+#ifndef _Pareto_
+#define _Pareto_
 
 #include "../Hyperparameters.h"
 #include <ostream>
@@ -7,14 +7,13 @@
 /*
 * Stars can be anywhere, but their fluxes are tied together
 */
-class BrokenPareto:public Hyperparameters
+class Pareto:public Hyperparameters
 {
 	private:
-		double minLogMu, maxLogMu, rangeLogMu;
 		double xMin, xMax, yMin, yMax;
 
-		double mu; // Minimum flux of stars
-		double alpha; // Slope
+		double x[2]; // Lower cutoff and break-point
+		double alpha[2]; // Slopes
 
 		// These are useful for perturbStar1 and 2
 		double perturbMu();
@@ -26,7 +25,7 @@ class BrokenPareto:public Hyperparameters
 		double fluxLogPDF(double f) const;
 
 	public:
-		BrokenPareto();
+		Pareto();
 
 		// Generate hyperparameters from the prior
 		void fromPrior();

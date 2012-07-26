@@ -287,7 +287,7 @@ constraints. The first constraint is that the PDF should be continuous at
 $x=x_1$:
 \begin{eqnarray}
 Z_1^{-1} x_1^{-\alpha_1 - 1} &=& Z_2^{-1} x_1^{-\alpha_2 - 1} \\
-\implies Z_2 &=& Z_1 x_1^{\alpha_1-\alpha_2} \label{constraint1}
+\implies Z_2 &=& x_1^{\alpha_1-\alpha_2}Z_1 \label{constraint1}
 \end{eqnarray}
 The second constraint is that the total probability is unity:
 \begin{eqnarray}
@@ -298,8 +298,8 @@ The second constraint is that the total probability is unity:
 \end{eqnarray}
 Combining equations~\ref{constraint1} and~\ref{constraint2} yields:
 \begin{eqnarray}
-Z_1 &=& \\
-Z_2 &=& 
+Z_1 &=& \frac{x_0^{-\alpha_1} - x_1^{-\alpha_1}}{\alpha_1} + \frac{x_1^{-\alpha_1}}{\alpha_2}\\
+Z_2 &=& x_1^{\alpha_1-\alpha_2}Z_1
 \end{eqnarray}
 
 %\subsection{Future Possibilities}

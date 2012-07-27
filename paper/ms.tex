@@ -310,64 +310,23 @@ F(x) &=& P(X \leq x) \\
 \end{array}
 \right.
 \end{eqnarray}
+The probability density function (PDF) can be obtained by differentiation:
+\begin{eqnarray}
+f(x) &=& \frac{d}{dx} F(x) \\
+&=& \left\{
+\begin{array}{lcr}
+0, & & x < x_1 \\
+\left[\alpha_1 x_1^{\alpha_1}\right]x^{-\alpha_1 - 1}, & & x_1 \leq x \leq x_2 \\
+\left[\alpha_2 x_1^{\alpha_1} x^{\alpha_2 - \alpha_1}\right]x^{-\alpha_2 - 1}, & & x > x_2
+\end{array}
+\right.
+\end{eqnarray}
+The normalization constants are the factors inside square brackets.
 
 
 
-%The Broken Pareto distribution is:
-%\begin{eqnarray}
-%p(x | \theta) &\propto&
-%\left\{
-%\begin{array}{lcr}
-%0, & & x < x_0 \\
-%x^{-\alpha_1 - 1}, & & x_0 \leq x \leq x_1 \\
-%x^{-\alpha_2 - 1}, & & x > x_1
-%\end{array}
-%\right.
-%\end{eqnarray}
-%where the parameters are $\theta = \{x_0, x_1, \alpha_0, \alpha_1\}$.
-%We will need the fully normalised version. Putting in two normalisers:
-%\begin{eqnarray}
-%p(x | \theta) &=&
-%\left\{
-%\begin{array}{lcr}
-%0, & & x < x_0 \\
-%Z_1^{-1}x^{-\alpha_1 - 1}, & & x_0 \leq x \leq x_1 \\
-%Z_2^{-1}x^{-\alpha_2 - 1}, & & x > x_1
-%\end{array}
-%\right.
-%\end{eqnarray}
-%The normalising constants can be obtained by enforcing the following
-%constraints. The first constraint is that the PDF should be continuous at
-%$x=x_1$:
-%\begin{eqnarray}
-%Z_1^{-1} x_1^{-\alpha_1 - 1} &=& Z_2^{-1} x_1^{-\alpha_2 - 1} \\
-%\implies Z_2 &=& x_1^{\alpha_1-\alpha_2}Z_1 \label{constraint1}
-%\end{eqnarray}
-%The second constraint is that the total probability is unity:
-%\begin{eqnarray}
-%\int p(x|\theta) \, dx &=& 1 \\
-%\implies
-%\int_{x_0}^{x_1} Z_1^{-1}x^{-\alpha_1 - 1} \, dx
-%+ \int_{x_1}^{\infty} Z_2^{-1}x^{-\alpha_2 - 1} \, dx &=& 1 \label{constraint2}
-%\end{eqnarray}
-%Combining equations~\ref{constraint1} and~\ref{constraint2} yields:
-%\begin{eqnarray}
-%Z_1 &=& \frac{x_0^{-\alpha_1} - x_1^{-\alpha_1}}{\alpha_1} + \frac{x_1^{-\alpha_1}}{\alpha_2}\\
-%Z_2 &=& x_1^{\alpha_1-\alpha_2}Z_1
-%\end{eqnarray}
 
-%The cumulative distribution can be obtained:
-%\begin{eqnarray}
-%F(x) &=& \int_{x_0}^x p(x|\theta) \, dx \\
-%&=&
-%\left\{
-%\begin{array}{lcr}
-%0, & & x < x_0 \\
-%\frac{x_0^{-\alpha_1} - x^{-\alpha_1}}{Z_1\alpha_1}, & & x_0 \leq x \leq x_1 \\
-%, & & x > x_1
-%\end{array}
-%\right.
-%\end{eqnarray}
+
 
 %\subsection{Future Possibilities}
 %{\bf Hogg}: {\it I think this problem is important enough and general enough

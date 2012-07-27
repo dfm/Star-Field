@@ -276,8 +276,37 @@ G(x) &=&
 \left\{
 \begin{array}{lcr}
 1, & & x < x_1 \\
-\left(\frac{x_1}{x}\right)^{-\alpha_1}, & & x_1 \leq x \leq x_2 \\
-K\left(\frac{x_2}{x}\right)^{-\alpha_2}, & & x > x_2
+\left(\frac{x_1}{x}\right)^{\alpha_1}, & & x_1 \leq x \leq x_2 \\
+K\left(\frac{x_2}{x}\right)^{\alpha_2}, & & x > x_2
+\end{array}
+\right.
+\end{eqnarray}
+Since we want the CDF to be continuous (to avoid delta functions in the PDF!)
+then the value of $K$ must be set by:
+\begin{eqnarray}
+\left(\frac{x_1}{x_2}\right)^{\alpha_1} &=& K\left(\frac{x_2}{x_2}\right)^{\alpha_2} \\
+\implies K &=& \left(\frac{x_1}{x_2}\right)^{\alpha_1}.
+\end{eqnarray}
+Therefore the complementary CDF is:
+\begin{eqnarray}
+G(x) &=&
+\left\{
+\begin{array}{lcr}
+1, & & x < x_1 \\
+\left(\frac{x_1}{x}\right)^{\alpha_1}, & & x_1 \leq x \leq x_2 \\
+\left(\frac{x_1}{x_2}\right)^{\alpha_1}\left(\frac{x_2}{x}\right)^{\alpha_2}, & & x > x_2
+\end{array}
+\right.
+\end{eqnarray}
+From this we can obtain the standard CDF:
+\begin{eqnarray}
+F(x) &=& P(X \leq x) \\
+&=& 1 - G(x)\\
+&=& \left\{
+\begin{array}{lcr}
+0, & & x < x_1 \\
+1 - \left(\frac{x_1}{x}\right)^{\alpha_1}, & & x_1 \leq x \leq x_2 \\
+1 - \left(\frac{x_1}{x_2}\right)^{\alpha_1}\left(\frac{x_2}{x}\right)^{\alpha_2}, & & x > x_2
 \end{array}
 \right.
 \end{eqnarray}

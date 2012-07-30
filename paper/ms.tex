@@ -316,7 +316,7 @@ F^{-1}(x)
 &=& \left\{
 \begin{array}{lcr}
 x_1(1-x)^{-\frac{1}{\alpha_1}}, & & 0 \leq x \leq 1 - \left(\frac{x_1}{x_2}\right)^{\alpha_1} \\
-x_2\left((1-F)\left(\frac{x_2}{x_1}\right)^{\alpha_1}\right)^{-\frac{1}{\alpha_2}}, & & 1 - \left(\frac{x_1}{x_2}\right)^{\alpha_1} \leq x \leq 1
+x_2\left((1-x)\left(\frac{x_2}{x_1}\right)^{\alpha_1}\right)^{-\frac{1}{\alpha_2}}, & & 1 - \left(\frac{x_1}{x_2}\right)^{\alpha_1} \leq x \leq 1
 \end{array}
 \right.
 \end{eqnarray}
@@ -330,7 +330,7 @@ f(x) &=& \frac{d}{dx} F(x) \\
 \begin{array}{lcr}
 0, & & x < x_1 \\
 \left[\alpha_1 x_1^{\alpha_1}\right]x^{-\alpha_1 - 1}, & & x_1 \leq x \leq x_2 \\
-\left[\alpha_2 x_1^{\alpha_1} x^{\alpha_2 - \alpha_1}\right]x^{-\alpha_2 - 1}, & & x > x_2
+\left[\alpha_2 x_1^{\alpha_1} x_2^{\alpha_2 - \alpha_1}\right]x^{-\alpha_2 - 1}, & & x > x_2
 \end{array}
 \right.
 \end{eqnarray}

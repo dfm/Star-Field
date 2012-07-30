@@ -57,7 +57,7 @@ double BrokenPareto::perturb_x()
 	return logH;
 }
 
-double BrokenPareto::perturbAlpha()
+double BrokenPareto::perturb_a()
 {
 	double logH = 0.;
 
@@ -114,7 +114,7 @@ double BrokenPareto::perturb2(const vector<Star>& stars)
 
 void BrokenPareto::print(ostream& out) const
 {
-	out<<mu<<' '<<alpha;
+	out<<x1<<' '<<x2<<' '<<a1<<' '<<a2<<' ';
 }
 
 Star BrokenPareto::generateStar() const
@@ -149,18 +149,36 @@ double BrokenPareto::perturbStar2(Star& star, double scale) const
 
 double BrokenPareto::fluxCDF(double f) const
 {
-	return 1. - pow(mu/f, alpha);
+	if(f < x1)
+		return 0.;
+
+	if(f < x2)
+		return 1. - pow(x1/f, a1);
+
+	return 1. - pow(x1/x2, a1)*pow(x2/f, a2);
 }
 
 double BrokenPareto::fluxInvCDF(double u) const
 {
-	return mu*pow(1. - u, -1./alpha);
+	if(u < 0)
+		return 0;
+	if(u > 1)
+		return 1E300;
+
+	if(u <= 1. - pow(x1/x2, a1))
+		return x1*pow(1. - u, -1./a1);
+
+	return x2*pow((1 - u)*pow(x2/x1, a1), -1./a2);
 }
 
 double BrokenPareto::fluxLogPDF(double f) const
 {
-	if(f < mu)
+	if(f < x1)
 		return -1E300;
-	return log(alpha) + alpha*log(mu) - (alpha + 1.)*log(f);
+
+	if(f < x2)
+		return a1*pow(x1, a1)*pow(f, -a1 - 1);
+
+	return a2*pow(x1, a1)*pow(x2, a2 - a1)*pow(f, -a2 - 1);
 }
 

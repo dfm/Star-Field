@@ -1,5 +1,5 @@
-#ifndef _Pareto_
-#define _Pareto_
+#ifndef _BrokenPareto_
+#define _BrokenPareto_
 
 #include "../Hyperparameters.h"
 #include <ostream>
@@ -7,7 +7,7 @@
 /*
 * Stars can be anywhere, but their fluxes are tied together
 */
-class Pareto:public Hyperparameters
+class BrokenPareto:public Hyperparameters
 {
 	private:
 		// For star positions
@@ -26,7 +26,7 @@ class Pareto:public Hyperparameters
 		double fluxLogPDF(double f) const;
 
 	public:
-		Pareto();
+		BrokenPareto();
 
 		// Generate hyperparameters from the prior
 		void fromPrior();

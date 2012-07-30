@@ -10,14 +10,15 @@
 class Pareto:public Hyperparameters
 {
 	private:
+		// For star positions
 		double xMin, xMax, yMin, yMax;
 
-		double x[2]; // Lower cutoff and break-point
-		double alpha[2]; // Slopes
+		double x1, x2; // Lower cutoff and break-point of flux PDF
+		double a1, a2; // Slopes
 
 		// These are useful for perturbStar1 and 2
-		double perturbMu();
-		double perturbAlpha();
+		double perturb_x();
+		double perturb_a();
 
 		// These are useful for perturbStar2
 		double fluxCDF(double f) const;

@@ -8,9 +8,6 @@ using namespace std;
 using namespace DNest3;
 
 BrokenPareto::BrokenPareto()
-:minLogMu(log(1E-3))
-,maxLogMu(log(1E3))
-,rangeLogMu(maxLogMu - minLogMu)
 {
 	if(!Data::get_data().isLoaded())
 		cerr<<"# Error. No data has been loaded."<<endl;
@@ -23,27 +20,57 @@ BrokenPareto::BrokenPareto()
 
 void BrokenPareto::fromPrior()
 {
-	mu = exp(minLogMu + rangeLogMu*randn());
-	alpha = 1. + 4.*randomU();
+	x1 = log(1E-3) + log(1E6)*randomU();
+	x2 = x1 + 10.*randomU();
+	x1 = exp(x1); x2 = exp(x2);
+
+	a1 = 1. + 4*randomU();
+	a2 = 1. + 4*randomU();
 }
 
-double BrokenPareto::perturbMu()
+double BrokenPareto::perturb_x()
 {
 	double logH = 0.;
-	mu = log(mu);
-	mu += rangeLogMu*pow(10., 1.5 - 6.*randomU())*randn();
-	mu = mod(mu - minLogMu, rangeLogMu) + minLogMu;
-	mu = exp(mu);
+
+	if(randomU() <= 0.5)
+	{
+		x1 = log(x1); x2 = log(x2);
+
+		double diff = log(1E6)*pow(10., 1.5 - 6.*randomU())*randn();
+		x1 += diff;
+		x2 += diff;
+
+		x1 = exp(x1); x2 = log(x2);
+	}
+	else
+	{
+		x1 = log(x1); x2 = log(x2);
+
+		double diff = x2 - x1;
+		diff += 10.*pow(10., 1.5 - 6.*randomU())*randn();
+		diff = mod(diff, 10.);
+		x2 = x1 + diff;
+
+		x1 = exp(x1); x2 = log(x2);	
+	}
+
 	return logH;
 }
 
 double BrokenPareto::perturbAlpha()
 {
 	double logH = 0.;
-	int which = randInt(2);
 
-	alpha += 4.*pow(10., 1.5 - 6.*randomU())*randn();
-	alpha = mod(alpha - 1., 4.) + 1.;
+	if(randomU() <= 0.5)
+	{
+		a1 += 4.*pow(10., 1.5 - 6.*randomU())*randn();
+		a1 = mod(a1 - 1., 4.) + 1.;
+	}
+	else
+	{
+		a2 += 4.*pow(10., 1.5 - 6.*randomU())*randn();
+		a2 = mod(a2 - 1., 4.) + 1.;
+	}
 	return logH;
 }
 
@@ -56,9 +83,9 @@ double BrokenPareto::perturb1(vector<Star>& stars)
 
 	int which = randInt(2);
 	if(which == 0)
-		logH += perturbMu();
+		logH += perturb_x();
 	else if(which == 1)
-		logH += perturbAlpha();
+		logH += perturb_a();
 
 	for(size_t i=0; i<stars.size(); i++)
 		stars[i].flux = fluxInvCDF(stars[i].flux);
@@ -75,9 +102,9 @@ double BrokenPareto::perturb2(const vector<Star>& stars)
 
 	int which = randInt(2);
 	if(which == 0)
-		logH += perturbMu();
+		logH += perturb_x();
 	else if(which == 1)
-		logH += perturbAlpha();
+		logH += perturb_a();
 
 	for(size_t i=0; i<stars.size(); i++)
 		logH += fluxLogPDF(stars[i].flux);

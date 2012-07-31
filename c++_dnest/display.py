@@ -6,7 +6,7 @@ if saveFrames:
 	os.system('rm Frames/*.png')
 
 maxNumStars = 200
-numHyperparams = 3	# Number of parameters before catalog begins
+numHyperparams = 6	# Number of parameters before catalog begins
 			# maxNumStars, staleness, hyperparameters
 
 sample = atleast_2d(loadtxt('posterior_sample.txt'))

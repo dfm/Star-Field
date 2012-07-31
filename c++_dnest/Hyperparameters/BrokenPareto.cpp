@@ -36,9 +36,10 @@ double BrokenPareto::perturb_x()
 	{
 		x1 = log(x1); x2 = log(x2);
 
-		double diff = log(1E6)*pow(10., 1.5 - 6.*randomU())*randn();
-		x1 += diff;
-		x2 += diff;
+		double change = -x1;
+		x1 += log(1E6)*pow(10., 1.5 - 6.*randomU())*randn();
+		x1 = mod(x1 - log(1E3), log(1E6)) + log(1E3);
+		x2 += change;
 
 		x1 = exp(x1); x2 = log(x2);
 	}
@@ -177,8 +178,8 @@ double BrokenPareto::fluxLogPDF(double f) const
 		return -1E300;
 
 	if(f < x2)
-		return a1*pow(x1, a1)*pow(f, -a1 - 1);
+		return log(a1) + a1*log(x1) - (a1 + 1)*log(f);
 
-	return a2*pow(x1, a1)*pow(x2, a2 - a1)*pow(f, -a2 - 1);
+	return log(a2) + a1*log(x1) + (a2 - a1)*log(x2) - (a2 + 1)*log(f);
 }
 

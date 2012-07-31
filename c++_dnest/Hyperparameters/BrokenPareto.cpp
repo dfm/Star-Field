@@ -38,10 +38,11 @@ double BrokenPareto::perturb_x()
 
 		double change = -x1;
 		x1 += log(1E6)*pow(10., 1.5 - 6.*randomU())*randn();
-		x1 = mod(x1 - log(1E3), log(1E6)) + log(1E3);
+		x1 = mod(x1 - log(1E-3), log(1E6)) + log(1E-3);
+		change += x1;
 		x2 += change;
 
-		x1 = exp(x1); x2 = log(x2);
+		x1 = exp(x1); x2 = exp(x2);
 	}
 	else
 	{
@@ -52,7 +53,7 @@ double BrokenPareto::perturb_x()
 		diff = mod(diff, 10.);
 		x2 = x1 + diff;
 
-		x1 = exp(x1); x2 = log(x2);	
+		x1 = exp(x1); x2 = exp(x2);	
 	}
 
 	return logH;

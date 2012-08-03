@@ -299,77 +299,29 @@ Z_1^{-1}x_2^{-\alpha_1 - 1} &=& Z_2^{-1}x_2^{-\alpha_2 - 1}\\
 Z_2 &=& Z_1x_2^{\alpha_1-\alpha_2}
 \end{eqnarray}
 
+The second condition is the total probability must be 1:
 
-Consider the complementary CDF:
 \begin{eqnarray}
-G(x) = P(X \geq x)
-\end{eqnarray}
-The complementary CDF for a broken Pareto is:
-\begin{eqnarray}
-G(x) &=&
-\left\{
-\begin{array}{lcr}
-1, & & x < x_1 \\
-\left(\frac{x_1}{x}\right)^{\alpha_1}, & & x_1 \leq x \leq x_2 \\
-K\left(\frac{x_2}{x}\right)^{\alpha_2}, & & x > x_2
-\end{array}
-\right.
-\end{eqnarray}
-Since we want the CDF to be continuous (to avoid delta functions in the PDF!)
-then the value of $K$ must be set by:
-\begin{eqnarray}
-\left(\frac{x_1}{x_2}\right)^{\alpha_1} &=& K\left(\frac{x_2}{x_2}\right)^{\alpha_2} \\
-\implies K &=& \left(\frac{x_1}{x_2}\right)^{\alpha_1}.
-\end{eqnarray}
-Therefore the complementary CDF is:
-\begin{eqnarray}
-G(x) &=&
-\left\{
-\begin{array}{lcr}
-1, & & x < x_1 \\
-\left(\frac{x_1}{x}\right)^{\alpha_1}, & & x_1 \leq x \leq x_2 \\
-\left(\frac{x_1}{x_2}\right)^{\alpha_1}\left(\frac{x_2}{x}\right)^{\alpha_2}, & & x > x_2
-\end{array}
-\right.
-\end{eqnarray}
-From this we can obtain the standard CDF:
-\begin{eqnarray}
-F(x) &=& P(X \leq x) \\
-&=& 1 - G(x)\\
-&=& \left\{
-\begin{array}{lcr}
-0, & & x < x_1 \\
-1 - \left(\frac{x_1}{x}\right)^{\alpha_1}, & & x_1 \leq x \leq x_2 \\
-1 - \left(\frac{x_1}{x_2}\right)^{\alpha_1}\left(\frac{x_2}{x}\right)^{\alpha_2}, & & x > x_2
-\end{array}
-\right.
-\end{eqnarray}
-and its inverse (defined on $[0, 1]$):
-\begin{eqnarray}
-F^{-1}(x) 
-&=& \left\{
-\begin{array}{lcr}
-x_1(1-x)^{-\frac{1}{\alpha_1}}, & & 0 \leq x \leq 1 - \left(\frac{x_1}{x_2}\right)^{\alpha_1} \\
-x_2\left((1-x)\left(\frac{x_2}{x_1}\right)^{\alpha_1}\right)^{-\frac{1}{\alpha_2}}, & & 1 - \left(\frac{x_1}{x_2}\right)^{\alpha_1} \leq x \leq 1
-\end{array}
-\right.
+\int_{x_1}^{x_2} Z_1^{-1} x^{-\alpha_1 - 1} \, dx
++
+\int_{x_2}^\infty Z_2^{-1} x^{-\alpha_2 - 1} \, dx
+&=& 1 \\
+Z_1^{-1}\alpha_1^{-1}\left[x_1^{-\alpha_1} - x_2^{-\alpha_1}\right]
++
+Z_2^{-1}\alpha_2^{-1}x_2^{-\alpha_2}
+&=& 1 \\
+Z_1^{-1}\alpha_1^{-1}\left[x_1^{-\alpha_1} - x_2^{-\alpha_1}\right]
++
+Z_1^{-1}x_2^{\alpha_2-\alpha_1}\alpha_2^{-1}x_2^{-\alpha_2}
+&=& 1
 \end{eqnarray}
 
-
-
-The probability density function (PDF) can be obtained by differentiation:
 \begin{eqnarray}
-f(x) &=& \frac{d}{dx} F(x) \\
-&=& \left\{
-\begin{array}{lcr}
-0, & & x < x_1 \\
-\left[\alpha_1 x_1^{\alpha_1}\right]x^{-\alpha_1 - 1}, & & x_1 \leq x \leq x_2 \\
-\left[\alpha_2 x_1^{\alpha_1} x_2^{\alpha_2 - \alpha_1}\right]x^{-\alpha_2 - 1}, & & x > x_2
-\end{array}
-\right.
+\implies
+Z_1 &=& \alpha_1^{-1}\left[x_1^{-\alpha_1} - x_2^{-\alpha_1}\right]
++
+x_2^{-\alpha_1}\alpha_2^{-1}
 \end{eqnarray}
-The normalization constants are the factors inside square brackets.
-
 
 
 

@@ -266,6 +266,40 @@ See Table~\ref{proposals} for a list of current proposal distributions.
 
 \section{Broken Pareto Distribution}
 
+The Broken Pareto (power-law) distribution is:
+\begin{eqnarray}
+p(x) &\propto&
+\left\{
+\begin{array}{lcr}
+0, & & x < x_1 \\
+x^{-\alpha_1 - 1} & & x_1 \leq x \leq x_2 \\
+x^{-\alpha_2 - 1} & & x > x_2
+\end{array}
+\right.
+.
+\end{eqnarray}
+With normalising terms included, the proportionality becomes an equality:
+\begin{eqnarray}
+p(x) &=&
+\left\{
+\begin{array}{lcr}
+0, & & x < x_1 \\
+Z_1^{-1}x^{-\alpha_1 - 1}, & & x_1 \leq x \leq x_2 \\
+Z_2^{-1}x^{-\alpha_2 - 1}, & & x > x_2
+\end{array}
+\right.
+.
+\end{eqnarray}
+
+Two conditions will be used to determine the normalisers $Z_1$ and $Z_2$.
+Firstly, the PDF should be continuous at $x=x_2$:
+\begin{eqnarray}
+Z_1^{-1}x_2^{-\alpha_1 - 1} &=& Z_2^{-1}x_2^{-\alpha_2 - 1}\\
+\implies
+Z_2 &=& Z_1x_2^{\alpha_1-\alpha_2}
+\end{eqnarray}
+
+
 Consider the complementary CDF:
 \begin{eqnarray}
 G(x) = P(X \geq x)

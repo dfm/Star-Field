@@ -325,12 +325,22 @@ x_2^{-\alpha_1}\alpha_2^{-1}
 
 The cumulative distribution (CDF) is:
 \begin{eqnarray}
-F(x) &=& 
+P(X \leq x) = F(x) &=& 
 \left\{
 \begin{array}{lcr}
 0, & & x < x_1 \\
 (Z_1\alpha_1)^{-1}\left(x_1^{-\alpha_1} - x^{-\alpha_1}\right), & & x_1 \leq x \leq x_2 \\
 1 - (Z_2\alpha_2)^{-1}x^{-\alpha_2}, & & x > x_2 
+\end{array}
+\right.
+\end{eqnarray}
+and the inverse CDF is:
+\begin{eqnarray}
+F^{-1}(u) &=& 
+\left\{
+\begin{array}{lcr}
+\left[x_1^{-\alpha_1} - uZ_1\alpha_1\right]^{-1/\alpha_1}, & & 0 < u < 1 - (Z_2\alpha_2)^{-1}x_2^{-\alpha_2}\\
+\left[Z_2\alpha_2(1-u)\right]^{-1/\alpha_2},& & 1 - (Z_2\alpha_2)^{-1}x_2^{-\alpha_2}< u < 1
 \end{array}
 \right.
 \end{eqnarray}

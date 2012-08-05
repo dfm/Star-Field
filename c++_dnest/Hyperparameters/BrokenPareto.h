@@ -16,6 +16,9 @@ class BrokenPareto:public Hyperparameters
 		double x1, x2; // Lower cutoff and break-point of flux PDF
 		double a1, a2; // Slopes
 
+		double Z1, Z2; // Normalisers
+		void calculateZ();
+
 		// These are useful for perturbStar1 and 2
 		double perturb_x();
 		double perturb_a();

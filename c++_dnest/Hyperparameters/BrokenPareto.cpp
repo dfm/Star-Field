@@ -26,6 +26,8 @@ void BrokenPareto::fromPrior()
 
 	a1 = 1. + 4*randomU();
 	a2 = 1. + 4*randomU();
+
+	calculateZ();
 }
 
 double BrokenPareto::perturb_x()
@@ -55,6 +57,7 @@ double BrokenPareto::perturb_x()
 
 		x1 = exp(x1); x2 = exp(x2);	
 	}
+	calculateZ();
 
 	return logH;
 }
@@ -73,7 +76,14 @@ double BrokenPareto::perturb_a()
 		a2 += 4.*pow(10., 1.5 - 6.*randomU())*randn();
 		a2 = mod(a2 - 1., 4.) + 1.;
 	}
+	calculateZ();
 	return logH;
+}
+
+void BrokenPareto::calculateZ()
+{
+	Z1 = (pow(x1, -a1) - pow(x2, -a1))/a1 + pow(x2, -a1)/a2;
+	Z2 = pow(x2, a1 - a2)*Z1;
 }
 
 double BrokenPareto::perturb1(vector<Star>& stars)
@@ -155,9 +165,9 @@ double BrokenPareto::fluxCDF(double f) const
 		return 0.;
 
 	if(f < x2)
-		return 1. - pow(x1/f, a1);
+		return (pow(x1, -a1) - pow(f, -a1))/(Z1*a1);
 
-	return 1. - pow(x1/x2, a1)*pow(x2/f, a2);
+	return 1. - pow(f, -a2)/(Z2*a2);
 }
 
 double BrokenPareto::fluxInvCDF(double u) const
@@ -167,10 +177,10 @@ double BrokenPareto::fluxInvCDF(double u) const
 	if(u > 1)
 		return 1E300;
 
-	if(u <= 1. - pow(x1/x2, a1))
-		return x1*pow(1. - u, -1./a1);
+	if(u <= 1. - pow(x2, -a2)/(Z2*a2))
+		return pow(pow(x1, -a1) - u*Z1*a1, -1./a1);
 
-	return x2*pow((1 - u)*pow(x2/x1, a1), -1./a2);
+	return pow(Z2*a2*(1. - u), -1./a2);
 }
 
 double BrokenPareto::fluxLogPDF(double f) const
@@ -179,8 +189,8 @@ double BrokenPareto::fluxLogPDF(double f) const
 		return -1E300;
 
 	if(f < x2)
-		return log(a1) + a1*log(x1) - (a1 + 1)*log(f);
+		return -log(Z1) - (a1 + 1.)*log(f);
 
-	return log(a2) + a1*log(x1) + (a2 - a1)*log(x2) - (a2 + 1)*log(f);
+	return -log(Z2) - (a2 + 1.)*log(f);
 }
 

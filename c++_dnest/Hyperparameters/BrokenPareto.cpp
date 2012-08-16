@@ -21,7 +21,7 @@ BrokenPareto::BrokenPareto()
 void BrokenPareto::fromPrior()
 {
 	x1 = log(1E-3) + log(1E6)*randomU();
-	x2 = x1 + 10.*randomU();
+	x2 = x1 + 2.3*randomU();
 	x1 = exp(x1); x2 = exp(x2);
 
 	a1 = 1. + 4*randomU();
@@ -51,8 +51,8 @@ double BrokenPareto::perturb_x()
 		x1 = log(x1); x2 = log(x2);
 
 		double diff = x2 - x1;
-		diff += 10.*pow(10., 1.5 - 6.*randomU())*randn();
-		diff = mod(diff, 10.);
+		diff += 2.3*pow(10., 1.5 - 6.*randomU())*randn();
+		diff = mod(diff, 2.3);
 		x2 = x1 + diff;
 
 		x1 = exp(x1); x2 = exp(x2);	

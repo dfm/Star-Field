@@ -50,30 +50,40 @@ However, standard methods for constructing catalogs can have difficulty in some
 challenging situations. For example, when multiple sources overlap partially
 or completely, it can be difficult to determine how many sources are present,
 and how much flux belongs to each source. In principle, uncertainty should be
-taken into account -- instead of simply estimating the position and flux of each
-object, we should fully describe the fact that sometimes we are not certain of
-the position and flux of each source.
+taken into account. Instead of simply {\it estimating} the position and flux of
+each object in the image, we should fully describe the fact that sometimes we
+are not certain of the position and flux of each source.
 
 Essentially, the creation of a catalog is an attempt to answer the question
 ``given the image we have obtained, what objects are present in the field and
 what are their properties?''. This motivates a probabilistic (Bayesian)
-approach to making catalogs.
+approach to making catalogs. The output of such an approach would not be a
+single single answer to this question (i.e. a single catalog), but rather a
+probability distribution over the space of possible catalogs. This is
+challenging for a number of reasons. Firstly, the number $N$ of objects in the
+image is itself unknown. Secondly, if $N$ is large, then the parameter space
+of positions and properties (flux, size, etc) of the objects is also large.
+This can cause Markov Chain Monte Carlo (MCMC) algorithms difficulties -- they
+may take a long time to converge to the target posterior distribution over
+catalogs.
 
-\citet{2011MNRAS.415.3462F} have attempted this, by replacing the complex
-$N$-component model with a single-component model, and using the
-single-component
-results to reconstruct what the $N$-component results would have been. However,
+Bayesian object detection has been implemented by \citet{2011MNRAS.415.3462F}
+under the assumption of a known $N$. This assumption is required for the
+{\tt MultiNest} sampler to be applicable. Using the results from the known $N$
+run, it is possible (under certain circumstances) to reconstruct what the
+results would have been if a variable-$N$ simulation had been used. However,
 this will not work well in situations where there is significant confusion
-(i.e. two or more sources overlap) and also does not allow for unknown $N$,
-which is the general situation. What we really need is a variable dimension
-model, where $N$ is an unknown quantity to be inferred from the data.
-The computational implementation of these models will require tools such as reversible jump Markov Chain Monte Carlo \citep{rjmcmc}.
+(i.e. two or more sources overlap). What is really required is a variable
+dimension model, where $N$ is an unknown quantity to be inferred from the data.
+The computational implementation of these models will require tools such as
+reversible jump Markov Chain Monte Carlo \citep{rjmcmc}.
 
 \section{Bayesian Inference}
 To quantitatively model uncertainties, Bayesian Inference is the appropriate
-framework \citep{cox, jaynes, caticha}. Suppose there exist unknown parameters (denoted
-collectively by $\theta$) and we expect to obtain some data $D$. Our prior
-knowledge (or uncertainty) about the parameters is modelled by a prior
+framework \citep{cox, jaynes, caticha}. Suppose there exist unknown parameters
+(denoted
+collectively by $\theta$) and we expect to obtain some data $x$. Our prior
+state of knowledge about the parameters is modelled by a prior
 probability distribution:
 \begin{equation}
 p(\theta)
@@ -81,24 +91,29 @@ p(\theta)
 We also model how the parameters give rise to the data, via a {\it sampling
 distribution}:
 \begin{equation}
-p(D|\theta)
+p(x|\theta)
 \end{equation}
 Despite the singular, the sampling distribution is actually a family of
 probability distributions, one for each possible value of $\theta$. Note that
-the sampling distribution is also an assertion of a prior state of knowledge.
-In this case it models our prior information about the fact that the parameters
-$\theta$ are going to influence the data in some way (otherwise this data
-would be irrelevant).
+the sampling distribution is also an assertion of a prior state of knowledge:
+It models prior information about the fact that the data $x$ is connected to
+the parameters $\theta$ in some way. Without this prior knowledge, learning is
+impossible: there has to be some relationship between the parameters and the
+data, otherwise new data tells you about nothing but itself.
 
-When specific data $D^*$ are known, the prior gets updated to the posterior
+When specific data $x^*$ has been obtained, our state of knowledge about $\theta$
+gets updated from the prior to the posterior,
 via Bayes' rule:
 \begin{eqnarray}
-p(\theta|D=D^*) &\propto& p(\theta)p(D|\theta)|_{D=D^*} \\
-&=& p(\theta)\mathcal{L}(\theta; D)
+p(\theta|x=x^*) &\propto& p(\theta)p(x|\theta)|_{x=x^*} \\
+&=& p(\theta)\mathcal{L}(\theta; x)
 \end{eqnarray}
 The modulating function is the {\it likelihood function}, which is the prior
-probability of obtaining the actual data set $D^*$ as a function of the
-parameters. As suggested by the above notation, it is obtained from the
+probability of obtaining the actual data set $x^*$ as a function of the
+parameters\footnote{In the case that the sampling distribution is a probability
+density, the likelihood is the probability density at the observed data. This
+is usually fine, although one should be aware of the Borel-Kolmogorov ``paradox''}.
+As suggested by the above notation, it is obtained from the
 sampling distribution with the actual data substituted in.
 
 \section{The Specific Model for Stellar Fields}

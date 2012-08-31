@@ -1,12 +1,9 @@
-default: ms.pdf
-
-ms.pdf: ms.dvi
+default:
+	latex ms
+	latex ms
+	latex ms
 	dvipdf ms
 
-ms.dvi: ms.tex
-	latex ms
-	latex ms
-
 clean:
-	rm *.dvi *.pdf *.aux *.log
+	rm ms.pdf ms.log ms.aux ms.dvi
 

@@ -29,18 +29,16 @@ f = exp(logf)
 f = f/trapz(f, x=x)
 print(trapz(f*(x < x2), x=x))
 
-subplot(2,1,1)
-loglog(x, 1-F, 'b')
-xlabel('x')
-ylabel('P(>x)')
-xlim([1, 100])
-
-subplot(2,1,2)
-plot(x, f, 'b')
-xlabel('x')
-ylabel('Probability Density')
-xlim([0, 20])
-
+plot(x, f, 'b', linewidth=2, label='Probability Density')
+xlabel('Flux', fontsize=14)
+ylabel('Probability Density', fontsize=14)
+xlim([0, 2])
+ylim([0, 1.5*f.max()])
+plot([0.3, 0.3], [0., 1.5*f.max()], 'r--', linewidth=2, label='Lower Cutoff $x_1$')
+plot([0.6, 0.6], [0., 1.5*f.max()], 'g--', linewidth=2, label='Break Point $x_2$')
+legend()
+gca().tick_params(labelsize=14)
+savefig('Figures/broken.eps')
 show()
 
 

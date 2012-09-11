@@ -198,9 +198,7 @@ where $\epsilon_{ij} \sim \mathcal{N}(0, \sigma^2)$.
 
 \subsection{The Prior Distribution}
 The prior distribution for the number of stars $N$ is uniform between 0 and
-$N_{\rm max}$.
-
-\section{Broken Power-Law Distribution}
+$N_{\rm max}$. The model for the luminosity function is a broken power-law.
 The broken power-law distribution is defined by:
 \begin{eqnarray}
 p(x) &\propto&
@@ -212,6 +210,10 @@ x^{-\alpha_2 - 1} & & x > x_2
 \end{array}
 \right.
 .
+\end{eqnarray}
+The free parameters of the broken power-law are:
+\begin{eqnarray}
+\beta = \{x_1, x_2, \alpha_1, \alpha_2\}
 \end{eqnarray}
 
 \begin{figure}

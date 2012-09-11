@@ -58,18 +58,21 @@ Essentially, the creation of a catalog is an attempt to answer the question
 ``given the image we have obtained, what objects are present in the field and
 what are their properties?''. This motivates a probabilistic (Bayesian)
 approach to making catalogs. The output of such an approach would not be a
-single single answer to this question (i.e. a single catalog), but rather a
-probability distribution over the space of possible catalogs. This is
+single answer to this question (i.e. a single catalog), but rather a
+probability distribution over the space of possible catalogs.
+Constructing such a probability distribution is
 challenging for a number of reasons. Firstly, the number $N$ of objects in the
-image is itself unknown. Secondly, if $N$ is large, then the parameter space
+image (and that should be in the catalog) is itself unknown. Secondly, if $N$ is large, then the parameter space
 of positions and properties (flux, size, etc) of the objects is also large.
 This can cause Markov Chain Monte Carlo (MCMC) algorithms difficulties -- they
 may take a long time to converge to the target posterior distribution over
 catalogs.
 
 Bayesian object detection has been implemented by \citet{2011MNRAS.415.3462F}
-under the assumption of a known $N$. This assumption is required for the
-{\tt MultiNest} sampler to be applicable. Using the results from the known $N$
+under the assumption of a known number of objects $N$.
+This assumption is required for the
+{\tt MultiNest} sampler \citep{multinest} to be applicable.
+Using the results from the known $N$
 run, it is possible (under certain circumstances) to reconstruct what the
 results would have been if a variable-$N$ simulation had been used. However,
 this will not work well in situations where there is significant confusion
@@ -88,13 +91,14 @@ probability distribution:
 \begin{equation}
 p(\theta)
 \end{equation}
-We also model how the parameters give rise to the data, via a {\it sampling
-distribution}:
+We also model how the parameters give rise to the data, via a generative model.
+This is also known as a {\it sampling distribution}.
 \begin{equation}
 p(x|\theta)
 \end{equation}
 Despite the singular, the sampling distribution is actually a family of
-probability distributions, one for each possible value of $\theta$. Note that
+probability distributions over the data space, one for each possible value
+of $\theta$. Note that
 the sampling distribution is also an assertion of a prior state of knowledge:
 It models prior information about the fact that the data $x$ is connected to
 the parameters $\theta$ in some way. Without this prior knowledge, learning is
@@ -102,18 +106,20 @@ impossible: there has to be some relationship between the parameters and the
 data, otherwise new data tells you about nothing but itself.
 
 When specific data $x^*$ has been obtained, our state of knowledge about $\theta$
-gets updated from the prior to the posterior,
+gets updated from the prior distribution to the posterior distribution,
 via Bayes' rule:
 \begin{eqnarray}
 p(\theta|x=x^*) &\propto& p(\theta)p(x|\theta)|_{x=x^*} \\
 &=& p(\theta)\mathcal{L}(\theta; x)
 \end{eqnarray}
-The modulating function is the {\it likelihood function}, which is the prior
+The term $p(\theta)p(x|\theta)|_{x=x^*} = \mathcal{L}(\theta; x)$
+is the {\it likelihood function}, which is the 
 probability of obtaining the actual data set $x^*$ as a function of the
 parameters\footnote{In the case that the sampling distribution is a probability
-density, the likelihood is the probability density at the observed data. This
-is usually fine, although one should be aware of the Borel-Kolmogorov ``paradox''}.
-As suggested by the above notation, it is obtained from the
+density, the likelihood is the probability density evaluated at the observed
+data. This usually causes no problems, although one should be aware of the
+Borel-Kolmogorov paradox \citep{jaynes}.}.
+As suggested by the above notation, the likelihood function is obtained from the
 sampling distribution with the actual data substituted in.
 
 \section{The Specific Model for Stellar Fields}
@@ -122,46 +128,77 @@ sampling distribution with the actual data substituted in.
 Our model makes the following assumptions. There are an unknown number of stars
 $N$ in the field. Each star has an unknown
 position $(x,y)$ in the plane of the sky, and an unknown flux $f$. We also
-describe the {\it spatial distribution} of the stars by parameters
-$\alpha$, and the distribution of fluxes (commonly known as the {\it luminosity
-function}) by parameters $\beta$. In summary, the unknown parameters are:
+describe distribution of fluxes (commonly known as the {\it luminosity
+function}) of the stars by parameters $\beta$. In summary, the unknown
+parameters are:
 \begin{eqnarray}
-\theta = \left\{N, \alpha, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
+\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
 \left\{f_i\right\}_{i=1}^N\right\}
 \end{eqnarray}
 The prior probability distribution for the unknown parameters can be factorized
 using the product rule. With a variety of independence assumptions, the prior
 can be written as:
 \begin{eqnarray}
-p(\theta) = p(N)p(\alpha)p(\beta)\prod_{i=1}^N p(x_i, y_i | \alpha)
+p(\theta) = p(N)p(\beta)\prod_{i=1}^N p(x_i, y_i)
 p(f_i | \beta) 
 \end{eqnarray}
 Here, we have assumed that the luminosity function does not depend on position.
-We have also assumed independence of $N$, $\alpha$ and $\beta$, which means that
+We have also assumed independence of $N$ and $\beta$, which means that
 learning the value of one would not tell us anything about the values of the
-others. Finally, the positions and fluxes of the stars come independently from
-a common distribution. If we knew the spatial distribution and the luminosity
+others. Finally, the fluxes of the stars come independently from
+a common distribution. If we knew the luminosity
 function of the stars, then the location and flux of a particular star would
 not tell us anything about the location and flux of another star. Really, this
-is just a way of implementing exchangeability.
+is just a way of implementing exchangeability of the stars.
+
+For simplicity, we assume a uniform prior probability distribution for the
+position of each star. This creates a strong preference for catalogs where
+the stars are uniformly distributed across the image. Thus, this model is appropriate for small patches of sky where the density of stars is approximately
+uniform. In other scenarios, such as images of stellar clusters, it is possible
+to parameterise the spatial distribution of the stars in a similar way to how
+we have parameterised the luminosity function.
+
 
 \subsection{The Sampling Distribution}
 The sampling distribution is a probabilistic model for the process that
-generates the data. The pixel-convolved PSF-convolved scene is given by:
+generates the data; it describes the probability distribution we would use
+to predict the data if we happened to know the true catalog. Thus, we need
+a prescription for simulating images from a catalog:
+\begin{eqnarray}
+\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
+\left\{f_i\right\}_{i=1}^N\right\}
+\end{eqnarray}
+If we knew the true catalog, we could compute the image we would expect to see,
+in the absence of noise. This mock image is given by:
 \begin{eqnarray}
 \mathcal{M}(x, y) &=& \sum_{i=1}^N \mathcal{P}(x - x_i, y - y_i)
 \end{eqnarray}
-where $\mathcal{P}$ is the pixel-convolved PSF. Throughout this paper we
-assume the pixel-convolved PSF is a known mixture of two concentric circular
-Gaussians:
+where $\mathcal{P}$ is the pixel-convolved point spread function (PSF).
+Throughout this paper we
+assume the pixel-convolved PSF is a known weighted mixture of two concentric
+circular
+Gaussians with widths $s_1$ and $s_2$:
 \begin{eqnarray}
-\mathcal{P}(x, y) &=&
+\mathcal{P}(x, y) = \frac{w}{2\pi s_1^2}\exp
+\left[
+-\frac{1}{2s_1^2}\left(x^2 + y^2\right)
+\right]
++ \frac{1-w}{2\pi s_2^2}\exp
+\left[-\frac{1}{2s_2^2}\left(x^2 + y^2\right)
+\right].
 \end{eqnarray}
+The observed image is assumed to be generated from the mock image (evaluated
+at the center of each pixel) plus Gaussian noise:
+\begin{eqnarray}
+y_{ij} &=& \mathcal{M}(x_{ij}, y_{ij}) + \epsilon_{ij}
+\end{eqnarray}
+where $\epsilon_{ij} \sim \mathcal{N}(0, \sigma^2)$.
+
 
 
 \subsection{The Prior Distribution}
-A model for the spatial distribution corresponds to a choice of functional
-forms for the distributions $p(x_i, y_i | \alpha)$ and $p(f_i | \beta)$.
+The prior distribution for the number of stars $N$ is uniform between 0 and
+$N_{\rm max}$.
 
 \section{Broken Power-Law Distribution}
 The broken power-law distribution is defined by:
@@ -416,6 +453,9 @@ Series 1193, 60-68.
 Hobson, M.~P.\ 2011.\ Detecting extrasolar planets from stellar radial 
 velocities using Bayesian evidence.\ Monthly Notices of the Royal 
 Astronomical Society 415, 3462-3472. 
+
+\bibitem[\protect\citeauthoryear{Feroz, Hobson, 
+\& Bridges}{2009}]{multinest} Feroz F., Hobson M.~P., Bridges M., 2009, MNRAS, 398, 1601 
 
 \bibitem[\protect\citeauthoryear{Green}{1995}]{rjmcmc}
 Green, P.~J., 1995, Reversible Jump Markov Chain Monte Carlo Computation and Bayesian Model Determination, Biometrika 82 (4): 711–732.

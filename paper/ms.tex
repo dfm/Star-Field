@@ -12,19 +12,15 @@
 \newcommand{\crowded}{\texttt{Crowded}}
 
 \title{Probabilistic Catalogs from Crowded Star Fields}
-\author{Brendon J. Brewer$^{1, 2, ^*}$, David W. Hogg$^{3}$,
-and Daniel Foreman-Mackey$^{3}$ \\
+\author{Brendon J. Brewer$^{1,*}$, David W. Hogg$^{2}$,
+and Daniel Foreman-Mackey$^{2}$ \\
 \\
 \small
-$^1$ Department of Physics, University of California, Santa Barbara,\\
-\small
-CA 93106, USA \\
-\small
-$^2$ Department of Statistics, The University of Auckland,\\
+$^1$ Department of Statistics, The University of Auckland,\\
 \small
 Private Bag 92019, Auckland 1142, New Zealand \\
 \small
-$^3$ Center for Cosmology and Particle Physics, Department of Physics,
+$^2$ Center for Cosmology and Particle Physics, Department of Physics,
 New York University,\\
 \small
 4 Washington Place, New York, NY, 10003, USA\\
@@ -162,14 +158,22 @@ we have parameterised the luminosity function.
 \subsection{The Sampling Distribution}
 The sampling distribution is a probabilistic model for the process that
 generates the data; it describes the probability distribution we would use
-to predict the data if we happened to know the true catalog. Thus, we need
-a prescription for simulating images from a catalog:
+to predict the data if we happened to know the true catalog. In our case,
+the data will be an $n \times n$ array of pixel intensities:
 \begin{eqnarray}
-\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
-\left\{f_i\right\}_{i=1}^N\right\}
+\{Y_{ij}\}
 \end{eqnarray}
-If we knew the true catalog, we could compute the image we would expect to see,
-in the absence of noise. This mock image is given by:
+The center of each pixel is:
+\begin{eqnarray}
+\{x_{ij}, y_{ij}\}.
+\end{eqnarray}
+Thus, we need
+a prescription for simulating an image $\{Y_{ij}\}$ from a catalog
+$\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
+\left\{f_i\right\}_{i=1}^N\right\}$.
+If we knew the true catalog, we could compute the
+``mock image'' we would expect to see
+in the absence of noise. This mock image (at infinite resolution) is given by:
 \begin{eqnarray}
 \mathcal{M}(x, y) &=& \sum_{i=1}^N \mathcal{P}(x - x_i, y - y_i)
 \end{eqnarray}
@@ -187,18 +191,124 @@ Gaussians with widths $s_1$ and $s_2$:
 \left[-\frac{1}{2s_2^2}\left(x^2 + y^2\right)
 \right].
 \end{eqnarray}
-The observed image is assumed to be generated from the mock image (evaluated
-at the center of each pixel) plus Gaussian noise:
+The finite-resolution observed image is assumed to be generated from the mock
+image (evaluated at the center of each pixel) plus Gaussian noise:
 \begin{eqnarray}
-y_{ij} &=& \mathcal{M}(x_{ij}, y_{ij}) + \epsilon_{ij}
+Y_{ij} &=& \mathcal{M}(x_{ij}, y_{ij}) + \epsilon_{ij}
 \end{eqnarray}
-where $\epsilon_{ij} \sim \mathcal{N}(0, \sigma^2)$.
-
-
+where the errors $\{\epsilon_{ij}\}$ are independent and normally distributed:
+\begin{eqnarray}
+\epsilon_{ij} \sim \mathcal{N}(0, \sigma^2).
+\end{eqnarray}
+Throughout this paper, we will assume that the noise variance $\sigma^2$ is
+known. This is not usually true in practice (although it is often assumed).
+However it is straightforward to extend the model so that $\sigma$ is an
+unknown parameter.
 
 \subsection{The Prior Distribution}
 The prior distribution for the number of stars $N$ is uniform between 0 and
-$N_{\rm max}$. The model for the luminosity function is a broken power-law.
+some maximum number $N_{\rm max}$. The extent of the image is assumed to be
+from $x=-1$ to $x=1$ and from $y=-1$ to $y=1$ in arbitrary units, and the
+positions of the stars are assigned independent uniform priors:
+\begin{eqnarray}
+x_i &\sim& \textnormal{Uniform}(-1.1, 1.1) \\
+y_i &\sim& \textnormal{Uniform}(-1.1, 1.1) \\
+\end{eqnarray}
+The model for the luminosity function is a broken power-law with four
+parameters:
+\begin{eqnarray}
+\beta = \{h_1, h_2, \alpha_1, \alpha_2\}.
+\end{eqnarray}
+
+\section{MCMC Implementation}
+The sampling was implemented using the Diffusive Nested Sampling \citep{dnest}
+method (hereafter DNS). DNS is based on the Metropolis-Hastings algorithm and
+is very generally applicable. The main difference between DNS and the standard
+Metropolis-Hastings algorithm is that the target distribution is modified.
+Rather than simply exploring the posterior distribution over catalog space,
+DNS constructs an alternative target distribution which is a mixture of the
+prior distribution with more constrained versions of the prior distribution.
+The modified target distribution assists 
+
+Nested Sampling is good because it is invariant under monotonic transformations
+of the likelihood function. i.e. the exploration only depends on things like
+whether one point is better than another, and not on how much better it is.
+
+\section{A More Realistic Model}
+\citep{2008ApJ...682..874K}
+
+
+
+\section{Three Scenarios: Sparse, Cluster, and Crowded}
+In this paper we discuss three test cases, named \sparse, \cluster
+and \crowded. For the generation of the simulated
+images, we used the following assumptions:
+
+\begin{table}
+\begin{center}
+\begin{tabular}{ccccc}
+Test Case & Parameter & Value \\
+\hline
+\sparse \\
+\cluster \\
+\crowded
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{figure}
+\hspace{-1cm}
+\includegraphics{Figures/test_cases.eps}
+\end{figure}
+
+\subsection{Sparse}
+Sparse has a giant first-order phase transition. {\bf Nested Sampling is
+mandatory!} Show the plot of it
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.7]{Figures/likelihood.eps}
+\end{center}
+\end{figure}
+
+\subsection{Cluster}
+Was generated from non-uniform spatial distribution (obviously) but modelled
+with a uniform one.
+
+\subsection{Crowded}
+Crowded is slow if the data have high S/N. Something like $e^5000$ compressions
+are needed. Can do NS and not worry about equilibration if you are willing to
+make a guess about the logXs of the levels.
+
+\subsection{Toy Model}
+For the first implementation I wrote at NYU, I used the following model and
+priors:
+\begin{itemize}
+\item $N \sim \textnormal{Uniform}(0, 1, 2, ..., 1000)$ \\
+\item The parameters of the spatial
+distribution: $\alpha = \left\{x_c, y_c, \sigma\right\}$ \\
+\item The spatial distribution: $p(x_i, y_i | \alpha)\sim\mathcal{N}\left(
+\texttt{mean}=(x_c, y_c), \texttt{covariance}=
+\left(\begin{array}{cc}\sigma^2 & 0 \\ 0 & \sigma^2\end{array}\right)\right)$ \\
+\item Prior on $\alpha$: Uniform within image for $(x_c, y_c)$, logUniform for
+$\sigma$ with max value $\sim$ image size.
+\item The luminosity function: $p(f_i | \beta) \sim
+\textnormal{Exponential}\left(\texttt{mean}=\beta\right)$ \\
+\item Prior on $\beta$: logUniform with generous bounds.
+\end{itemize}
+
+
+
+
+
+\section{Acknowledgements}
+BJB would like to thank his teaching mentor Dr Wayne Stewart.
+Marshall, Lang, ...
+
+
+\appendix
+
+\section{Broken Power-Law Distribution}
 The broken power-law distribution is defined by:
 \begin{eqnarray}
 p(x) &\propto&
@@ -292,84 +402,6 @@ F^{-1}(u) &=&
 
 
 
-\section{Three Scenarios: Sparse, Cluster, and Crowded}
-In this paper we discuss three test cases, named \sparse, \cluster
-and \crowded. For the generation of the simulated
-images, we used the following assumptions:
-
-\begin{table}
-\begin{center}
-\begin{tabular}{ccccc}
-Test Case & Parameter & Value \\
-\hline
-\sparse \\
-\cluster \\
-\crowded
-\end{tabular}
-\end{center}
-\end{table}
-
-\begin{figure}
-\hspace{-1cm}
-\includegraphics{Figures/test_cases.eps}
-\end{figure}
-
-\subsection{Sparse}
-Sparse has a giant first-order phase transition. {\bf Nested Sampling is
-mandatory!} Show the plot of it
-
-\begin{figure}
-\begin{center}
-\includegraphics[scale=0.7]{Figures/likelihood.eps}
-\end{center}
-\end{figure}
-
-\subsection{Cluster}
-Was generated from non-uniform spatial distribution (obviously) but modelled
-with a uniform one.
-
-\subsection{Crowded}
-Crowded is slow if the data have high S/N. Something like $e^5000$ compressions
-are needed. Can do NS and not worry about equilibration if you are willing to
-make a guess about the logXs of the levels.
-
-\subsection{Toy Model}
-For the first implementation I wrote at NYU, I used the following model and
-priors:
-\begin{itemize}
-\item $N \sim \textnormal{Uniform}(0, 1, 2, ..., 1000)$ \\
-\item The parameters of the spatial
-distribution: $\alpha = \left\{x_c, y_c, \sigma\right\}$ \\
-\item The spatial distribution: $p(x_i, y_i | \alpha)\sim\mathcal{N}\left(
-\texttt{mean}=(x_c, y_c), \texttt{covariance}=
-\left(\begin{array}{cc}\sigma^2 & 0 \\ 0 & \sigma^2\end{array}\right)\right)$ \\
-\item Prior on $\alpha$: Uniform within image for $(x_c, y_c)$, logUniform for
-$\sigma$ with max value $\sim$ image size.
-\item The luminosity function: $p(f_i | \beta) \sim
-\textnormal{Exponential}\left(\texttt{mean}=\beta\right)$ \\
-\item Prior on $\beta$: logUniform with generous bounds.
-\end{itemize}
-
-
-\section{MCMC Implementation}
-\subsection{Current}
-I am using Diffusive Nested Sampling \citep{dnest}, which is really just
-Metropolis-Hastings but targeting a fancy distribution instead of the actual
-posterior, and then assigning importance weights when you want the posterior.
-Nested Sampling is good because it is invariant under monotonic transformations
-of the likelihood function. i.e. the exploration only depends on things like
-whether one point is better than another, and not on how much better it is.
-
-\section{A More Realistic Model}
-\citep{2008ApJ...682..874K}
-
-
-\section{Acknowledgements}
-BJB would like to thank his teaching mentor Dr Wayne Stewart.
-Marshall, Lang, ...
-
-
-\appendix
 \section{Pixel Convolved PSF}
 Consider a ``true image'' $f_0(x, y)$ with infinite resolution. We now model how
 this image gives rise to the observed data. First, it is convolved with a

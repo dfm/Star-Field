@@ -228,7 +228,8 @@ Metropolis-Hastings algorithm is that the target distribution is modified.
 Rather than simply exploring the posterior distribution over catalog space,
 DNS constructs an alternative target distribution which is a mixture of the
 prior distribution with more constrained versions of the prior distribution.
-The modified target distribution assists 
+The modified target distribution assists the sampling in several ways:
+i) 
 
 Nested Sampling is good because it is invariant under monotonic transformations
 of the likelihood function. i.e. the exploration only depends on things like
@@ -239,10 +240,13 @@ whether one point is better than another, and not on how much better it is.
 
 
 
-\section{Three Scenarios: Sparse, Cluster, and Crowded}
-In this paper we discuss three test cases, named \sparse, \cluster
-and \crowded. For the generation of the simulated
-images, we used the following assumptions:
+\section{Simulated Data}
+We now apply the method to two illustrative simulated images. Each of the images
+is $100 \times 100$ pixels in extent. The first image contains 100 stars and
+the second image contains 1000 stars. These images are shown in
+Figure~\ref{simulated_data}.
+
+
 
 \begin{table}
 \begin{center}
@@ -259,6 +263,7 @@ Test Case & Parameter & Value \\
 \begin{figure}
 \hspace{-1cm}
 \includegraphics{Figures/test_cases.eps}
+\caption{\label{simulated_data}}
 \end{figure}
 
 \subsection{Sparse}

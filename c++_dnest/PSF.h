@@ -12,13 +12,14 @@ class PSF
 		double weight;
 
 		double preFactor1, preFactor2;
-		double rsqEdge;
+		double rEdge, rsqEdge;
 
 	public:
 		PSF();
 		PSF(double sigma1, double sigma2, double weight);
 		double evaluate(double x, double y) const;
 		void set(double sigma1, double sigma2, double weight);
+		double get_rEdge() const { return rEdge; }
 };
 
 #endif

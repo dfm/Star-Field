@@ -27,7 +27,7 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-	Data::load_data("SimulatedData/break.txt");
+	Data::load_data("SimulatedData/break2.txt");
 	DNest3::start_mt< StarFieldModel<BrokenPareto> >(argc, argv);
 	return 0;
 }

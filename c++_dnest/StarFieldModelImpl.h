@@ -21,7 +21,7 @@
 #include <cmath>
 
 template<class HyperType>
-const double StarFieldModel<HyperType>::noiseSigma = 30.;
+const double StarFieldModel<HyperType>::noiseSigma = 5.;
 
 template<class HyperType>
 const double StarFieldModel<HyperType>::noiseCoeff = 0;

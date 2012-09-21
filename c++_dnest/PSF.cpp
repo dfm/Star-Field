@@ -41,6 +41,7 @@ void PSF::set(double sigma1, double sigma2, double weight)
 	this->weight = weight;
 	preFactor1 = 1./(sigma1*sigma1)/(2*M_PI);
 	preFactor2 = 1./(sigma2*sigma2)/(2*M_PI);
-	rsqEdge = pow(PSF::edge*sigma2, 2);
+	rEdge = PSF::edge*sigma2;
+	rsqEdge = pow(rEdge, 2);
 }
 

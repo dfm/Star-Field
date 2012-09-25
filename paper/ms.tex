@@ -32,11 +32,12 @@ $^*$\texttt{bj.brewer@auckland.ac.nz}
 \maketitle
 
 \abstract{We introduce a fully probabilistic method for producing catalogs
-from images of crowded stellar fields. The method is demonstrated on simulated
-data where the luminosity function of the stars is a broken power-law.}
+from images of crowded stellar fields. The feasibility of the method is
+demonstrated on simulated data where the luminosity function of the stars is a
+broken power-law. The parameters of the luminosity function can be recovered
+with moderate uncertainty.}
 
 \section{Introduction}
-
 A fundamental problem in astronomy is the construction of {\it catalogs} from
 raw image data. {\bf The catalogs are then used for...}
 Standard tools for generating catalogs include \texttt{SExtractor}
@@ -86,7 +87,8 @@ state of knowledge about the parameters is modelled by a prior
 probability distribution:
 \begin{equation}
 p(\theta)
-\end{equation}
+\end{equation}.
+Note that this is a very concise notation \citep{hogg}.
 We also model how the parameters give rise to the data, via a generative model.
 This is also known as a {\it sampling distribution}.
 \begin{equation}
@@ -124,7 +126,7 @@ sampling distribution with the actual data substituted in.
 Our model makes the following assumptions. There are an unknown number of stars
 $N$ in the field. Each star has an unknown
 position $(x,y)$ in the plane of the sky, and an unknown flux $f$. We also
-describe distribution of fluxes (commonly known as the {\it luminosity
+describe the distribution of fluxes (commonly known as the {\it luminosity
 function}) of the stars by parameters $\beta$. In summary, the unknown
 parameters are:
 \begin{eqnarray}
@@ -149,11 +151,11 @@ is just a way of implementing exchangeability of the stars.
 
 For simplicity, we assume a uniform prior probability distribution for the
 position of each star. This creates a strong preference for catalogs where
-the stars are uniformly distributed across the image. Thus, this model is appropriate for small patches of sky where the density of stars is approximately
+the stars are uniformly distributed across the image. Thus, this model is
+appropriate for small patches of sky where the density of stars is approximately
 uniform. In other scenarios, such as images of stellar clusters, it is possible
 to parameterise the spatial distribution of the stars in a similar way to how
 we have parameterised the luminosity function.
-
 
 \subsection{The Sampling Distribution}
 The sampling distribution is a probabilistic model for the process that
@@ -168,9 +170,11 @@ The center of each pixel is:
 \{x_{ij}, y_{ij}\}.
 \end{eqnarray}
 Thus, we need
-a prescription for simulating an image $\{Y_{ij}\}$ from a catalog
-$\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
-\left\{f_i\right\}_{i=1}^N\right\}$.
+a prescription for simulating an image $\{Y_{ij}\}$ from a catalog $\theta$:
+\begin{eqnarray}
+\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
+\left\{f_i\right\}_{i=1}^N\right\}.
+\end{eqnarray}
 If we knew the true catalog, we could compute the
 ``mock image'' we would expect to see
 in the absence of noise. This mock image (at infinite resolution) is given by:
@@ -203,10 +207,15 @@ where the errors $\{\epsilon_{ij}\}$ are independent and normally distributed:
 Throughout this paper, we will assume that the noise variance $\sigma^2$ is
 known. This is not usually true in practice (although it is often assumed).
 However it is straightforward to extend the model so that $\sigma$ is an
-unknown parameter.
+unknown parameter or that the noise variance should be a function of the
+intensity of the mock image \citep[e.g.][]{2011MNRAS.412.2521B}.
+
+For the generation of the simulated data in Section~\ref{sec:simulated_data},
+the values of the PSF parameters used were $s_1=0.02$, $s_2=0.1$ (one and
+five pixel widths respectively), and $w=0.5$. 
 
 \subsection{The Prior Distribution}
-The prior distribution for the number of stars $N$ is uniform between 0 and
+The prior distribution for the number of stars $N$ is assigned to be uniform between 0 and
 some maximum number $N_{\rm max}$. The extent of the image is assumed to be
 from $x=-1$ to $x=1$ and from $y=-1$ to $y=1$ in arbitrary units, and the
 positions of the stars are assigned independent uniform priors:
@@ -215,11 +224,29 @@ x_i &\sim& \textnormal{Uniform}(-1.1, 1.1) \\
 y_i &\sim& \textnormal{Uniform}(-1.1, 1.1) \\
 \end{eqnarray}
 The model for the luminosity function is a broken power-law with four
-parameters:
+free parameters:
 \begin{eqnarray}
 \beta = \{h_1, h_2, \alpha_1, \alpha_2\}.
 \end{eqnarray}
+where $h_1$ is the lower flux cutoff, $h_2$ is a break-point, $\alpha_1$ is
+the slope of the distribution between $h_1$ and $h_2$, and $\alpha_2$ is the
+slope of the distribution above $h_2$. For details on the broken power-law
+model, see Appendix~\ref{power_law}. The prior distribution on $h_1$, $h_2$,
+$\alpha_1$ and $\alpha_2$ is assigned to be:
+\begin{eqnarray}
+\log h_1 &\sim& \textnormal{Uniform}(\log(10^{-3}), \log(10^{+3})) \\
+\log h_2 &\sim& \textnormal{Uniform}(h_1, h_1 + 2.3) \\
+\alpha_1 &\sim& \textnormal{Uniform}(1, 5) \\
+\alpha_2 &\sim& \textnormal{Uniform}(1, 5).
+\end{eqnarray}
 
+This simply-parameterised model for the luminosity function can be criticised
+on the basis that information from bright stars can be used to infer the
+parameters of the luminosity function which then still apply at lower flux
+levels. In principle, this can be resolved by using a more flexible distribution
+\citep[e.g.][]{2008ApJ...682..874K} where each star's measured brightness
+affects the inference of the luminosity function locally but not globally.
+ 
 \section{MCMC Implementation}
 The sampling was implemented using the Diffusive Nested Sampling \citep{dnest}
 method (hereafter DNS). DNS is based on the Metropolis-Hastings algorithm and
@@ -228,100 +255,96 @@ Metropolis-Hastings algorithm is that the target distribution is modified.
 Rather than simply exploring the posterior distribution over catalog space,
 DNS constructs an alternative target distribution which is a mixture of the
 prior distribution with more constrained versions of the prior distribution.
-The modified target distribution assists the sampling in several ways:
-i) 
+The modified target distribution assists the sampling in several ways.
+Firstly, the target distribution shrinks at a constant rate with time during the
+initial phase of the exploration. This is similar to the popular ``simulated
+annealing'' method but with an optimal annealing schedule. Secondly,
+communication with the prior is maintained: once a catalog is found that
+fits the data, the catalog can ``disintegrate'' back to the prior distribution
+and re-fit, allowing different peaks in the parameter space to be explored
+(if they exist). This all happens naturally within the context of a valid
+MCMC sampler.
 
-Nested Sampling is good because it is invariant under monotonic transformations
-of the likelihood function. i.e. the exploration only depends on things like
-whether one point is better than another, and not on how much better it is.
-
-\section{A More Realistic Model}
-\citep{2008ApJ...682..874K}
-
-
-
-\section{Simulated Data}
-We now apply the method to two illustrative simulated images. Each of the images
-is $100 \times 100$ pixels in extent. The first image contains 100 stars and
-the second image contains 1000 stars. These images are shown in
-Figure~\ref{simulated_data}.
-
-
+\section{Simulated Data}\label{sec:simulated_data}
+We now apply the method to two illustrative simulated images generated from
+the above model. The true parameter values used are listed in
+Table~\ref{tab:truth}.
+Each of the images
+is $100 \times 100$ pixels in extent and covers a range from $-1$ to $1$ in
+arbitrary units for both the $x$ and $y$ axes. The first image contains
+$\sim$100 stars and the second image contains $\sim$1000 stars. The images
+are shown in Figure~\ref{fig:simulated_data}.
 
 \begin{table}
 \begin{center}
-\begin{tabular}{ccccc}
+\begin{tabular}{|c|c|c|}
+\hline
 Test Case & Parameter & Value \\
 \hline
-\sparse \\
-\cluster \\
-\crowded
+1 & $N$ & 100\\
+  & $h_1$ & 0.3\\
+  & $h_2$ & 0.6\\
+  & $\alpha_1$ & 1.1\\
+  & $\alpha_2$ & 2\\
+  & $\sigma$ & 0.05\\
+\hline
+2 & $N$ & 1000\\
+  & $h_1$ & 0.3\\
+  & $h_2$ & 0.6\\
+  & $\alpha_1$ & 1.1\\
+  & $\alpha_2$ & 2\\
+  & $\sigma$ & 0.3\\
+\hline
 \end{tabular}
 \end{center}
+\caption{True parameter values used to generate the simulated data.
+\label{tab:truth}}
 \end{table}
 
 \begin{figure}
 \hspace{-1cm}
 \includegraphics{Figures/test_cases.eps}
-\caption{\label{simulated_data}}
+\caption{Two simulated images.
+{\bf Left}: A field containing $\sim$100 stars.
+{\bf Right}: A field containing $\sim$1000 stars.\label{fig:simulated_data}}
 \end{figure}
 
-\subsection{Sparse}
-Sparse has a giant first-order phase transition. {\bf Nested Sampling is
-mandatory!} Show the plot of it
-
-\begin{figure}
-\begin{center}
-\includegraphics[scale=0.7]{Figures/likelihood.eps}
-\end{center}
-\end{figure}
+\subsection{Test Case 1}
 
 \begin{figure}
 \begin{center}
 \includegraphics[scale=0.33]{Figures/inference1.eps}
 \end{center}
+\caption{Inference about the parameters for test case 1.\label{fig:results1}}
 \end{figure}
 
+{\bf Show phase transition}\\
+{\bf Comment on computational speed}\\
+{\bf Show a few catalogs}\\
+{\bf Show posterior expected true scene}\\
 
-\subsection{Cluster}
-Was generated from non-uniform spatial distribution (obviously) but modelled
-with a uniform one.
-
-\subsection{Crowded}
-Crowded is slow if the data have high S/N. Something like $e^5000$ compressions
-are needed. Can do NS and not worry about equilibration if you are willing to
-make a guess about the logXs of the levels.
-
-\subsection{Toy Model}
-For the first implementation I wrote at NYU, I used the following model and
-priors:
-\begin{itemize}
-\item $N \sim \textnormal{Uniform}(0, 1, 2, ..., 1000)$ \\
-\item The parameters of the spatial
-distribution: $\alpha = \left\{x_c, y_c, \sigma\right\}$ \\
-\item The spatial distribution: $p(x_i, y_i | \alpha)\sim\mathcal{N}\left(
-\texttt{mean}=(x_c, y_c), \texttt{covariance}=
-\left(\begin{array}{cc}\sigma^2 & 0 \\ 0 & \sigma^2\end{array}\right)\right)$ \\
-\item Prior on $\alpha$: Uniform within image for $(x_c, y_c)$, logUniform for
-$\sigma$ with max value $\sim$ image size.
-\item The luminosity function: $p(f_i | \beta) \sim
-\textnormal{Exponential}\left(\texttt{mean}=\beta\right)$ \\
-\item Prior on $\beta$: logUniform with generous bounds.
-\end{itemize}
+\subsection{Test Case 2}
+{\bf Show inference on parameters}\\
+{\bf Show phase transition}\\
+{\bf Comment on computational speed}\\
+{\bf Show a few catalogs}\\
+{\bf Show posterior expected true scene}\\
 
 
-
-
+\section{Conclusions}
+We can do it. This is important because...
 
 \section{Acknowledgements}
-BJB would like to thank his teaching mentor Dr Wayne Stewart.
-Marshall, Lang, ...
+Marshall, Lang, Geraint, Wayne Stewart...
 
 
 \appendix
 
-\section{Broken Power-Law Distribution}
-The broken power-law distribution is defined by:
+\section{Broken Power-Law Distribution}\label{power_law}
+The broken power-law distribution is based on a straightforward extension
+to a simple power-law distribution (also known as a Pareto distribution,
+particularly in the statistics literature).
+The broken power-law distribution for a variable $x$ is defined by:
 \begin{eqnarray}
 p(x) &\propto&
 \left\{
@@ -365,7 +388,7 @@ Z_1^{-1}x_2^{-\alpha_1 - 1} &=& Z_2^{-1}x_2^{-\alpha_2 - 1}\\
 Z_2 &=& Z_1x_2^{\alpha_1-\alpha_2}
 \end{eqnarray}
 
-The second condition is the total probability must be 1:
+The second condition is that the total probability must be 1:
 
 \begin{eqnarray}
 \int_{x_1}^{x_2} Z_1^{-1} x^{-\alpha_1 - 1} \, dx
@@ -412,9 +435,8 @@ F^{-1}(u) &=&
 \end{eqnarray}
 
 
-
-
 \section{Pixel Convolved PSF}
+{\bf Do people need to be schooled on this? I did...}
 Consider a ``true image'' $f_0(x, y)$ with infinite resolution. We now model how
 this image gives rise to the observed data. First, it is convolved with a
 PSF $g(\delta_x, \delta_y)$ (assumed normalized to 1) to give the blurred image:
@@ -432,31 +454,25 @@ F &=& \iint_{\rm pixel} f_{\rm blurred}(x, y) \,dx'\,dy'\\
 Now consider $F$ as a function of the central location $(x_c, y_c)$ of the
 pixel.
 
-
-
-
 \subsubsection{Proposal Distributions}
 
 \begin{table}
 \begin{center}
-\begin{tabular}{c|c|c}
+\begin{tabular}{|c|c|c|}
+\hline
 Parameter & Proposal & Notes\\
 \hline
 $N$ & $N \to N + \delta_N$ & Generate $\delta_N$ new stars from prior given
-$(\alpha, \beta)$\\
+$\beta$\\
 $N$ & $N \to N - \delta_N$ & Remove $\delta_N$ stars at random\\
-$\alpha$ & $\alpha \to \alpha + \delta_\alpha$ & Move stars along with $\alpha$
-\\
-$\alpha$ & $\alpha \to \alpha + \delta_\alpha$ & Stars fixed, use logHastings
-factor \\
 $\beta$ & $\beta \to \beta + \delta_\beta$ & Move stars' fluxes along with
 $\beta$\\
-$\beta$ & $\beta \to \beta + \delta_\beta$ & Stars' fluxes fixed, use
-logHastings factor \\
-$(x,y)$ & $(x,y) \to (x,y)+(\delta_x, \delta_y)$ & Can move $>1$ star.
-Include prior via logH \\
-$f$ & $f \to f + \delta_f$ & Can move $>1$ stars' fluxes. Include prior
-via logH
+$\beta$ & $\beta \to \beta + \delta_\beta$ & Stars' fluxes fixed, put extra
+term in acceptance probability \\
+$(x_i,y_i)$ & $(x_i,y_i) \to (x_i,y_i)+(\delta_x, \delta_y)$ & Can move $>1$ star
+in a single step \\
+$f$ & $f \to f + \delta_f$ & Can move $>1$ stars' fluxes in a single step\\
+\hline
 \end{tabular}
 \end{center}
 \caption{All $\delta$ parameters are drawn from multi-scale distibutions such
@@ -489,6 +505,11 @@ Arnouts(1996)]{sextractor} Bertin, E., Arnouts, S.\ 1996.\ SExtractor: Software 
 \& Cs{\'a}nyi}{2011}]{dnest} Brewer B.~J., P{\'a}rtay L.~B.,
 Cs{\'a}nyi G., 2011, Statistics and Computing, 21, 4, 649-656. arXiv:0912.2380
 
+\bibitem[Brewer et al.(2011)]{2011MNRAS.412.2521B} Brewer, B.~J., Lewis, 
+G.~F., Belokurov, V., Irwin, M.~J., Bridges, T.~J., Evans, N.~W.\ 2011.\ 
+Modelling of the complex CASSOWARY/SLUGS gravitational lenses.\ Monthly 
+Notices of the Royal Astronomical Society 412, 2521-2529
+
 \bibitem[Caticha(2009)]{caticha} Caticha, A.\ 2009.\ 
 Quantifying Rational Belief.\ American Institute of Physics Conference 
 Series 1193, 60-68. 
@@ -505,6 +526,10 @@ Astronomical Society 415, 3462-3472.
 
 \bibitem[\protect\citeauthoryear{Green}{1995}]{rjmcmc}
 Green, P.~J., 1995, Reversible Jump Markov Chain Monte Carlo Computation and Bayesian Model Determination, Biometrika 82 (4): 711–732.
+
+\bibitem[Hogg(2012)]{hogg} Hogg, D.~W.\ 2012.\ Data analysis 
+recipes: Probability calculus for inference.\ ArXiv e-prints 
+arXiv:1205.4446. 
 
 \bibitem[Jaynes(2003)]{jaynes} Jaynes, E.~T., 2003, Probability Theory: The
 Logic of Science, ISBN 0521592712, Cambridge University Press, June 2003.

@@ -5,11 +5,15 @@
 \usepackage{bbm}	% for blackboard bold numbers
 \usepackage[left=3cm,top=3cm,right=3cm]{geometry}
 
-\renewcommand{\topfraction}{0.85} \renewcommand{\textfraction}{0.1} 
+\usepackage[normalem]{ulem}  % For strike through...
+
+\renewcommand{\topfraction}{0.85} \renewcommand{\textfraction}{0.1}
 \parindent=0cm
 \newcommand{\sparse}{\texttt{Sparse}}
 \newcommand{\cluster}{\texttt{Cluster}}
 \newcommand{\crowded}{\texttt{Crowded}}
+
+\newcommand{\etc}{\emph{etc.}}
 
 \title{Probabilistic Catalogs from Crowded Star Fields}
 \author{Brendon J. Brewer$^{1,*}$, David W. Hogg$^{2}$,
@@ -49,19 +53,23 @@ or completely, it can be difficult to determine how many sources are present,
 and how much flux belongs to each source. In principle, uncertainty should be
 taken into account. Instead of simply {\it estimating} the position and flux of
 each object in the image, we should fully describe the fact that sometimes we
-are not certain of the position and flux of each source.
+are not certain of the position and flux of each source. {\bf is it worth
+commenting on the huge degeneracies and how poorly defined the objective is
+unless we use prior knowledge?}
 
 Essentially, the creation of a catalog is an attempt to answer the question
 ``given the image we have obtained, what objects are present in the field and
 what are their properties?''. This motivates a probabilistic (Bayesian)
 approach to making catalogs. The output of such an approach would not be a
-single answer to this question (i.e. a single catalog), but rather a
+single answer to this question (i.e.~a single catalog), but rather a
 probability distribution over the space of possible catalogs.
 Constructing such a probability distribution is
 challenging for a number of reasons. Firstly, the number $N$ of objects in the
-image (and that should be in the catalog) is itself unknown. Secondly, if $N$ is large, then the parameter space
-of positions and properties (flux, size, etc) of the objects is also large.
-This can cause Markov Chain Monte Carlo (MCMC) algorithms difficulties -- they
+image that should be included in the catalog is itself unknown. Secondly, if
+$N$ is large, then the parameter space
+of positions and {\bf (physical?)} properties (flux, size, \etc) of the
+objects is also large.
+This can cause Markov Chain Monte Carlo (MCMC) algorithms difficulties --- they
 may take a long time to converge to the target posterior distribution over
 catalogs.
 
@@ -86,18 +94,21 @@ collectively by $\theta$) and we expect to obtain some data $x$. Our prior
 state of knowledge about the parameters is modelled by a prior
 probability distribution:
 \begin{equation}
-p(\theta)
-\end{equation}.
-Note that this is a very concise notation \citep{hogg}.
+p(\theta) \quad.
+\end{equation}
+\sout{Note that this is a very concise notation \citep{hogg}.}
+{\bf I think that I know what you're trying to say here but I think that this
+comment is more confusing than helpful...}
 We also model how the parameters give rise to the data, via a generative model.
-This is also known as a {\it sampling distribution}.
+This is also known as a {\it sampling distribution}:
 \begin{equation}
-p(x|\theta)
+p(x|\theta) \quad.
 \end{equation}
 Despite the singular, the sampling distribution is actually a family of
 probability distributions over the data space, one for each possible value
 of $\theta$. Note that
-the sampling distribution is also an assertion of a prior state of knowledge:
+the sampling distribution is also an assertion of a prior state of knowledge
+{\bf (or assumption?)}:
 It models prior information about the fact that the data $x$ is connected to
 the parameters $\theta$ in some way. Without this prior knowledge, learning is
 impossible: there has to be some relationship between the parameters and the
@@ -111,7 +122,7 @@ p(\theta|x=x^*) &\propto& p(\theta)p(x|\theta)|_{x=x^*} \\
 &=& p(\theta)\mathcal{L}(\theta; x)
 \end{eqnarray}
 The term $p(\theta)p(x|\theta)|_{x=x^*} = \mathcal{L}(\theta; x)$
-is the {\it likelihood function}, which is the 
+is the {\it likelihood function}, which is the
 probability of obtaining the actual data set $x^*$ as a function of the
 parameters\footnote{In the case that the sampling distribution is a probability
 density, the likelihood is the probability density evaluated at the observed
@@ -130,7 +141,7 @@ describe the distribution of fluxes (commonly known as the {\it luminosity
 function}) of the stars by parameters $\beta$. In summary, the unknown
 parameters are:
 \begin{eqnarray}
-\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
+\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N,
 \left\{f_i\right\}_{i=1}^N\right\}
 \end{eqnarray}
 The prior probability distribution for the unknown parameters can be factorized
@@ -138,7 +149,7 @@ using the product rule. With a variety of independence assumptions, the prior
 can be written as:
 \begin{eqnarray}
 p(\theta) = p(N)p(\beta)\prod_{i=1}^N p(x_i, y_i)
-p(f_i | \beta) 
+p(f_i | \beta)
 \end{eqnarray}
 Here, we have assumed that the luminosity function does not depend on position.
 We have also assumed independence of $N$ and $\beta$, which means that
@@ -172,7 +183,7 @@ The center of each pixel is:
 Thus, we need
 a prescription for simulating an image $\{Y_{ij}\}$ from a catalog $\theta$:
 \begin{eqnarray}
-\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
+\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N,
 \left\{f_i\right\}_{i=1}^N\right\}.
 \end{eqnarray}
 If we knew the true catalog, we could compute the
@@ -212,7 +223,7 @@ intensity of the mock image \citep[e.g.][]{2011MNRAS.412.2521B}.
 
 For the generation of the simulated data in Section~\ref{sec:simulated_data},
 the values of the PSF parameters used were $s_1=0.02$, $s_2=0.1$ (one and
-five pixel widths respectively), and $w=0.5$. 
+five pixel widths respectively), and $w=0.5$.
 
 \subsection{The Prior Distribution}
 The prior distribution for the number of stars $N$ is assigned to be uniform between 0 and
@@ -246,7 +257,7 @@ parameters of the luminosity function which then still apply at lower flux
 levels. In principle, this can be resolved by using a more flexible distribution
 \citep[e.g.][]{2008ApJ...682..874K} where each star's measured brightness
 affects the inference of the luminosity function locally but not globally.
- 
+
 \section{MCMC Implementation}
 The sampling was implemented using the Diffusive Nested Sampling \citep{dnest}
 method (hereafter DNS). DNS is based on the Metropolis-Hastings algorithm and
@@ -414,18 +425,18 @@ x_2^{-\alpha_1}\alpha_2^{-1}
 
 The cumulative distribution (CDF) is:
 \begin{eqnarray}
-P(X \leq x) = F(x) &=& 
+P(X \leq x) = F(x) &=&
 \left\{
 \begin{array}{lcr}
 0, & & x < x_1 \\
 (Z_1\alpha_1)^{-1}\left(x_1^{-\alpha_1} - x^{-\alpha_1}\right), & & x_1 \leq x \leq x_2 \\
-1 - (Z_2\alpha_2)^{-1}x^{-\alpha_2}, & & x > x_2 
+1 - (Z_2\alpha_2)^{-1}x^{-\alpha_2}, & & x > x_2
 \end{array}
 \right.
 \end{eqnarray}
 and the inverse CDF is:
 \begin{eqnarray}
-F^{-1}(u) &=& 
+F^{-1}(u) &=&
 \left\{
 \begin{array}{lcr}
 \left[x_1^{-\alpha_1} - uZ_1\alpha_1\right]^{-1/\alpha_1}, & & 0 < u < 1 - (Z_2\alpha_2)^{-1}x_2^{-\alpha_2}\\
@@ -498,50 +509,50 @@ See Table~\ref{proposals} for a list of current proposal distributions.
 
 
 \begin{thebibliography}{99}
-\bibitem[Bertin and 
+\bibitem[Bertin and
 Arnouts(1996)]{sextractor} Bertin, E., Arnouts, S.\ 1996.\ SExtractor: Software for source extraction.\ Astronomy and Astrophysics Supplement Series 117, 393-404.
 
-\bibitem[\protect\citeauthoryear{Brewer, P{\'a}rtay, 
+\bibitem[\protect\citeauthoryear{Brewer, P{\'a}rtay,
 \& Cs{\'a}nyi}{2011}]{dnest} Brewer B.~J., P{\'a}rtay L.~B.,
 Cs{\'a}nyi G., 2011, Statistics and Computing, 21, 4, 649-656. arXiv:0912.2380
 
-\bibitem[Brewer et al.(2011)]{2011MNRAS.412.2521B} Brewer, B.~J., Lewis, 
-G.~F., Belokurov, V., Irwin, M.~J., Bridges, T.~J., Evans, N.~W.\ 2011.\ 
-Modelling of the complex CASSOWARY/SLUGS gravitational lenses.\ Monthly 
+\bibitem[Brewer et al.(2011)]{2011MNRAS.412.2521B} Brewer, B.~J., Lewis,
+G.~F., Belokurov, V., Irwin, M.~J., Bridges, T.~J., Evans, N.~W.\ 2011.\
+Modelling of the complex CASSOWARY/SLUGS gravitational lenses.\ Monthly
 Notices of the Royal Astronomical Society 412, 2521-2529
 
-\bibitem[Caticha(2009)]{caticha} Caticha, A.\ 2009.\ 
-Quantifying Rational Belief.\ American Institute of Physics Conference 
-Series 1193, 60-68. 
+\bibitem[Caticha(2009)]{caticha} Caticha, A.\ 2009.\
+Quantifying Rational Belief.\ American Institute of Physics Conference
+Series 1193, 60-68.
 
 \bibitem[Cox(1946)]{cox} Cox, R.~T., 1946, Probability, Frequency, and Reasonable Expectation. 1946. American Journal of Physics 14 14, 1-13.
 
-\bibitem[Feroz et al.(2011)]{2011MNRAS.415.3462F} Feroz, F., Balan, S.~T., 
-Hobson, M.~P.\ 2011.\ Detecting extrasolar planets from stellar radial 
-velocities using Bayesian evidence.\ Monthly Notices of the Royal 
-Astronomical Society 415, 3462-3472. 
+\bibitem[Feroz et al.(2011)]{2011MNRAS.415.3462F} Feroz, F., Balan, S.~T.,
+Hobson, M.~P.\ 2011.\ Detecting extrasolar planets from stellar radial
+velocities using Bayesian evidence.\ Monthly Notices of the Royal
+Astronomical Society 415, 3462-3472.
 
-\bibitem[\protect\citeauthoryear{Feroz, Hobson, 
-\& Bridges}{2009}]{multinest} Feroz F., Hobson M.~P., Bridges M., 2009, MNRAS, 398, 1601 
+\bibitem[\protect\citeauthoryear{Feroz, Hobson,
+\& Bridges}{2009}]{multinest} Feroz F., Hobson M.~P., Bridges M., 2009, MNRAS, 398, 1601
 
 \bibitem[\protect\citeauthoryear{Green}{1995}]{rjmcmc}
 Green, P.~J., 1995, Reversible Jump Markov Chain Monte Carlo Computation and Bayesian Model Determination, Biometrika 82 (4): 711–732.
 
-\bibitem[Hogg(2012)]{hogg} Hogg, D.~W.\ 2012.\ Data analysis 
-recipes: Probability calculus for inference.\ ArXiv e-prints 
-arXiv:1205.4446. 
+\bibitem[Hogg(2012)]{hogg} Hogg, D.~W.\ 2012.\ Data analysis
+recipes: Probability calculus for inference.\ ArXiv e-prints
+arXiv:1205.4446.
 
 \bibitem[Jaynes(2003)]{jaynes} Jaynes, E.~T., 2003, Probability Theory: The
 Logic of Science, ISBN 0521592712, Cambridge University Press, June 2003.
 
-\bibitem[Kelly et al.(2008)]{2008ApJ...682..874K} Kelly, B.~C., Fan, X., 
-\& Vestergaard, M.\ 2008, ApJ, 682, 874 
+\bibitem[Kelly et al.(2008)]{2008ApJ...682..874K} Kelly, B.~C., Fan, X.,
+\& Vestergaard, M.\ 2008, ApJ, 682, 874
 
 \bibitem[Mackay(2003)]{mackay} Mackay, D.~J.~C., 2003, Information Theory,
 Inference and Learning Algorithms, Cambridge University Press, UK.
 
-\bibitem[\protect\citeauthoryear{Skilling}{1998}]{massinf} 
-Skilling J., 1998, Massive Inference and Maximum Entropy, in Maximum Entropy 
+\bibitem[\protect\citeauthoryear{Skilling}{1998}]{massinf}
+Skilling J., 1998, Massive Inference and Maximum Entropy, in Maximum Entropy
 and Bayesian Methods, Kluwer Academic Publishers, Dordrecht/Boston/London p.14
 \end{thebibliography}
 

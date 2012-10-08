@@ -3,7 +3,7 @@
 \usepackage{natbib}	% For citet and citep
 \usepackage{amsmath}	% for \iint
 \usepackage{bbm}	% for blackboard bold numbers
-\usepackage[left=3cm,top=3cm,right=3cm]{geometry}
+\usepackage[left=2cm,top=3cm,right=2cm]{geometry}
 
 \renewcommand{\topfraction}{0.85} \renewcommand{\textfraction}{0.1} 
 \parindent=0cm
@@ -11,7 +11,7 @@
 \newcommand{\cluster}{\texttt{Cluster}}
 \newcommand{\crowded}{\texttt{Crowded}}
 
-\title{Probabilistic Catalogs from Crowded Star Fields}
+\title{Probabilistic Catalogs for Crowded Stellar Fields}
 \author{Brendon J. Brewer$^{1,*}$, David W. Hogg$^{2}$,
 and Daniel Foreman-Mackey$^{2}$ \\
 \\
@@ -42,6 +42,7 @@ A fundamental problem in astronomy is the construction of {\it catalogs} from
 raw image data. {\bf The catalogs are then used for...}
 Standard tools for generating catalogs include \texttt{SExtractor}
 \citep{sextractor}, {\bf more refs}.
+\citep{2011EAS....45..351H}
 
 However, standard methods for constructing catalogs can have difficulty in some
 challenging situations. For example, when multiple sources overlap partially
@@ -221,14 +222,15 @@ from $x=-1$ to $x=1$ and from $y=-1$ to $y=1$ in arbitrary units, and the
 positions of the stars are assigned independent uniform priors:
 \begin{eqnarray}
 x_i &\sim& \textnormal{Uniform}(-1.1, 1.1) \\
-y_i &\sim& \textnormal{Uniform}(-1.1, 1.1) \\
+y_i &\sim& \textnormal{Uniform}(-1.1, 1.1)
 \end{eqnarray}
-The model for the luminosity function is a broken power-law with four
+The stars are allowed to be slightly outside of the observed image because the
+PSF can scatter light from these stars into the image. The model for the luminosity function is a broken power-law with four
 free parameters:
 \begin{eqnarray}
 \beta = \{h_1, h_2, \alpha_1, \alpha_2\}.
 \end{eqnarray}
-where $h_1$ is the lower flux cutoff, $h_2$ is a break-point, $\alpha_1$ is
+where $h_1$ is the lower flux limit, $h_2$ is a break-point, $\alpha_1$ is
 the slope of the distribution between $h_1$ and $h_2$, and $\alpha_2$ is the
 slope of the distribution above $h_2$. For details on the broken power-law
 model, see Appendix~\ref{power_law}. The prior distribution on $h_1$, $h_2$,
@@ -460,7 +462,10 @@ F &=& \iint_{\rm pixel} f_{\rm blurred}(x, y) \,dx'\,dy'\\
 Now consider $F$ as a function of the central location $(x_c, y_c)$ of the
 pixel.
 
-\subsubsection{Proposal Distributions}
+\section{Usage}
+Software can be obtained from {\tt http://github.com/dfm/star-field/}
+
+\section{Proposal Distributions}
 
 \begin{table}
 \begin{center}
@@ -536,6 +541,10 @@ Green, P.~J., 1995, Reversible Jump Markov Chain Monte Carlo Computation and Bay
 \bibitem[Hogg(2012)]{hogg} Hogg, D.~W.\ 2012.\ Data analysis 
 recipes: Probability calculus for inference.\ ArXiv e-prints 
 arXiv:1205.4446. 
+
+\bibitem[Hogg and Lang(2011)]{2011EAS....45..351H} Hogg, D.~W., Lang, D.\ 
+2011.\ Telescopes don't make catalogues!.\ EAS Publications Series 45, 
+351-358. 
 
 \bibitem[Jaynes(2003)]{jaynes} Jaynes, E.~T., 2003, Probability Theory: The
 Logic of Science, ISBN 0521592712, Cambridge University Press, June 2003.

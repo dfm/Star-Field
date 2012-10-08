@@ -369,15 +369,8 @@ x^{-\alpha_2 - 1} & & x > h_2.
 \end{eqnarray}
 The free parameters of the broken power-law are:
 \begin{eqnarray}
-\beta = \{h_1, h_2, \alpha_1, \alpha_2\}
+\beta = \{h_1, h_2, \alpha_1, \alpha_2\}.
 \end{eqnarray}
-
-\begin{figure}
-\begin{center}
-\includegraphics[scale=0.7]{Figures/broken.eps}
-\end{center}
-\end{figure}
-
 With normalising terms included, the proportionality becomes an equality:
 \begin{eqnarray}
 p(x) &=&
@@ -385,12 +378,10 @@ p(x) &=&
 \begin{array}{lcr}
 0, & & x < h_1 \\
 Z_1^{-1}x^{-\alpha_1 - 1}, & & h_1 \leq x \leq h_2 \\
-Z_2^{-1}x^{-\alpha_2 - 1}, & & x > h_2
+Z_2^{-1}x^{-\alpha_2 - 1}, & & x > h_2.
 \end{array}
 \right.
-.
 \end{eqnarray}
-
 Two conditions will be used to determine the normalisers $Z_1$ and $Z_2$.
 Firstly, the PDF should be continuous at $x=h_2$:
 \begin{eqnarray}
@@ -398,9 +389,7 @@ Z_1^{-1}h_2^{-\alpha_1 - 1} &=& Z_2^{-1}h_2^{-\alpha_2 - 1}\\
 \implies
 Z_2 &=& Z_1h_2^{\alpha_1-\alpha_2}
 \end{eqnarray}
-
 The second condition is that the total probability must be 1:
-
 \begin{eqnarray}
 \int_{h_1}^{h_2} Z_1^{-1} x^{-\alpha_1 - 1} \, dx
 +
@@ -415,14 +404,12 @@ Z_1^{-1}\alpha_1^{-1}\left[h_1^{-\alpha_1} - h_2^{-\alpha_1}\right]
 Z_1^{-1}h_2^{\alpha_2-\alpha_1}\alpha_2^{-1}h_2^{-\alpha_2}
 &=& 1
 \end{eqnarray}
-
 \begin{eqnarray}
 \implies
 Z_1 &=& \alpha_1^{-1}\left[h_1^{-\alpha_1} - h_2^{-\alpha_1}\right]
 +
-h_2^{-\alpha_1}\alpha_2^{-1}
+h_2^{-\alpha_1}\alpha_2^{-1}.
 \end{eqnarray}
-
 The cumulative distribution (CDF) is:
 \begin{eqnarray}
 P(X \leq x) = F(x) &=& 
@@ -444,6 +431,13 @@ F^{-1}(u) &=&
 \end{array}
 \right.
 \end{eqnarray}
+An example of a broken power-law distribution is shown in Figure~\ref{fig:powerlaw}.
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.7]{Figures/broken.eps}
+\caption{A broken power-law distribution.\label{fig:powerlaw}}
+\end{center}
+\end{figure}
 
 
 \section{Pixel Convolved PSF}

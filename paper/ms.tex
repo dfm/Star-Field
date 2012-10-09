@@ -31,8 +31,15 @@ $^*$\texttt{bj.brewer@auckland.ac.nz}
 \begin{document}
 \maketitle
 
-\abstract{We introduce a fully probabilistic method for producing catalogs
-from images of crowded stellar fields. The feasibility of the method is
+\abstract{We introduce a probabilistic (Bayesian) method for producing catalogs
+from images of crowded stellar fields. The method is capable of handling the
+challenges introduced by overlapping sources and is able to determine the luminosity
+function of the stars even when the precise luminosity of each star is uncertain.
+This is in contrast with standard techniques which make a single catalog,
+potentially underestimating the uncertainties in any study of the stellar
+population. The method is implemented using advanced Markov Chain Monte Carlo
+(MCMC) techniques including Reversible Jump and Nested Sampling.
+The computational feasibility of the method is
 demonstrated on simulated data where the luminosity function of the stars is a
 broken power-law. The parameters of the luminosity function can be recovered
 with moderate uncertainty.}

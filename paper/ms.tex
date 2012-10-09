@@ -60,9 +60,9 @@ each object in the image, we should fully describe the fact that sometimes we
 are not certain of the position and flux of each source. This uncertainty
 should then be propagated into any inferences about the stellar population.
 
-Essentially, the creation of a catalog is an attempt to answer the question
-``given the image we have obtained, what objects are present in the field and
-what are their properties?''. This motivates a probabilistic (Bayesian)
+Essentially, the creation of a catalog is an attempt to answer the question,
+``Given the image we have obtained, what objects are present in the field and
+what are their properties?'' This motivates a probabilistic (Bayesian)
 approach to making catalogs. The output of such an approach would not be a
 single answer to this question (i.e. a single ``point estimate'' catalog), but rather a posterior probability distribution over the space of possible catalogs.
 Constructing such a probability distribution is
@@ -100,9 +100,9 @@ p(\theta).
 Note that this is a very concise notation \citep{hogg} and should be read
 as ``the probability distribution for $\theta$''.
 We also model how the parameters give rise to the data, via a generative model.
-This is also known as a {\it sampling distribution}.
+This is also known as a {\it sampling distribution}:
 \begin{equation}
-p(x|\theta)
+p(x|\theta).
 \end{equation}
 Despite the singular, the sampling distribution is actually a family of
 probability distributions over the space of possible data, one probability
@@ -138,29 +138,31 @@ and the sampling distribution. These choices are presented and discussed in
 Section~\ref{sec:model}.
 
 \section{The Specific Model for Stellar Fields}\label{sec:model}
-
-\subsection{The Hypothesis Space and the Prior}
-Our model makes the following assumptions. There are an unknown number of stars
+\subsection{The Hypothesis Space}
+The hypothesis space is the set of possible catalogs, or the set of possible
+answers to the question, ``What objects are present in the field and
+what are their properties?'' There are an unknown number of stars
 $N$ in the field. Each star has an unknown
 position $(x,y)$ in the plane of the sky, and an unknown flux $f$. We also
 describe the distribution of fluxes (commonly known as the {\it luminosity
-function}) of the stars by parameters $\beta$. In summary, the unknown
-parameters are:
+function}) of the stars by some parameters denoted collectively by $\beta$.
+In summary, the unknown parameters are:
 \begin{eqnarray}
 \theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
-\left\{f_i\right\}_{i=1}^N\right\}
+\left\{f_i\right\}_{i=1}^N\right\}.
 \end{eqnarray}
+
+\subsection{The Prior}
 The prior probability distribution for the unknown parameters can be factorized
-using the product rule. With a variety of independence assumptions, the prior
-can be written as:
+using the product rule of probability theory.
+With a variety of independence assumptions, the prior
+can be factorized as:
 \begin{eqnarray}
-p(\theta) = p(N)p(\beta)\prod_{i=1}^N p(x_i, y_i)
+p(\theta) = p(\beta)p(N|\beta)\prod_{i=1}^N p(x_i, y_i)
 p(f_i | \beta) 
 \end{eqnarray}
 Here, we have assumed that the luminosity function does not depend on position.
-We have also assumed independence of $N$ and $\beta$, which means that
-learning the value of one would not tell us anything about the values of the
-others. Finally, the fluxes of the stars come independently from
+Finally, the fluxes of the stars come independently from
 a common distribution. If we knew the luminosity
 function of the stars, then the location and flux of a particular star would
 not tell us anything about the location and flux of another star. Really, this
@@ -171,30 +173,32 @@ position of each star. This creates a strong preference for catalogs where
 the stars are uniformly distributed across the image. Thus, this model is
 appropriate for small patches of sky where the density of stars is approximately
 uniform. In other scenarios, such as images of stellar clusters, it is possible
-to parameterise the spatial distribution of the stars in a similar way to how
-we have parameterised the luminosity function.
+to parameterize the spatial distribution of the stars in a similar way to how
+we have parameterized the luminosity function.
 
 \subsection{The Sampling Distribution}
 The sampling distribution is a probabilistic model for the process that
 generates the data; it describes the probability distribution we would use
 to predict the data if we happened to know the true catalog. In our case,
-the data will be an $n \times n$ array of pixel intensities:
+the data will be an $m \times m$ array of pixel intensities $I$:
 \begin{eqnarray}
-\{Y_{ij}\}
+\{I_{ij}\}
 \end{eqnarray}
-The center of each pixel is:
+where the central position of each pixel is:
 \begin{eqnarray}
-\{x_{ij}, y_{ij}\}.
+\{X_{ij}, Y_{ij}\}.
 \end{eqnarray}
-Thus, we need
-a prescription for simulating an image $\{Y_{ij}\}$ from a catalog $\theta$:
+The image is assumed to be a noisy version of the true underlying intensity
+field. Thus, we need
+a prescription for simulating an image $\{I_{ij}\}$ from a catalog $\theta$:
 \begin{eqnarray}
 \theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
 \left\{f_i\right\}_{i=1}^N\right\}.
 \end{eqnarray}
 If we knew the true catalog, we could compute the
 ``mock image'' we would expect to see
-in the absence of noise. This mock image (at infinite resolution) is given by:
+in the absence of noise. This mock image (defined at every point on the sky)
+is given by:
 \begin{eqnarray}
 \mathcal{M}(x, y) &=& \sum_{i=1}^N \mathcal{P}(x - x_i, y - y_i)
 \end{eqnarray}
@@ -212,10 +216,10 @@ Gaussians with widths $s_1$ and $s_2$:
 \left[-\frac{1}{2s_2^2}\left(x^2 + y^2\right)
 \right].
 \end{eqnarray}
-The finite-resolution observed image is assumed to be generated from the mock
+The pixellated observed image is assumed to be generated from the mock
 image (evaluated at the center of each pixel) plus Gaussian noise:
 \begin{eqnarray}
-Y_{ij} &=& \mathcal{M}(x_{ij}, y_{ij}) + \epsilon_{ij}
+I_{ij} &=& \mathcal{M}(X_{ij}, Y_{ij}) + \epsilon_{ij}
 \end{eqnarray}
 where the errors $\{\epsilon_{ij}\}$ are independent and normally distributed:
 \begin{eqnarray}
@@ -225,15 +229,14 @@ Throughout this paper, we will assume that the noise variance $\sigma^2$ is
 known. This is not usually true in practice (although it is often assumed).
 However it is straightforward to extend the model so that $\sigma$ is an
 unknown parameter or that the noise variance should be a function of the
-intensity of the mock image \citep[e.g.][]{2011MNRAS.412.2521B}.
-
-For the generation of the simulated data in Section~\ref{sec:simulated_data},
+intensity of the mock image \citep[e.g.][]{2011MNRAS.412.2521B}. Allowing
+the parameters of the pixel-convolved PSF to be unknown is another possible
+extension. For the generation of the simulated data in Section~\ref{sec:simulated_data},
 the values of the PSF parameters used were $s_1=0.02$, $s_2=0.1$ (one and
 five pixel widths respectively), and $w=0.5$. 
 
 \subsection{The Prior Distribution}
-The prior distribution for the number of stars $N$ is assigned to be uniform between 0 and
-some maximum number $N_{\rm max}$. The extent of the image is assumed to be
+The prior distribution for the number of stars $N$ is assigned to be uniform between 0 and some maximum number $N_{\rm max}$. The extent of the image is assumed to be
 from $x=-1$ to $x=1$ and from $y=-1$ to $y=1$ in arbitrary units, and the
 positions of the stars are assigned independent uniform priors:
 \begin{eqnarray}
@@ -241,24 +244,28 @@ x_i &\sim& \textnormal{Uniform}(-1.1, 1.1) \\
 y_i &\sim& \textnormal{Uniform}(-1.1, 1.1)
 \end{eqnarray}
 The stars are allowed to be slightly outside of the observed image because the
-PSF can scatter light from these stars into the image. The model for the luminosity function is a broken power-law with four
+PSF can scatter light from these stars into the image. Our model for the
+luminosity function is a broken power-law with four
 free parameters:
 \begin{eqnarray}
 \beta = \{h_1, h_2, \alpha_1, \alpha_2\}.
 \end{eqnarray}
-where $h_1$ is the lower flux limit, $h_2$ is a break-point, $\alpha_1$ is
+where $h_1$ is a lower flux limit, $h_2$ is a break-point, $\alpha_1$ is
 the slope of the distribution between $h_1$ and $h_2$, and $\alpha_2$ is the
 slope of the distribution above $h_2$. For details on the broken power-law
 model, see Appendix~\ref{power_law}. The prior distribution on $h_1$, $h_2$,
 $\alpha_1$ and $\alpha_2$ is assigned to be:
 \begin{eqnarray}
-\log h_1 &\sim& \textnormal{Uniform}(\log(10^{-3}), \log(10^{+3})) \\
-\log h_2 &\sim& \textnormal{Uniform}(h_1, h_1 + 2.3) \\
+\log_e h_1 &\sim& \textnormal{Uniform}(\log_e(10^{-3}), \log_e(10^3)) \\
+\log_e h_2 &\sim& \textnormal{Uniform}(h_1, h_1 + 2.3) \\
 \alpha_1 &\sim& \textnormal{Uniform}(1, 5) \\
 \alpha_2 &\sim& \textnormal{Uniform}(1, 5).
 \end{eqnarray}
+These priors express vague prior knowledge about $\alpha_1$ and $\alpha_2$ in
+addition to vague prior knowledge about $h_1$ and $h_2$ apart from the fact
+that $h_2$ should be no more than an order of magnitude greater than $h_1$.
 
-This simply-parameterised model for the luminosity function can be criticised
+This simply-parameterized model for the luminosity function can be criticized
 on the basis that information from bright stars can be used to infer the
 parameters of the luminosity function which then still apply at lower flux
 levels. In principle, this can be resolved by using a more flexible distribution
@@ -379,10 +386,10 @@ $x=h_2$:
 \begin{eqnarray}
 p(x) &\propto&
 \left\{
-\begin{array}{lcr}
-0, & & x < h_1 \\
-x^{-\alpha_1 - 1} & & h_1 \leq x \leq h_2 \\
-x^{-\alpha_2 - 1} & & x > h_2.
+\begin{array}{lcrl}
+0, & & x < h_1 & \\
+x^{-\alpha_1 - 1} & & h_1 \leq x \leq h_2 & \\
+x^{-\alpha_2 - 1} & & x > h_2 & .
 \end{array}
 \right.
 \end{eqnarray}
@@ -401,8 +408,8 @@ Z_2^{-1}x^{-\alpha_2 - 1}, & & x > h_2.
 \end{array}
 \right.
 \end{eqnarray}
-Two conditions will be used to determine the normalisers $Z_1$ and $Z_2$.
-Firstly, the PDF should be continuous at $x=h_2$:
+Two conditions will be used to determine the normalizers $Z_1$ and $Z_2$.
+Firstly, the probability density function (PDF) should be continuous at $x=h_2$:
 \begin{eqnarray}
 Z_1^{-1}h_2^{-\alpha_1 - 1} &=& Z_2^{-1}h_2^{-\alpha_2 - 1}\\
 \implies
@@ -429,7 +436,8 @@ Z_1 &=& \alpha_1^{-1}\left[h_1^{-\alpha_1} - h_2^{-\alpha_1}\right]
 +
 h_2^{-\alpha_1}\alpha_2^{-1}.
 \end{eqnarray}
-The cumulative distribution (CDF) is:
+The cumulative distribution (CDF) is a useful property of a probability
+distribution and is given by the antiderivative of the PDF:
 \begin{eqnarray}
 P(X \leq x) = F(x) &=& 
 \left\{
@@ -439,8 +447,9 @@ P(X \leq x) = F(x) &=&
 1 - (Z_2\alpha_2)^{-1}x^{-\alpha_2}, & & x > h_2 
 \end{array}
 \right.
+.
 \end{eqnarray}
-and the inverse CDF is:
+The inverse of the CDF is also useful and is given by:
 \begin{eqnarray}
 F^{-1}(u) &=& 
 \left\{
@@ -449,12 +458,17 @@ F^{-1}(u) &=&
 \left[Z_2\alpha_2(1-u)\right]^{-1/\alpha_2},& & 1 - (Z_2\alpha_2)^{-1}h_2^{-\alpha_2}< u < 1
 \end{array}
 \right.
+.
 \end{eqnarray}
 An example of a broken power-law distribution is shown in Figure~\ref{fig:powerlaw}.
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[scale=0.5]{Figures/broken.eps}
-\caption{A broken power-law distribution.\label{fig:powerlaw}}
+\caption{A broken power-law distribution. The parameter values for this
+particular PDF were
+$\{h_1, h_2, \alpha_1, \alpha_2\} = \{0.3, 0.6, 1.1, 2\}$, i.e. the same
+parameter values used to make the simulated data.
+\label{fig:powerlaw}}
 \end{center}
 \end{figure}
 

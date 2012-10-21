@@ -1,1 +1,4 @@
 sextractor*
+*.cat
+*.sex
+*.param

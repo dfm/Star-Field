@@ -22,10 +22,19 @@ import subprocess
 from docopt import docopt
 import pyfits
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as pl
 
 
-def run_sex(fitfn, outdir, convname="gauss_2.0_5x5.conv"):
+# Nicer colors off the bat from:
+#  https://github.com/mbostock/d3/wiki/Ordinal-Scales
+matplotlib.rcParams["axes.color_cycle"] = ["#1f77b4", "#ff7f0e", "#2ca02c",
+                                           "#d62728", "#9467bd", "#8c564b",
+                                           "#e377c2", "#7f7f7f", "#bcbd22",
+                                           "#17becf"]
+
+
+def run_sex(fitfn, outdir, convname="gauss_2.0_5x5.conv", thresh=1.5):
     try:
         os.makedirs(outdir)
     except os.error:
@@ -42,13 +51,14 @@ def run_sex(fitfn, outdir, convname="gauss_2.0_5x5.conv"):
     with open(os.path.join(configdir, "default.sex")) as f:
         config = f.read()
 
-    catfn = os.path.join(outdir, "stars.cat")
+    catfn = os.path.join(outdir, "stars.{0}.cat".format(thresh))
     config = replace_settings(config, ["CATALOG_NAME", "FILTER_NAME",
-                                       "PARAMETERS_NAME"],
+                                       "PARAMETERS_NAME",
+                                       "DETECT_THRESH", "ANALYSIS_THRESH"],
                                       [catfn,
                                        os.path.join(configdir, convname),
-                                       parsfn])
-    configfn = os.path.join(outdir, "config.sex")
+                                       parsfn, thresh, thresh])
+    configfn = os.path.join(outdir, "config.{0}.sex".format(thresh))
     with open(configfn, "w") as f:
         f.write(config)
 
@@ -67,7 +77,7 @@ def replace_settings(config, names, values):
     return config
 
 
-def plot_sex(imgfn, catfn):
+def plot_sex(imgfn, catfn, hist_ax):
     hdus = pyfits.open(imgfn)
     img = np.array(hdus[0].data, dtype=float)
     hdus.close()
@@ -100,6 +110,14 @@ def plot_sex(imgfn, catfn):
     ax.set_ylim([0, img.shape[1]])
 
     fig.savefig(os.path.splitext(catfn)[0] + ".pdf")
+    fig.savefig(os.path.splitext(catfn)[0] + ".png")
+
+    # Plot the histogram of fluxes.
+    fluxes = catalog["FLUX_AUTO"]
+    n, b = np.histogram(fluxes, max(2, int(0.3 * len(fluxes))))
+    inds = np.array([np.all(n[:i] > 0) for i in range(len(n))], dtype=bool)
+    hist_ax.plot(np.log(0.5 * (b[:-1] + b[1:]))[inds], np.log(n[inds]), lw=2,
+                label=r"{0:.1f}-$\sigma$ ({1})".format(thresh, len(fluxes)))
 
 
 def estimate_sigma(scene, nsigma=3.5, tol=0.0):
@@ -122,7 +140,19 @@ def asinh(img, mu, sigma, f):
 
 if __name__ == "__main__":
     args = docopt(__doc__)
+    fig = pl.figure(figsize=(8, 8,))
     for i, fn in enumerate(args["<infile>"]):
+        ax = fig.add_subplot(111)
         outdir = os.path.splitext(os.path.split(fn)[1])[0]
-        catfn = run_sex(fn, outdir, convname=args["--conv"])
-        plot_sex(fn, catfn)
+        for thresh in [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]:
+            catfn = run_sex(fn, outdir, convname=args["--conv"], thresh=thresh)
+            plot_sex(fn, catfn, ax)
+
+        # Layout/save the histograms plot.
+        ax.legend(prop={"size": 13}, loc="lower left")
+        ax.set_xlabel(r"$\ln \, f$")
+        ax.set_ylabel(r"$\ln \, N$")
+        hfn = os.path.join(outdir, os.path.splitext(fn)[0]) + ".hist"
+        ax.figure.savefig(hfn + ".png")
+        ax.figure.savefig(hfn + ".pdf")
+        fig.clear()

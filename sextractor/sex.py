@@ -54,10 +54,11 @@ def run_sex(fitfn, outdir, convname="gauss_2.0_5x5.conv", thresh=1.5):
     catfn = os.path.join(outdir, "stars.{0}.cat".format(thresh))
     config = replace_settings(config, ["CATALOG_NAME", "FILTER_NAME",
                                        "PARAMETERS_NAME",
-                                       "DETECT_THRESH", "ANALYSIS_THRESH"],
+                                       "DETECT_THRESH", "ANALYSIS_THRESH",
+                                       "DETECT_MINAREA"],
                                       [catfn,
                                        os.path.join(configdir, convname),
-                                       parsfn, thresh, thresh])
+                                       parsfn, thresh, thresh, 1])
     configfn = os.path.join(outdir, "config.{0}.sex".format(thresh))
     with open(configfn, "w") as f:
         f.write(config)

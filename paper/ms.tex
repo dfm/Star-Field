@@ -1,37 +1,34 @@
-\documentclass[letterpaper, 11pt]{article}
+\documentclass[manuscript]{aastex}
 \usepackage{graphicx}	% For figures
 \usepackage{natbib}	% For citet and citep
 \usepackage{amsmath}	% for \iint
 \usepackage{bbm}	% for blackboard bold numbers
-\usepackage[left=2cm,top=3cm,right=2cm]{geometry}
 
-\renewcommand{\topfraction}{0.85} \renewcommand{\textfraction}{0.1} 
-\parindent=0cm
-\newcommand{\sparse}{\texttt{Sparse}}
-\newcommand{\cluster}{\texttt{Cluster}}
-\newcommand{\crowded}{\texttt{Crowded}}
+\newcommand{\vdag}{(v)^\dagger}
+\newcommand{\myemail}{bj.brewer@auckland.ac.nz}
 
-\title{Probabilistic Catalogs for Crowded Stellar Fields}
-\author{Brendon J. Brewer$^{1,*}$, David W. Hogg$^{2}$,
-and Daniel Foreman-Mackey$^{2}$ \\
-\\
-\small
-$^1$ Department of Statistics, The University of Auckland,\\
-\small
-Private Bag 92019, Auckland 1142, New Zealand \\
-\small
-$^2$ Center for Cosmology and Particle Physics, Department of Physics,
-New York University,\\
-\small
-4 Washington Place, New York, NY, 10003, USA\\
-\small
-$^*$\texttt{bj.brewer@auckland.ac.nz}
-}
+\shorttitle{Probabilistic Stellar Catalogs}
+\shortauthors{Brewer et al.}
 
 \begin{document}
-\maketitle
 
-\abstract{We introduce a probabilistic (Bayesian) method for producing catalogs
+\title{Probabilistic Catalogs for Crowded Stellar Fields}
+
+\author{Brendon J. Brewer}
+\affil{Department of Statistics, The University of Auckland,
+Private Bag 92019, Auckland 1142, New Zealand}
+
+\author{David W. Hogg}
+\affil{Center for Cosmology and Particle Physics, Department of Physics,
+New York University, Washington Place, New York, NY, 10003, USA}
+
+\and
+
+\author{Daniel Foreman-Mackey}
+\affil{Center for Cosmology and Particle Physics, Department of Physics,
+New York University, Washington Place, New York, NY, 10003, USA}
+
+\begin{abstract}We introduce a probabilistic (Bayesian) method for producing catalogs
 from images of crowded stellar fields. The method is capable of handling the
 challenges introduced by overlapping sources and is able to determine the luminosity
 function of the stars even when the precise luminosity of each star is uncertain.
@@ -42,7 +39,8 @@ population. The method is implemented using advanced Markov Chain Monte Carlo
 The computational feasibility of the method is
 demonstrated on simulated data where the luminosity function of the stars is a
 broken power-law. The parameters of the luminosity function can be recovered
-with moderate uncertainty.}
+with moderate uncertainty.
+\end{abstract}
 
 \section{Introduction}
 A fundamental problem in astronomy is the construction of {\it catalogs} from

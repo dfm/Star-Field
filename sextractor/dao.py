@@ -2,12 +2,13 @@
 """
 Run the IDL version of DAOPHOT on some FITS images and show the results.
 
-Usage: dao.py <infile>... [--server <server>]
+Usage: dao.py <infile>... [--server <server>] [--plot_only]
 
 Options:
   -h --help         Show this information.
   <infile>          The path to the input FITS image.
   --server <sever>  The SSH path to the server to run on. [default: sculptor]
+  --plot_only       Only generate the plots.
 
 """
 
@@ -23,6 +24,8 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as pl
 
+from utils import estimate_sigma, asinh
+
 
 # Nicer colors off the bat from:
 #  https://github.com/mbostock/d3/wiki/Ordinal-Scales
@@ -32,7 +35,7 @@ matplotlib.rcParams["axes.color_cycle"] = ["#1f77b4", "#ff7f0e", "#2ca02c",
                                            "#17becf"]
 
 
-def run_dao(fitfn, outdir, server):
+def run_dao(fitfn, outdir, server, threshes=[1]):
     try:
         os.makedirs(outdir)
     except os.error:
@@ -43,14 +46,17 @@ def run_dao(fitfn, outdir, server):
     tmpfn = id_ + ".fits"
     localscript = "idl.pro"
     scriptfn = id_ + ".pro"
-    catfn = id_ + ".cat"
+    catfns = [os.path.join(outdir, "daophot.{0}.cat".format(t))
+                                    for t in threshes]
 
     # Generate an IDL script.
+    script = "img = mrdfits('{0}')\n".format(tmpfn)
+    for t in threshes:
+        script += "find, img, x, y, f, sharp, round, {0}, 2,".format(t)
+        script += "[0.2,1.0], [-1.0,1.0], PRINT='{0}.{1}.cat'\n".format(id_, t)
+    script += "exit\n"
     with open(localscript, "w") as f:
-        f.write("""img = mrdfits('{0}')
-find, img, x, y, f, sharp, round, 4, 2, [0.2,1.0], [-1.0,1.0], PRINT='{1}'
-exit
-""".format(tmpfn, catfn))
+        f.write(script)
 
     try:
         # Copy the image.
@@ -65,17 +71,18 @@ exit
                 + "idl {0};'".format(id_)
         subprocess.check_call(cmd, shell=True)
 
-        # Copy back the catalog.
-        subprocess.check_call(["scp", "{0}:{1}".format(server, catfn),
-                            os.path.join(outdir, "daophot.cat")])
+        # Copy back the catalogs.
+        [subprocess.check_call(["scp", "{0}:{1}".format(server,
+                "{0}.{1}.cat".format(id_, t)), c]) for c in catfns]
     finally:
         # Clean up.
         os.remove(localscript)
-        subprocess.check_call(["ssh", server,
-                    "rm -rf {0}".format(" ".join([tmpfn, scriptfn, catfn]))])
+        subprocess.check_call(["ssh", server, "rm -rf {0}.*".format(id_)])
+
+    return catfns
 
 
-def plot_sex(imgfn, catfn, hist_ax):
+def plot_dao(imgfn, catfn, hist_ax, thresh):
     hdus = pyfits.open(imgfn)
     img = np.array(hdus[0].data, dtype=float)
     hdus.close()
@@ -88,13 +95,9 @@ def plot_sex(imgfn, catfn, hist_ax):
 
     # Load catalog.
     with open(catfn) as f:
-        headers = []
-        catalog = []
-        for line in f:
-            if line[0] == "#":
-                headers.append(line.split()[2])
-            else:
-                catalog.append(tuple(line.split()))
+        lines = f.readlines()[12:]
+        headers = lines[0].split()
+        catalog = [tuple(l.split()) for l in lines[1:]]
 
     catalog = np.array(catalog, dtype=np.dtype([(n, float) for n in headers]))
 
@@ -102,53 +105,41 @@ def plot_sex(imgfn, catfn, hist_ax):
     ax = fig.add_subplot(111)
 
     ax.imshow(img, cmap="gray", interpolation="nearest", vmin=0, vmax=1)
-    ax.plot(catalog["X_IMAGE"] - 1, catalog["Y_IMAGE"] - 1, "+r")
+    ax.plot(catalog["X"] - 1, catalog["Y"] - 1, "+r")
 
     ax.set_xlim([0, img.shape[0]])
     ax.set_ylim([0, img.shape[1]])
 
-    fig.savefig(os.path.splitext(catfn)[0] + ".pdf")
-    fig.savefig(os.path.splitext(catfn)[0] + ".png")
+    fig.savefig(os.path.splitext(catfn)[0] + ".dao.pdf")
+    fig.savefig(os.path.splitext(catfn)[0] + ".dao.png")
 
     # Plot the histogram of fluxes.
-    fluxes = catalog["FLUX_AUTO"]
+    fluxes = catalog["FLUX"]
     n, b = np.histogram(fluxes, max(2, int(0.3 * len(fluxes))))
     inds = np.array([np.all(n[:i] > 0) for i in range(len(n))], dtype=bool)
     hist_ax.plot(np.log(0.5 * (b[:-1] + b[1:]))[inds], np.log(n[inds]), lw=2,
                 label=r"{0:.1f}-$\sigma$ ({1})".format(thresh, len(fluxes)))
 
 
-def estimate_sigma(scene, nsigma=3.5, tol=0.0):
-    img = scene.flatten()
-    mask = np.ones(len(img), dtype=bool)
-    ms_old = 0.0
-    for i in range(500):
-        m = np.median(img[mask])
-        ms = np.mean((img[mask] - m) ** 2)
-        mask = (img - m) ** 2 < nsigma ** 2 * ms
-        if i > 1 and np.abs(ms - ms_old) < tol:
-            break
-        ms_old = ms
-    return np.sqrt(ms)
-
-
-def asinh(img, mu, sigma, f):
-    return f * np.arcsinh((img - mu) / sigma) + 0.2
-
-
 if __name__ == "__main__":
     args = docopt(__doc__)
-    # fig = pl.figure(figsize=(8, 8,))
+    fig = pl.figure(figsize=(8, 8,))
+    threshes = np.arange(0.5, 6, 0.5)
     for i, fn in enumerate(args["<infile>"]):
-        # ax = fig.add_subplot(111)
+        ax = fig.add_subplot(111)
         outdir = os.path.splitext(os.path.split(fn)[1])[0]
-        catfn = run_dao(fn, outdir, args["--server"])
+        if not args["--plot_only"]:
+            catfns = run_dao(fn, outdir, args["--server"], threshes=threshes)
+        else:
+            catfns = [os.path.join(outdir, "daophot.{0}.cat".format(t))
+                                            for t in threshes]
+        [plot_dao(fn, catfns[i], ax, t) for i, t in enumerate(threshes)]
 
-        # # Layout/save the histograms plot.
-        # ax.legend(prop={"size": 13}, loc="lower left")
-        # ax.set_xlabel(r"$\ln \, f$")
-        # ax.set_ylabel(r"$\ln \, N$")
-        # hfn = os.path.join(outdir, os.path.splitext(fn)[0]) + ".hist"
-        # ax.figure.savefig(hfn + ".png")
-        # ax.figure.savefig(hfn + ".pdf")
-        # fig.clear()
+        # Layout/save the histograms plot.
+        ax.legend(prop={"size": 13}, loc="lower left")
+        ax.set_xlabel(r"$\ln \, f$")
+        ax.set_ylabel(r"$\ln \, N$")
+        hfn = os.path.join(outdir, os.path.splitext(fn)[0]) + ".hist"
+        ax.figure.savefig(hfn + ".dao.png")
+        ax.figure.savefig(hfn + ".dao.pdf")
+        fig.clear()

@@ -77,7 +77,8 @@ This can cause Markov Chain Monte Carlo (MCMC) algorithms difficulties -- they
 may take a long time to converge to the target posterior distribution over
 the space of catalogs.
 
-Bayesian object detection (as this problem is sometimes called) has been implemented by \citet{2011MNRAS.415.3462F}
+Bayesian object detection (as this problem is sometimes called) has been
+implemented by \citet{2011MNRAS.415.3462F}
 under the assumption of a known number of objects $N$.
 This assumption is required for the
 {\tt MultiNest} sampler \citep{multinest} to be applicable.
@@ -88,7 +89,12 @@ this will not work well in situations where there is significant confusion
 (i.e. two or more sources overlap). What is really required is a variable
 dimension model, where $N$ is an unknown quantity to be inferred from the data.
 The computational implementation of these models will require tools such as
-reversible jump Markov Chain Monte Carlo \citep{rjmcmc}.
+reversible jump Markov Chain Monte Carlo \citep{rjmcmc}. Other statistical
+methods such as maximum likelihood have also been used to model crowded fields
+\citep[e.g.][]{irwin}. However, maximum likelihood is not completely appropriate
+because it may lead to overfitting. In this situation overfitting would result
+in more stars being added to the model to explain small positive fluctuations
+in the image which are actually due to noise.
 
 \section{Bayesian Inference}
 To quantitatively model uncertainties and transform noise in observed data
@@ -597,6 +603,9 @@ arXiv:1205.4446.
 \bibitem[Hogg and Lang(2011)]{2011EAS....45..351H} Hogg, D.~W., Lang, D.\ 
 2011.\ Telescopes don't make catalogues!.\ EAS Publications Series 45, 
 351-358. 
+
+\bibitem[Irwin(1985)]{irwin} Irwin, M.~J.\ 1985, \mnras, 214, 
+575 
 
 \bibitem[Jaynes(2003)]{jaynes} Jaynes, E.~T., 2003, Probability Theory: The
 Logic of Science, ISBN 0521592712, Cambridge University Press, June 2003.

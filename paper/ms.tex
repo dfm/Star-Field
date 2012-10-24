@@ -39,8 +39,14 @@ population. The method is implemented using advanced Markov Chain Monte Carlo
 The computational feasibility of the method is
 demonstrated on simulated data where the luminosity function of the stars is a
 broken power-law. The parameters of the luminosity function can be recovered
-with moderate uncertainty.
+with moderate uncertainty. We compare the results obtained from our method
+with those obtained from the SExtractor software and find that the latter is
+unable to correctly infer the number of stars or the luminosity function
+parameters.
 \end{abstract}
+
+\keywords{catalogs --- methods: data analysis --- methods: statistical ---
+stars: luminosity function, mass function}
 
 \section{Introduction}
 A fundamental problem in astronomy is the construction of {\it catalogs} from
@@ -198,7 +204,7 @@ If we knew the true catalog, we could compute the
 in the absence of noise. This mock image (defined at every point on the sky)
 is given by:
 \begin{eqnarray}
-\mathcal{M}(x, y) &=& \sum_{i=1}^N \mathcal{P}(x - x_i, y - y_i)
+\mathcal{M}(x, y) &=& \sum_{i=1}^N f_i \mathcal{P}(x - x_i, y - y_i)
 \end{eqnarray}
 where $\mathcal{P}$ is the pixel-convolved point spread function (PSF).
 Throughout this paper we

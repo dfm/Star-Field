@@ -1,37 +1,34 @@
-\documentclass[letterpaper, 11pt]{article}
+\documentclass[manuscript]{aastex}
 \usepackage{graphicx}	% For figures
 \usepackage{natbib}	% For citet and citep
 \usepackage{amsmath}	% for \iint
 \usepackage{bbm}	% for blackboard bold numbers
-\usepackage[left=2cm,top=3cm,right=2cm]{geometry}
 
-\renewcommand{\topfraction}{0.85} \renewcommand{\textfraction}{0.1} 
-\parindent=0cm
-\newcommand{\sparse}{\texttt{Sparse}}
-\newcommand{\cluster}{\texttt{Cluster}}
-\newcommand{\crowded}{\texttt{Crowded}}
+\newcommand{\vdag}{(v)^\dagger}
+\newcommand{\myemail}{bj.brewer@auckland.ac.nz}
 
-\title{Probabilistic Catalogs for Crowded Stellar Fields}
-\author{Brendon J. Brewer$^{1,*}$, David W. Hogg$^{2}$,
-and Daniel Foreman-Mackey$^{2}$ \\
-\\
-\small
-$^1$ Department of Statistics, The University of Auckland,\\
-\small
-Private Bag 92019, Auckland 1142, New Zealand \\
-\small
-$^2$ Center for Cosmology and Particle Physics, Department of Physics,
-New York University,\\
-\small
-4 Washington Place, New York, NY, 10003, USA\\
-\small
-$^*$\texttt{bj.brewer@auckland.ac.nz}
-}
+\shorttitle{Probabilistic Stellar Catalogs}
+\shortauthors{Brewer et al.}
 
 \begin{document}
-\maketitle
 
-\abstract{We introduce a probabilistic (Bayesian) method for producing catalogs
+\title{Probabilistic Catalogs for Crowded Stellar Fields}
+
+\author{Brendon J. Brewer}
+\affil{Department of Statistics, The University of Auckland,
+Private Bag 92019, Auckland 1142, New Zealand}
+
+\author{David W. Hogg}
+\affil{Center for Cosmology and Particle Physics, Department of Physics,
+New York University, Washington Place, New York, NY, 10003, USA}
+
+\and
+
+\author{Daniel Foreman-Mackey}
+\affil{Center for Cosmology and Particle Physics, Department of Physics,
+New York University, Washington Place, New York, NY, 10003, USA}
+
+\begin{abstract}We introduce a probabilistic (Bayesian) method for producing catalogs
 from images of crowded stellar fields. The method is capable of handling the
 challenges introduced by overlapping sources and is able to determine the luminosity
 function of the stars even when the precise luminosity of each star is uncertain.
@@ -42,7 +39,14 @@ population. The method is implemented using advanced Markov Chain Monte Carlo
 The computational feasibility of the method is
 demonstrated on simulated data where the luminosity function of the stars is a
 broken power-law. The parameters of the luminosity function can be recovered
-with moderate uncertainty.}
+with moderate uncertainty. We compare the results obtained from our method
+with those obtained from the SExtractor software and find that the latter is
+unable to correctly infer the number of stars or the luminosity function
+parameters.
+\end{abstract}
+
+\keywords{catalogs --- methods: data analysis --- methods: statistical ---
+stars: luminosity function, mass function}
 
 \section{Introduction}
 A fundamental problem in astronomy is the construction of {\it catalogs} from
@@ -73,7 +77,8 @@ This can cause Markov Chain Monte Carlo (MCMC) algorithms difficulties -- they
 may take a long time to converge to the target posterior distribution over
 the space of catalogs.
 
-Bayesian object detection (as this problem is sometimes called) has been implemented by \citet{2011MNRAS.415.3462F}
+Bayesian object detection (as this problem is sometimes called) has been
+implemented by \citet{2011MNRAS.415.3462F}
 under the assumption of a known number of objects $N$.
 This assumption is required for the
 {\tt MultiNest} sampler \citep{multinest} to be applicable.
@@ -84,7 +89,12 @@ this will not work well in situations where there is significant confusion
 (i.e. two or more sources overlap). What is really required is a variable
 dimension model, where $N$ is an unknown quantity to be inferred from the data.
 The computational implementation of these models will require tools such as
-reversible jump Markov Chain Monte Carlo \citep{rjmcmc}.
+reversible jump Markov Chain Monte Carlo \citep{rjmcmc}. Other statistical
+methods such as maximum likelihood have also been used to model crowded fields
+\citep[e.g.][]{irwin}. However, maximum likelihood is not completely appropriate
+because it may lead to overfitting. In this situation overfitting would result
+in more stars being added to the model to explain small positive fluctuations
+in the image which are actually due to noise.
 
 \section{Bayesian Inference}
 To quantitatively model uncertainties and transform noise in observed data
@@ -200,7 +210,7 @@ If we knew the true catalog, we could compute the
 in the absence of noise. This mock image (defined at every point on the sky)
 is given by:
 \begin{eqnarray}
-\mathcal{M}(x, y) &=& \sum_{i=1}^N \mathcal{P}(x - x_i, y - y_i)
+\mathcal{M}(x, y) &=& \sum_{i=1}^N f_i \mathcal{P}(x - x_i, y - y_i)
 \end{eqnarray}
 where $\mathcal{P}$ is the pixel-convolved point spread function (PSF).
 Throughout this paper we
@@ -593,6 +603,9 @@ arXiv:1205.4446.
 \bibitem[Hogg and Lang(2011)]{2011EAS....45..351H} Hogg, D.~W., Lang, D.\ 
 2011.\ Telescopes don't make catalogues!.\ EAS Publications Series 45, 
 351-358. 
+
+\bibitem[Irwin(1985)]{irwin} Irwin, M.~J.\ 1985, \mnras, 214, 
+575 
 
 \bibitem[Jaynes(2003)]{jaynes} Jaynes, E.~T., 2003, Probability Theory: The
 Logic of Science, ISBN 0521592712, Cambridge University Press, June 2003.

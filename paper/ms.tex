@@ -4,8 +4,9 @@
 \usepackage{amsmath}	% for \iint
 \usepackage{bbm}	% for blackboard bold numbers
 
-\newcommand{\vdag}{(v)^\dagger}
-\newcommand{\myemail}{bj.brewer@auckland.ac.nz}
+\newcommand{\sex}{\texttt{SExtractor }}
+
+\slugcomment{To be submitted to the Astronomical Journal}
 
 \shorttitle{Probabilistic Stellar Catalogs}
 \shortauthors{Brewer et al.}
@@ -28,11 +29,12 @@ New York University, Washington Place, New York, NY, 10003, USA}
 \affil{Center for Cosmology and Particle Physics, Department of Physics,
 New York University, Washington Place, New York, NY, 10003, USA}
 
-\begin{abstract}We introduce a probabilistic (Bayesian) method for producing catalogs
+\begin{abstract}
+We introduce a probabilistic (Bayesian) method for producing catalogs
 from images of crowded stellar fields. The method is capable of handling the
 challenges introduced by overlapping sources and is able to determine the luminosity
 function of the stars even when the precise luminosity of each star is uncertain.
-This is in contrast with standard techniques which make a single catalog,
+This is in contrast with standard techniques which produce a single catalog,
 potentially underestimating the uncertainties in any study of the stellar
 population. The method is implemented using advanced Markov Chain Monte Carlo
 (MCMC) techniques including Reversible Jump and Nested Sampling.
@@ -40,9 +42,9 @@ The computational feasibility of the method is
 demonstrated on simulated data where the luminosity function of the stars is a
 broken power-law. The parameters of the luminosity function can be recovered
 with moderate uncertainty. We compare the results obtained from our method
-with those obtained from the SExtractor software and find that the latter is
-unable to correctly infer the number of stars or the luminosity function
-parameters.
+with those obtained from the \sex software and find that the latter is
+unable to correctly infer the number of stars or the parameters of the luminosity
+function.
 \end{abstract}
 
 \keywords{catalogs --- methods: data analysis --- methods: statistical ---
@@ -51,9 +53,9 @@ stars: luminosity function, mass function}
 \section{Introduction}
 A fundamental problem in astronomy is the construction of {\it catalogs} from
 raw image data. {\bf The catalogs are then used for...}
-Standard tools for generating catalogs include \texttt{SExtractor}
-\citep{sextractor}, {\bf more refs}.
-\citep{2011EAS....45..351H}
+Standard tools for generating catalogs include \sex
+\citep{sextractor}, DAOPHOT \citep{1987PASP...99..191S}.
+%\citep{2011EAS....45..351H}
 
 However, standard methods for constructing catalogs can have difficulty in some
 challenging situations. For example, when multiple sources overlap partially
@@ -115,7 +117,7 @@ This is also known as a {\it sampling distribution}:
 p(x|\theta).
 \end{equation}
 Despite the singular, the sampling distribution is actually a family of
-probability distributions over the space of possible data, one probability
+probability distributions over the space of possible data sets, one probability
 distribution for each possible value
 of $\theta$. Note that the choice of
 the sampling distribution is also an assumption about prior knowledge:
@@ -142,16 +144,20 @@ As suggested by the above notation, the likelihood function is obtained from the
 sampling distribution with the actual data substituted in and is therefore
 a function of the parameters only.
 
-To proceed with the model for inferring catalogs from image data, we must
+To proceed with the model for inferring catalogs (stellar positions and fluxes)
+from image data, we must
 specify a definite hypothesis space and choices for the prior distribution
 and the sampling distribution. These choices are presented and discussed in
-Section~\ref{sec:model}.
+Section~\ref{sec:model}. Throughout this paper we make a number of simplifications
+for the purposes of testing the computational feasibility and performance of
+the method. In real applications, some of these assumptions (such as known PSF
+and noise variance) may be relaxed.
 
 \section{The Specific Model for Stellar Fields}\label{sec:model}
 \subsection{The Hypothesis Space}
 The hypothesis space is the set of possible catalogs, or the set of possible
 answers to the question, ``What objects are present in the field and
-what are their properties?'' There are an unknown number of stars
+what are their properties?'' We shall assume that there are an unknown number of stars
 $N$ in the field. Each star has an unknown
 position $(x,y)$ in the plane of the sky, and an unknown flux $f$. We also
 describe the distribution of fluxes (commonly known as the {\it luminosity
@@ -390,7 +396,7 @@ Test Case & Parameter & Value \\
 \begin{center}
 \includegraphics[scale=0.45]{Figures/sex_N.eps}
 \end{center}
-\caption{The number of stars in the catalogs produced by SExtractor.\label{fig:sex_N}}
+\caption{The number of stars in the catalogs produced by \sex.\label{fig:sex_N}}
 \end{figure}
 
 
@@ -628,6 +634,9 @@ Inference and Learning Algorithms, Cambridge University Press, UK.
 \bibitem[\protect\citeauthoryear{Skilling}{1998}]{massinf} 
 Skilling J., 1998, Massive Inference and Maximum Entropy, in Maximum Entropy 
 and Bayesian Methods, Kluwer Academic Publishers, Dordrecht/Boston/London p.14
+
+\bibitem[Stetson(1987)]{1987PASP...99..191S} Stetson, P.~B.\ 1987, \pasp, 
+99, 191 
 \end{thebibliography}
 
 \end{document}

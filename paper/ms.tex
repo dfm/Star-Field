@@ -524,24 +524,24 @@ parameter values used to make the simulated data.
 \end{figure}
 
 
-\section{Pixel Convolved PSF}
-{\bf Do people need to be schooled on this? I did...}
-Consider a ``true image'' $f_0(x, y)$ with infinite resolution. We now model how
-this image gives rise to the observed data. First, it is convolved with a
-PSF $g(\delta_x, \delta_y)$ (assumed normalized to 1) to give the blurred image:
-\begin{eqnarray}
-f_{\rm{blurred}}(x, y) &=& \iint f_0(x-\delta_x, y-\delta_y)
-g(\delta_x, \delta_y) \, d\delta_x \, d\delta_y \label{blur}
-\end{eqnarray}
-Then, we observe the blurred image with a certain pixellation. Consider a pixel.
-The true flux $F$ within the pixel is:
-\begin{eqnarray}
-F &=& \iint_{\rm pixel} f_{\rm blurred}(x, y) \,dx'\,dy'\\
-&=& \iint f_{\rm blurred}(x, y)\mathbbm{1}\left[(x,y) \in \textnormal{pixel}
-\right] \,dx\,dy \label{pixel}
-\end{eqnarray}
-Now consider $F$ as a function of the central location $(x_c, y_c)$ of the
-pixel.
+%\section{Pixel Convolved PSF}
+%{\bf Do people need to be schooled on this? I did...}
+%Consider a ``true image'' $f_0(x, y)$ with infinite resolution. We now model how
+%this image gives rise to the observed data. First, it is convolved with a
+%PSF $g(\delta_x, \delta_y)$ (assumed normalized to 1) to give the blurred image:
+%\begin{eqnarray}
+%f_{\rm{blurred}}(x, y) &=& \iint f_0(x-\delta_x, y-\delta_y)
+%g(\delta_x, \delta_y) \, d\delta_x \, d\delta_y \label{blur}
+%\end{eqnarray}
+%Then, we observe the blurred image with a certain pixellation. Consider a pixel.
+%The true flux $F$ within the pixel is:
+%\begin{eqnarray}
+%F &=& \iint_{\rm pixel} f_{\rm blurred}(x, y) \,dx'\,dy'\\
+%&=& \iint f_{\rm blurred}(x, y)\mathbbm{1}\left[(x,y) \in \textnormal{pixel}
+%\right] \,dx\,dy \label{pixel}
+%\end{eqnarray}
+%Now consider $F$ as a function of the central location $(x_c, y_c)$ of the
+%pixel.
 
 \section{Usage}
 Software can be obtained from {\tt http://github.com/dfm/star-field/}

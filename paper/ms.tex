@@ -4,7 +4,7 @@
 \usepackage{amsmath}	% for \iint
 \usepackage{bbm}	% for blackboard bold numbers
 
-\newcommand{\sex}{\texttt{SExtractor }}
+\newcommand{\sex}{{\tt SExtractor}}
 
 \slugcomment{To be submitted to the Astronomical Journal}
 
@@ -42,7 +42,7 @@ The computational feasibility of the method is
 demonstrated on simulated data where the luminosity function of the stars is a
 broken power-law. The parameters of the luminosity function can be recovered
 with moderate uncertainty. We compare the results obtained from our method
-with those obtained from the \sex software and find that the latter is
+with those obtained from the \sex~software and find that the latter is
 unable to correctly infer the number of stars or the parameters of the luminosity
 function.
 \end{abstract}
@@ -53,8 +53,8 @@ stars: luminosity function, mass function}
 \section{Introduction}
 A fundamental problem in astronomy is the construction of {\it catalogs} from
 raw image data. {\bf The catalogs are then used for...}
-Standard tools for generating catalogs include \sex
-\citep{sextractor}, DAOPHOT \citep{1987PASP...99..191S}.
+Standard tools for generating catalogs include \sex~\citep{sextractor},
+DAOPHOT \citep{1987PASP...99..191S}.
 %\citep{2011EAS....45..351H}
 
 However, standard methods for constructing catalogs can have difficulty in some
@@ -318,7 +318,7 @@ arbitrary units for both the $x$ and $y$ axes. The first image contains
 $\sim$100 stars and the second image contains $\sim$1000 stars. The images
 are shown in Figure~\ref{fig:simulated_data}.
 
-\begin{table}
+\begin{table}\footnotesize
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
@@ -548,7 +548,7 @@ Software can be obtained from {\tt http://github.com/dfm/star-field/}
 
 \section{Proposal Distributions}
 
-\begin{table}
+\begin{table}\footnotesize
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline

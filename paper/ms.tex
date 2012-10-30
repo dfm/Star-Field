@@ -312,7 +312,11 @@ targeting the posterior distribution.
 
 \section{Simulated Data}\label{sec:simulated_data}
 We now apply the method to two illustrative simulated images generated from
-the above model. The true parameter values used are listed in
+the above model. The purpose of this experiment was to test the computational
+feasibility of the model, as well as to compare the inferences from the model
+with those from more standard techniques.
+
+The true parameter values for the two simulated data sets are listed in
 Table~\ref{tab:truth}. The broken power-law parameter values were chosen so that
 roughly half of the stars' fluxes were below and above the break-point
 respectively. Figure~\ref{fig:powerlaw} also shows the true flux distribution
@@ -320,7 +324,7 @@ used for the simulated images. Each of the images
 is $100 \times 100$ pixels in extent and covers a range from $-1$ to $1$ in
 arbitrary units for both the $x$ and $y$ axes. The first image contains
 $\sim$100 stars (including stars just outside of the image) and the second
-image contains $\sim$1000 stars. The two simulated images
+image contains $\sim$1000 stars. The two simulated images themselves
 are shown in Figure~\ref{fig:simulated_data}.
 
 \begin{table}\footnotesize
@@ -345,7 +349,8 @@ Test Case & Parameter & Value \\
 \hline
 \end{tabular}
 \end{center}
-\caption{True parameter values used to generate the simulated data.
+\caption{True parameter values used to generate the simulated data. The main
+difference between the two datasets is the number of stars.
 \label{tab:truth}}
 \end{table}
 
@@ -418,8 +423,10 @@ catalog from \sex.\label{fig:sex_inference}}
 We can do it. This is important because...
 
 \section{Acknowledgements}
-Marshall, Lang, Geraint, Wayne Stewart...
-
+It is a pleasure to thank Phil Marshall, Dustin Lang, and Geraint Lewis for
+their comments on earlier versions of this work. BJB would also like to thank
+Wayne Stewart and Arden Miller for their support during his first semester at
+Auckland.
 
 \appendix
 

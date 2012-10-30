@@ -376,24 +376,26 @@ tightly constrain the parameters.
 \begin{center}
 \includegraphics[scale=0.33]{Figures/inference1.eps}
 \end{center}
-\caption{Inference about the parameters for test case 1.\label{fig:results1}}
+\caption{Inference about the parameters for Test Case 1. Note that there is
+considerable uncertainty (particularly about $h_2$), which occurs because the
+shape of the broken power-law does not depend strongly on the parameters.
+\label{fig:results1}}
 \end{figure}
 
-{\bf Show phase transition}\\
-{\bf Comment on computational speed}\\
-{\bf Show a few catalogs}\\
-{\bf Show posterior expected true scene}\\
-
 \subsection{Test Case 2}
+Test Case 2 is more challenging than Test Case 1 because the image contains
+more stars. This increases the size of the computational task in a number of
+ways: firstly, there will be more unknown parameters to infer, so the
+convergence of the MCMC algorithm will take longer. Secondly, the time taken
+to compute the predicted image from a catalog (in order to evaluate the
+likelihood) is longer because of the larger number of stars.
 
 \begin{figure}
 \begin{center}
 \includegraphics[scale=0.33]{Figures/inference2.eps}
 \end{center}
-\caption{Inference about the parameters for test case 2.\label{fig:results2}}
+\caption{Inference about the parameters for Test Case 2.\label{fig:results2}}
 \end{figure}
-
-
 
 {\bf Show phase transition}\\
 {\bf Comment on computational speed}\\

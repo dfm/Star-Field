@@ -361,7 +361,16 @@ difference between the two test cases is the number of stars and the noise level
 \end{figure}
 
 \subsection{Test Case 1}
-Test Case 1 was run with the DNS algorithm. 
+Test Case 1 was run with the DNS algorithm and usable results were obtained
+within about an hour on a modern desktop PC. The inferences on the parameters
+$N$, $h_1$, $h_2$, $\alpha_1$, and $\alpha_2$ are shown in
+Figure~\ref{fig:results1}. The number of stars is correctly inferred, and the
+posterior distributions for the other parameters comfortably contain the true
+input values. Note that the uncertainty in $h_2$, $\alpha_1$, and $\alpha_2$ is
+quite large. This is because the broken power-law model
+(Figure~\ref{fig:powerlaw}) does not change drastically in shape as the
+parameters are varied. Therefore, a large number of stars would be required to
+tightly constrain the parameters.
 
 \begin{figure}
 \begin{center}

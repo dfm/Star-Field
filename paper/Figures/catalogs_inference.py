@@ -30,7 +30,7 @@ axis([1, 5, 1, 5])
 xlabel('Slope $\\alpha_1$', fontsize=16)
 ylabel('Slope $\\alpha_2$', fontsize=16)
 legend(numpoints=1)
-savefig('inference.eps', bbox_inches='tight')
+#savefig('inference.eps', bbox_inches='tight')
 show()
 
 params =   sample[:, 0:numHyperparams]
@@ -71,7 +71,7 @@ for i in range(0, 9):
 
 	print(i+1, ((((data - mock)/30.)**2).sum()/10000. - 1.)/(sqrt(2.)/100.))
 
-savefig('catalogs.eps', bbox_inches='tight')
+##savefig('catalogs.eps', bbox_inches='tight')
 show()
 
 
@@ -125,7 +125,7 @@ gca().set_xticks([-1, 0, 1])
 gca().set_yticks([-1, 0, 1])
 xlabel('$x$', fontsize=20)
 ylabel('$y$', fontsize=20)
-savefig('summaries.eps', bbox_inches='tight')
+#savefig('summaries.eps', bbox_inches='tight')
 
 show()
 

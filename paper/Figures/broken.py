@@ -38,7 +38,7 @@ plot([0.3, 0.3], [0., 1.5*f.max()], 'r--', linewidth=2, label='Lower Limit $h_1$
 plot([0.6, 0.6], [0., 1.5*f.max()], 'g--', linewidth=2, label='Break Point $h_2$')
 legend()
 gca().tick_params(labelsize=14)
-savefig('broken.eps')
+#savefig('broken.eps')
 show()
 
 

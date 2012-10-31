@@ -23,6 +23,6 @@ xlabel('$x$', fontsize=16)
 ylabel('$y$', fontsize=16)
 title('Test Case 2', fontsize=14)
 
-savefig('test_cases.eps', bbox_inches='tight')
+#savefig('test_cases.eps', bbox_inches='tight')
 show()
 

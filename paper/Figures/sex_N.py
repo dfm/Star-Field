@@ -32,6 +32,6 @@ for i in xrange(0, 2):
 	plt.legend(loc=loc[i])
 	plt.title('Test Case ' + str(i+1), fontsize=15)
 
-plt.savefig('sex_N.eps', bbox_inches='tight')
+plt.#savefig('sex_N.eps', bbox_inches='tight')
 plt.show()
 

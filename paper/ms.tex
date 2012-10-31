@@ -577,11 +577,13 @@ parameter values used to make the simulated data.
 %\end{eqnarray}
 %Now consider $F$ as a function of the central location $(x_c, y_c)$ of the
 %pixel.
-
-\section{Usage}
-Software can be obtained from {\tt http://github.com/dfm/star-field/}
+%\section{Usage}
+%Software can be obtained from {\tt http://github.com/dfm/star-field/}
 
 \section{Proposal Distributions}
+To implement Metropolis-Hastings moves for the space of possible catalogs,
+proposal distributions are required. See Table~\ref{proposals} for a list of
+proposal distributions used in this study.
 
 \begin{table}\footnotesize
 \begin{center}
@@ -589,12 +591,12 @@ Software can be obtained from {\tt http://github.com/dfm/star-field/}
 \hline
 Parameter & Proposal & Notes\\
 \hline
-$N$ & $N \to N + \delta_N$ & Generate $\delta_N$ new stars from prior given
-$\beta$\\
-$N$ & $N \to N - \delta_N$ & Remove $\delta_N$ stars at random\\
-$\beta$ & $\beta \to \beta + \delta_\beta$ & Move stars' fluxes along with
-$\beta$\\
-$\beta$ & $\beta \to \beta + \delta_\beta$ & Stars' fluxes fixed, put extra
+$N$ & $N \to N + \delta_N$ & Generate $\delta_N$ new stars from
+$p(x, y, f|\beta)$.\\
+$N$ & $N \to N - \delta_N$ & Remove $\delta_N$ stars, chosen at random\\
+$\beta$ & $\beta \to \beta + \delta_\beta$ & Transform
+stars' fluxes correspondingly\\
+$\beta$ & $\beta \to \beta + \delta_\beta$ & Fix stars' fluxes, put extra
 term in acceptance probability \\
 $(x_i,y_i)$ & $(x_i,y_i) \to (x_i,y_i)+(\delta_x, \delta_y)$ & Can move $>1$ star
 in a single step \\
@@ -604,10 +606,10 @@ $f$ & $f \to f + \delta_f$ & Can move $>1$ stars' fluxes in a single step\\
 \end{center}
 \caption{All $\delta$ parameters are drawn from multi-scale distibutions such
 that the largest steps are of order the prior width, and the smallest steps
-are of order $10^{-6}$ times the prior width.\label{proposals}}
+are of order $10^{-6}$ times the prior width.\label{tab:proposals}}
 \end{table}
 
-See Table~\ref{proposals} for a list of current proposal distributions.
+
 
 
 

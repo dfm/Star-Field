@@ -376,7 +376,9 @@ input values. Note that the uncertainty in $h_2$, $\alpha_1$, and $\alpha_2$ is
 quite large. This is because the broken power-law model
 (Figure~\ref{fig:powerlaw}) does not change drastically in shape as the
 parameters are varied. Therefore, a large number of stars would be required to
-tightly constrain the parameters.
+tightly constrain the parameters. A Nested Sampling approach is required on
+this problem because of the presence of a first-order phase transition
+\citep{skilling}.
 
 \begin{figure}
 \begin{center}
@@ -394,19 +396,32 @@ more stars. This increases the size of the computational task in a number of
 ways: firstly, there will be more unknown parameters to infer, so the
 convergence of the MCMC algorithm will take longer. Secondly, the time taken
 to compute the predicted image from a catalog (in order to evaluate the
-likelihood) is longer because of the larger number of stars.
+likelihood) is longer because of the larger number of stars. Using DNS, some
+samples from the posterior distribution can be obtained in about a day on a
+modern PC. However, this problem does not have a first-order phase transition
+like Test Case 1. Therefore, it is tractable to run standard Metropolis-Hastings
+MCMC.
 
 \begin{figure}
 \begin{center}
 \includegraphics[scale=0.33]{Figures/inference2.eps}
 \end{center}
-\caption{Inference about the parameters for Test Case 2.\label{fig:results2}}
+\caption{Inference about the parameters for Test Case 2. Note that the
+parameters are still not very well constrained even with the larger number of
+stars.\label{fig:results2}}
 \end{figure}
 
-{\bf Show phase transition}\\
-{\bf Comment on computational speed}\\
-{\bf Show a few catalogs}\\
-{\bf Show posterior expected true scene}\\
+Some summary results from Test Case 2 are shown in Figures~\ref{fig:catalogs}
+and~\ref{fig:summaries}. Figure~\ref{fig:catalogs} shows nine possible catalogs
+(just the positions of the stars are shown) sampled from the posterior
+distribution. Features that are common to these nine samples are plausible, and
+features that differ are uncertain.
+
+Each catalog in the posterior sample represents a scenario for the true
+underlying image that we would observe if we had a hypothetical noise-free,
+infinite resolution telescope. From these samples, we can construct the
+posterior expected true scene. This is shown in Figure~\ref{fig:summaries} along
+with the blurred (but still noise-free) version and the residuals.
 
 \begin{figure}
 \begin{center}

@@ -80,8 +80,10 @@ may take a long time to converge to the target posterior distribution over
 the space of catalogs.
 
 Bayesian object detection (as this problem is sometimes called) has been
-implemented by \citet{2011MNRAS.415.3462F}
-under the assumption of a known number of objects $N$.
+implemented both inside and outside of astronomy
+\citep[e.g.][]{object, 2011MNRAS.415.3462F}. However, the 
+\citet{2011MNRAS.415.3462F} approach makes the assumption of a
+known number of objects $N$.
 This assumption is required for the
 {\tt MultiNest} sampler \citep{multinest} to be applicable.
 Using the results from the known $N$
@@ -651,6 +653,10 @@ Astronomical Society 415, 3462-3472.
 
 \bibitem[\protect\citeauthoryear{Green}{1995}]{rjmcmc}
 Green, P.~J., 1995, Reversible Jump Markov Chain Monte Carlo Computation and Bayesian Model Determination, Biometrika 82 (4): 711–732.
+
+\bibitem[Harkness and Green(2000)]{object} Harkness, M.~A. and Green, P.~J., 2000,
+Parallel chains, delayed rejection and reversible jump MCMC for object recognition,
+British Machine Vision Conference Proceedings.
 
 \bibitem[Hogg(2012)]{hogg} Hogg, D.~W.\ 2012.\ Data analysis 
 recipes: Probability calculus for inference.\ ArXiv e-prints 

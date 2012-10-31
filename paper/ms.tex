@@ -417,12 +417,6 @@ and~\ref{fig:summaries}. Figure~\ref{fig:catalogs} shows nine possible catalogs
 distribution. Features that are common to these nine samples are plausible, and
 features that differ are uncertain.
 
-Each catalog in the posterior sample represents a scenario for the true
-underlying image that we would observe if we had a hypothetical noise-free,
-infinite resolution telescope. From these samples, we can construct the
-posterior expected true scene. This is shown in Figure~\ref{fig:summaries} along
-with the blurred (but still noise-free) version and the residuals.
-
 \begin{figure}
 \begin{center}
 \includegraphics[scale=0.5]{Figures/catalogs.eps}
@@ -431,30 +425,61 @@ with the blurred (but still noise-free) version and the residuals.
 Test Case 2.\label{fig:catalogs}}
 \end{figure}
 
+Each catalog in the posterior sample represents a scenario for the true
+underlying image that we would observe if we had a hypothetical noise-free,
+infinite resolution telescope. From these samples, we can construct the
+posterior expected true scene. This is shown in Figure~\ref{fig:summaries} along
+with the blurred (but still noise-free) version and the residuals.
+
 \begin{figure}
 \begin{center}
 \includegraphics[scale=0.4]{Figures/summaries.eps}
 \end{center}
-\caption{Summary images for test case 2.\label{fig:summaries}}
+\caption{Summary images for test case 2. The left panel shows the posterior
+mean high-resolution scene. The middle panel shows the posterior mean scene
+when observed at the resolution of the data, and the right hand panel shows the
+model residuals.
+\label{fig:summaries}}
 \end{figure}
 
 \section{Comparison to SExtractor}
+In the previous section we established that the inference of the catalogs from
+the data is computationally feasible and that the number of stars and the
+luminosity function can be inferred from the image data, albeit with moderate
+uncertainty. We now compare this approach with the output from the standard
+tool \sex. To achieve this, we executed \sex~on the two test cases, for various
+values of the significance level cutoff. This results in a set of catalogs
+for each image, with more conservative cutoffs resulting in less stars detected
+as compared to more agressive cutoffs. The results for the number of stars in
+the images are shown in Figure~\ref{fig:sex_N}. The main result is that
+\sex~significantly underestimates the number of stars in the image for all
+possible values of the cutoff parameter.
 
 \begin{figure}
 \begin{center}
 \includegraphics[scale=0.45]{Figures/sex_N.eps}
 \end{center}
-\caption{The number of stars in the catalogs produced by \sex.\label{fig:sex_N}}
+\caption{The number of stars in the catalogs produced by \sex. The true numbers
+of stars shown in these plots are$\sim$82\% of the values listed in
+Figure~\ref{tab:truth} because here we only count those stars with positions
+in $[-1, 1] \times [-1, 1]$.
+\label{fig:sex_N}}
 \end{figure}
+
+For Test Case 2, we then took the catalog produced by \sex~for the $0.5\sigma$
+cutoff and fitted a broken power-law model to the list of fluxes in the catalog.
+The results of this inference are shown in Figure~\ref{fig:sex_inference}.
+The inference spuriously rules out the true values of the parameters. This
+occurs because the uncertainty in the stellar fluxes is not propagated through
+to the inference of the luminosity function.
 
 \begin{figure}
 \begin{center}
 \includegraphics[scale=0.45]{Figures/sex_inference.eps}
 \end{center}
-\caption{Inference of the luminosity function parameters using the $\sigma=0.5$
+\caption{Inference of the luminosity function parameters using the $0.5\sigma$
 catalog from \sex.\label{fig:sex_inference}}
 \end{figure}
-
 
 \section{Conclusions}
 We can do it. This is important because...

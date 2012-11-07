@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Data Data::data;
+Data Data::instance;
 
 Data::Data()
 :loaded(false)

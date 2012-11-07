@@ -12,13 +12,13 @@ Uniform::Uniform()
 ,maxLogMu(log(1E3))
 ,rangeLogMu(maxLogMu - minLogMu)
 {
-	if(!Data::get_data().isLoaded())
+	if(!Data::get_instance().isLoaded())
 		cerr<<"# Error. No data has been loaded."<<endl;
 
-	xMin = Data::get_data().get_xMin() - 0.1*Data::get_data().get_xRange();
-	xMax = Data::get_data().get_xMax() + 0.1*Data::get_data().get_xRange();
-	yMin = Data::get_data().get_yMin() - 0.1*Data::get_data().get_yRange();
-	yMax = Data::get_data().get_yMax() + 0.1*Data::get_data().get_yRange();
+	xMin = Data::get_instance().get_xMin() - 0.1*Data::get_instance().get_xRange();
+	xMax = Data::get_instance().get_xMax() + 0.1*Data::get_instance().get_xRange();
+	yMin = Data::get_instance().get_yMin() - 0.1*Data::get_instance().get_yRange();
+	yMax = Data::get_instance().get_yMax() + 0.1*Data::get_instance().get_yRange();
 }
 
 void Uniform::fromPrior()

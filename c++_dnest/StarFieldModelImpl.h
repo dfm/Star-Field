@@ -31,12 +31,12 @@ const int StarFieldModel<HyperType>::maxNumStars = 200;
 
 template<class HyperType>
 StarFieldModel<HyperType>::StarFieldModel()
-:mockImage(Data::get_data().get_ni(), Data::get_data().get_nj())
+:mockImage(Data::get_instance().get_ni(), Data::get_instance().get_nj())
 ,staleness(0)
 {
-	if(!Data::get_data().isLoaded())
+	if(!Data::get_instance().isLoaded())
 		std::cerr<<"WARNING: Data not loaded."<<std::endl;
-	psf.set(1.0*Data::get_data().get_dx(), 5.0*Data::get_data().get_dx(), 0.5);
+	psf.set(1.0*Data::get_instance().get_dx(), 5.0*Data::get_instance().get_dx(), 0.5);
 }
 
 template<class HyperType>
@@ -191,13 +191,13 @@ double StarFieldModel<HyperType>::logLikelihood() const
 	double logL = 0.;
 
 	double var;
-	for(int i=0; i<Data::get_data().get_ni(); i++)
-		for(int j=0; j<Data::get_data().get_nj(); j++)
+	for(int i=0; i<Data::get_instance().get_ni(); i++)
+		for(int j=0; j<Data::get_instance().get_nj(); j++)
 		{
 			var = pow(noiseSigma, 2)
 				+ pow(noiseCoeff*mockImage(i, j), 2);
 			logL += -0.5*(2*M_PI*var) 
-				- 0.5*pow(Data::get_data()(i, j)
+				- 0.5*pow(Data::get_instance()(i, j)
 				- mockImage(i, j), 2)/var;
 		}
 
@@ -228,8 +228,8 @@ void StarFieldModel<HyperType>::print(std::ostream& out) const
 	for(int i=numStars; i<maxNumStars; i++)
 		out<<0<<' ';
 
-	for(int i=0; i<Data::get_data().get_ni(); i++)
-		for(int j=0; j<Data::get_data().get_nj(); j++)
+	for(int i=0; i<Data::get_instance().get_ni(); i++)
+		for(int j=0; j<Data::get_instance().get_nj(); j++)
 			out<<mockImage(i, j)<<' ';
 }
 

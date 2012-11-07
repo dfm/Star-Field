@@ -179,7 +179,7 @@ double StarFieldModel<HyperType>::perturb3()
 template<class HyperType>
 void StarFieldModel<HyperType>::calculateMockImage()
 {
-	mockImage.setZero();
+	mockImage.set(0.);
 	for(size_t i=0; i<stars.size(); i++)
 		stars[i].incrementImage(mockImage, psf);
 	staleness = 0;

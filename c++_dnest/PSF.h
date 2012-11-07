@@ -20,6 +20,10 @@ class PSF
 		double evaluate(double x, double y) const;
 		void set(double sigma1, double sigma2, double weight);
 		double get_rEdge() const { return rEdge; }
+
+		// Can infer PSF!
+		void fromPrior();
+		double perturb();
 };
 
 #endif

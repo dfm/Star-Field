@@ -30,9 +30,6 @@ template<class HyperType>
 const int StarFieldModel<HyperType>::maxNumStars = 200;
 
 template<class HyperType>
-PSF StarFieldModel<HyperType>::psf;
-
-template<class HyperType>
 StarFieldModel<HyperType>::StarFieldModel()
 :mockImage(Data::get_data().get_ni(), Data::get_data().get_nj())
 ,staleness(0)

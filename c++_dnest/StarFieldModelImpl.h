@@ -36,12 +36,12 @@ StarFieldModel<HyperType>::StarFieldModel()
 {
 	if(!Data::get_instance().isLoaded())
 		std::cerr<<"WARNING: Data not loaded."<<std::endl;
-	psf.set(1.0*Data::get_instance().get_dx(), 5.0*Data::get_instance().get_dx(), 0.5);
 }
 
 template<class HyperType>
 void StarFieldModel<HyperType>::fromPrior()
 {
+	psf.fromPrior();
 	hyperparameters.fromPrior();
 	numStars = DNest3::randInt(maxNumStars + 1);
 
@@ -55,14 +55,31 @@ template<class HyperType>
 double StarFieldModel<HyperType>::perturb()
 {
 	double logH = 0.;
-	int which = DNest3::randInt(3);
+	int which;
+
+	if(DNest3::randomU() <= 0.05)
+		which = 3;
+	else
+		which = DNest3::randInt(3);
+
 	if(which == 0)
 		logH = perturb1();
 	else if(which == 1)
 		logH = perturb2();
 	else if(which == 2)
 		logH = perturb3();
+	else if(which == 3)
+		logH = perturb4();
 
+	return logH;
+}
+
+template<class HyperType>
+double StarFieldModel<HyperType>::perturb4()
+{
+	double logH = 0.;
+	logH += psf.perturb();
+	calculateMockImage();
 	return logH;
 }
 
@@ -209,6 +226,7 @@ void StarFieldModel<HyperType>::print(std::ostream& out) const
 {
 	out<<numStars<<' '<<staleness<<' ';
 	hyperparameters.print(out); out<<' ';
+	out<<psf<<' ';
 
 	// Print x, pad with zeros
 	for(int i=0; i<numStars; i++)

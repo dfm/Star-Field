@@ -82,12 +82,14 @@ double StarFieldModel<HyperType>::perturb4()
 	{
 		noiseSigma = log(noiseSigma);
 		noiseSigma += log(1E6)*pow(10., 1.5 - 6.*DNest3::randomU())*DNest3::randn();
+		noiseSigma = mod(noiseSigma - log(1E-3), log(1E6)) + log(1E-3);
 		noiseSigma = exp(noiseSigma);
 	}
 	else
 	{
 		noiseCoeff = log(noiseCoeff);
 		noiseCoeff += log(1E6)*pow(10., 1.5 - 6.*DNest3::randomU())*DNest3::randn();
+		noiseCoeff = mod(noiseCoeff - log(1E-3), log(1E6)) + log(1E-3);
 		noiseCoeff = exp(noiseCoeff);
 	}
 

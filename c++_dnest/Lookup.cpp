@@ -5,7 +5,7 @@
 Lookup Lookup::instance;
 
 Lookup::Lookup()
-:num(100000)
+:num(10000)
 ,xMin(0.)
 ,xMax(100.)
 ,dx((xMax - xMin)/(num-1))

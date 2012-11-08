@@ -35,8 +35,8 @@ StarFieldModel<HyperType>::StarFieldModel()
 template<class HyperType>
 void StarFieldModel<HyperType>::fromPrior()
 {
-	noiseSigma = 5.;
-	noiseCoeff = 0.;
+	noiseSigma = exp(log(1E-3) + log(1E6)*DNest3::randomU());
+	noiseCoeff = exp(log(1E-3) + log(1E6)*DNest3::randomU());
 
 	psf.fromPrior();
 	hyperparameters.fromPrior();
@@ -55,9 +55,9 @@ double StarFieldModel<HyperType>::perturb()
 	int which;
 
 	if(DNest3::randomU() <= 0.05)
-		which = 3;
+		which = 4;
 	else
-		which = DNest3::randInt(3);
+		which = DNest3::randInt(4);
 
 	if(which == 0)
 		logH = perturb1();
@@ -67,12 +67,36 @@ double StarFieldModel<HyperType>::perturb()
 		logH = perturb3();
 	else if(which == 3)
 		logH = perturb4();
+	else if(which == 4)
+		logH = perturb5();
 
 	return logH;
 }
 
 template<class HyperType>
 double StarFieldModel<HyperType>::perturb4()
+{
+	double logH = 0.;
+	int which = DNest3::randInt(2);
+	if(which == 0)
+	{
+		noiseSigma = log(noiseSigma);
+		noiseSigma += log(1E6)*pow(10., 1.5 - 6.*DNest3::randomU())*DNest3::randn();
+		noiseSigma = exp(noiseSigma);
+	}
+	else
+	{
+		noiseCoeff = log(noiseCoeff);
+		noiseCoeff += log(1E6)*pow(10., 1.5 - 6.*DNest3::randomU())*DNest3::randn();
+		noiseCoeff = exp(noiseCoeff);
+	}
+
+
+	return logH;
+}
+
+template<class HyperType>
+double StarFieldModel<HyperType>::perturb5()
 {
 	double logH = 0.;
 	logH += psf.perturb();
@@ -222,8 +246,8 @@ template<class HyperType>
 void StarFieldModel<HyperType>::print(std::ostream& out) const
 {
 	out<<numStars<<' '<<staleness<<' ';
+	out<<psf<<' '<<noiseSigma<<' '<<noiseCoeff<<' ';
 	hyperparameters.print(out); out<<' ';
-	out<<psf<<' ';
 
 	// Print x, pad with zeros
 	for(int i=0; i<numStars; i++)

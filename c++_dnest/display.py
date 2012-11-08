@@ -6,8 +6,9 @@ if saveFrames:
 	os.system('rm Frames/*.png')
 
 maxNumStars = 200
-numHyperparams = 9	# Number of parameters before catalog begins
-			# maxNumStars, staleness, hyperparameters, psf parameters
+numHyperparams = 11	# Number of parameters before catalog begins
+			# maxNumStars, staleness, psf parameters, noise parameters
+			# luminosity function parameters
 
 sample = atleast_2d(loadtxt('posterior_sample.txt'))
 data = loadtxt('SimulatedData/break2.txt')

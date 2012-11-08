@@ -236,7 +236,7 @@ double StarFieldModel<HyperType>::logLikelihood() const
 		{
 			var = pow(noiseSigma, 2)
 				+ pow(noiseCoeff*mockImage(i, j), 2);
-			logL += -0.5*(2*M_PI*var) 
+			logL += -0.5*log(2*M_PI*var)
 				- 0.5*pow(Data::get_instance()(i, j)
 				- mockImage(i, j), 2)/var;
 		}

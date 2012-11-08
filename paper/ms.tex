@@ -19,13 +19,13 @@
 \affil{Department of Statistics, The University of Auckland,
 Private Bag 92019, Auckland 1142, New Zealand}
 
-\author{David W. Hogg}
+\author{Daniel Foreman-Mackey}
 \affil{Center for Cosmology and Particle Physics, Department of Physics,
 New York University, Washington Place, New York, NY, 10003, USA}
 
 \and
 
-\author{Daniel Foreman-Mackey}
+\author{David W. Hogg}
 \affil{Center for Cosmology and Particle Physics, Department of Physics,
 New York University, Washington Place, New York, NY, 10003, USA}
 
@@ -51,13 +51,36 @@ function.
 stars: luminosity function, mass function}
 
 \section{Introduction}
-A fundamental problem in astronomy is the construction of {\it catalogs} from
-raw image data. {\bf The catalogs are then used for...}
-Standard tools for generating catalogs include \sex~\citep{sextractor},
-DAOPHOT \citep{1987PASP...99..191S}.
-%\citep{2011EAS....45..351H}
+Traditional practice in astronomy is to take images of the sky, detect
+or enumerate sources visible in those images, and create catalogs.
+These catalogs are then used to perform the fundamental astronomical
+measurements, which might include something like the three-dimensional
+structure of the Galaxy or the two-point correlation function of
+galaxies.  Indeed, the process of catalog construction is so ``baked
+in'' to our ideas about what astronomy is, we sometimes forget that
+the catalog is \emph{not} the fundamental data product of astronomy; catalogs are produced
+from imaging; their production involves many decisions and ideas
+that go way beyond the information provided to the telescope by the
+incident intensity field.
+Standard tools for generating catalogs from astronomical imaging include \sex~\citep{sextractor},
+DAOPHOT \citep{1987PASP...99..191S}, and SDSS PHOTO \citep{photo}.
 
-However, standard methods for constructing catalogs can have difficulty in some
+Telescopes don't make catalogs \citep{2011EAS....45..351H}, they
+measure the intensity field.  Viewed through the lens of probabilistic
+inference, the goals of astronomy are to take the information in the
+telescope-generated records of the intensity field and deliver it to
+the quantities of astronomical interest with as little loss as
+possible.  Insertion of a catalog-generation step in the inference
+pipeline between the raw imaging and the final astrophysical analyses
+is typically very lossy; the hard decisions of catalog making destroy
+information.  Probability theory suggests that it will be much less
+``lossy'' to pass forward not a catalog but a probabilisitic
+description of all the catalogs that could be consistent with the
+imaging---a posterior probability in (enormously large) catalog space.
+This Article represents an attempt at this ambitous goal.
+
+Beyond these extremely general concerns, there are practical issues:
+Standard methods for constructing catalogs can have difficulty in some
 challenging situations. For example, when multiple sources overlap partially
 or completely, it can be difficult to determine how many sources are present,
 and how much flux belongs to each source. In principle, uncertainty should be
@@ -481,14 +504,40 @@ to the inference of the luminosity function.
 catalog from \sex.\label{fig:sex_inference}}
 \end{figure}
 
-\section{Conclusions}
-We can do it. This is important because...
+\section{Discussion}
+
+What have we achieved?
+
+What are the limitations of what we have done?  Limitations include
+PSF knowledge (and simplicity), simple number--flux relationship, no
+astrophysical model.  On the latter, I mean: No model of temperatures,
+masses, distances, reddening and so on.  We also haven't thought about
+multi-epoch, multi-band imaging, where you have to consider the
+motions and variations and spectral energy distributions of stars.  On
+this latter point, we should cite Lang et al (faint motion).  Each of
+these limitations should get its own paragraph, really.
+
+What kinds of new science will this enable?  One example would be IMF
+inference in dense stellar clusters.  Another could be modeling of
+distant galaxies in terms of their stellar components.  Most
+importantly, astrophysics can proceed without taking the hard,
+information-lossy step of fixing a catalog, somewhere between the raw
+data and the science of interest!
 
 \section{Acknowledgements}
-It is a pleasure to thank Phil Marshall, Dustin Lang, and Geraint Lewis for
-their comments on earlier versions of this work. BJB would also like to thank
-Wayne Stewart and Arden Miller for their support during his first semester at
-Auckland.
+It is a pleasure to thank
+  Jonathan Goodman (NYU),
+  Fengji Hou (NYU),
+  Dustin Lang (CMU),
+  Geraint Lewis (Sydney), and
+  Phil Marshall (Oxford)
+for their comments and discussions.
+BJB would also
+like to thank Wayne Stewart and Arden Miller for their support during
+his first semester at Auckland.
+DFM and DWH were partially supported by
+   the US National Science Foundation (grant IIS-1124794) and
+   the US National Aeronautics and Space Administration (grant NNX12AI50G).
 
 \appendix
 
@@ -716,6 +765,9 @@ Logic of Science, ISBN 0521592712, Cambridge University Press, June 2003.
 
 \bibitem[Kelly et al.(2008)]{2008ApJ...682..874K} Kelly, B.~C., Fan, X., 
 \& Vestergaard, M.\ 2008, ApJ, 682, 874 
+
+\bibitem[Lupton et al.(2001)]{photo}
+Lupton,~R., Gunn,~J.~E., Ivezic,~Z., Knapp,~G.~R., Kent,~S.~M., \& Yasuda,~N., 2001, ASPC, 238, 269
 
 \bibitem[Mackay(2003)]{mackay} Mackay, D.~J.~C., 2003, Information Theory,
 Inference and Learning Algorithms, Cambridge University Press, UK.

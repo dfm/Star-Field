@@ -34,10 +34,9 @@ class StarFieldModel:public DNest3::Model
 {
 	private:
 		static const int maxNumStars;
-		static const double noiseSigma; 
-		static const double noiseCoeff;
 
 		PSF psf;
+		double noiseSigma, noiseCoeff; // Noise properties
 
 		HyperType hyperparameters;
 		int numStars;

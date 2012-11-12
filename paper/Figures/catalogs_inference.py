@@ -24,7 +24,8 @@ ax.set_yticklabels([])
 ax.xaxis.set_major_locator(MaxNLocator(4))
 
 ax = fig.add_axes([0.35, 0.1, 0.2, 0.85])
-ax.plot(sample[:, 2], sample[:, 3], 'k.', markersize=3)
+ax.plot(sample[:, 2], sample[:, 3], '.', color="#888888", mec="#888888",
+        markersize=3)
 ax.plot(0.3, 0.6, "rs", markersize=8)
 ax.set_xlabel('$h_1$')
 ax.set_ylabel('$h_2$')
@@ -33,8 +34,9 @@ ax.xaxis.set_major_locator(MaxNLocator(4))
 ax.yaxis.set_major_locator(MaxNLocator(4))
 
 ax = fig.add_axes([0.6, 0.1, 0.2, 0.85])
-ax.plot(sample[:, 4], sample[:, 5], 'k.', markersize=3)
-ax.plot(1.1, 2, "rs", markersize=6)
+ax.plot(sample[:, 4], sample[:, 5], '.', color="#888888", mec="#888888",
+        markersize=3)
+ax.plot(1.1, 2, "rs", markersize=8)
 ax.set_xlabel(r'$\alpha_1$')
 ax.set_ylabel(r'$\alpha_2$')
 ax.set_xlim([-0.01, 5.01])

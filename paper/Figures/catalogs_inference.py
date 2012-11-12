@@ -1,37 +1,49 @@
-from pylab import *
+import plot_utils
+import matplotlib.pyplot as pl
+from matplotlib.ticker import MaxNLocator
+import numpy as np
 import time, os
 
 maxNumStars = 1200
-numHyperparams = 6	# Number of parameters before catalog begins
-			# maxNumStars, staleness, hyperparameters
+numHyperparams = 6  # Number of parameters before catalog begins
+                    # maxNumStars, staleness, hyperparameters
 
-sample = atleast_2d(loadtxt('posterior_sample.txt'))
-data = loadtxt('../../c++_dnest/SimulatedData/crowded.txt')
+sample = np.atleast_2d(np.loadtxt('posterior_sample.txt'))
+data = np.loadtxt('../../c++_dnest/SimulatedData/crowded.txt')
 
 #sample = sample[::2, :]
 
-figure(figsize=(22, 5))
-subplot(1,3,1)
-hist(sample[:,0], 20, alpha=0.5)
-axvline(1000, color='k', linewidth=2)
-xlabel('Number of Stars $N$', fontsize=16)
-ylabel('Posterior Probability', fontsize=16)
-subplot(1,3,2)
-plot(sample[:,2], sample[:,3], 'k.', markersize=2, label='Posterior Samples')
-plot(0.3, 0.6, 'ro', markersize=10, label='True Input Values')
-xlabel('Flux Lower Limit $h_1$', fontsize=16)
-ylabel('Flux Break Point $h_2$', fontsize=16)
-xlim([0.2, 0.5])
-legend(numpoints=1)
-subplot(1,3,3)
-plot(sample[:,4], sample[:,5], 'k.', markersize=2, label='Posterior Samples')
-plot(1.1, 2, 'ro', markersize=10, label='True Input Values')
-axis([1, 5, 1, 5])
-xlabel('Slope $\\alpha_1$', fontsize=16)
-ylabel('Slope $\\alpha_2$', fontsize=16)
-legend(numpoints=1)
-#savefig('inference.eps', bbox_inches='tight')
-show()
+fig = pl.figure(figsize=(22, 5))
+
+ax = fig.add_axes([0.1, 0.1, 0.2, 0.85])
+n, b, p = plot_utils.hist(sample[:, 0], 20)
+ax.set_ylim(0, n.max() * 1.1)
+ax.axvline(1000, color='k', linewidth=2)
+ax.set_xlabel('Number of Stars ($N$)')
+ax.set_ylabel('Posterior Probability')
+ax.set_yticklabels([])
+ax.xaxis.set_major_locator(MaxNLocator(4))
+
+ax = fig.add_axes([0.35, 0.1, 0.2, 0.85])
+ax.plot(sample[:, 2], sample[:, 3], 'k.', markersize=3)
+ax.plot(0.3, 0.6, "rs", markersize=8)
+ax.set_xlabel('$h_1$')
+ax.set_ylabel('$h_2$')
+ax.set_xlim([0.19, 0.51])
+ax.xaxis.set_major_locator(MaxNLocator(4))
+ax.yaxis.set_major_locator(MaxNLocator(4))
+
+ax = fig.add_axes([0.6, 0.1, 0.2, 0.85])
+ax.plot(sample[:, 4], sample[:, 5], 'k.', markersize=3)
+ax.plot(1.1, 2, "rs", markersize=6)
+ax.set_xlabel(r'$\alpha_1$')
+ax.set_ylabel(r'$\alpha_2$')
+ax.set_xlim([-0.01, 5.01])
+ax.xaxis.set_major_locator(MaxNLocator(4))
+ax.yaxis.set_major_locator(MaxNLocator(4))
+
+pl.savefig('inference.eps', bbox_inches='tight')
+assert 0
 
 params =   sample[:, 0:numHyperparams]
 catalogs = sample[:, numHyperparams:numHyperparams+3*maxNumStars]

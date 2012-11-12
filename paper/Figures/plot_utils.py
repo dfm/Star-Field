@@ -8,6 +8,6 @@ def hist(*args, **kwargs):
     ax = kwargs.pop("ax", pl.gca())
 
     kwargs["histtype"] = kwargs.pop("histtype", "stepfilled")
-    kwargs["color"] = kwargs.pop("histtype", "#A6BDDB")
+    kwargs["color"] = kwargs.pop("color", "#A6BDDB")
 
-    ax.hist(*args, **kwargs)
+    return ax.hist(*args, **kwargs)

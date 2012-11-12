@@ -96,59 +96,56 @@ for i in range(0, 9):
 
 pl.savefig('catalogs.eps', bbox_inches='tight')
 
-assert 0
 
-#subplot(1,3,1)
-#img = (data - data.min())/(data.max() - data.min())
-#imshow(img**0.5, extent=(-1, 1, -1, 1), cmap='jet')
-#title('Data: A Crowded Image')
-#axis([-1, 1, -1, 1])
-#gca().set_xticks([-1, 0, 1])
-#gca().set_yticks([-1, 0, 1])
-#xlabel('$x$')
-#ylabel('$y$')
+#
+# SUMMARY IMAGES
+#
 
-figure(figsize=(22, 5))
-subplot(1,3,1)
+scale = lambda i: (i.max() - i.min()) ** 0.4 - (i - i.min()) ** 0.4
 
-which1 = logical_and(xCatalog > -1., xCatalog < 1.)
-which2 = logical_and(yCatalog > -1., yCatalog < 1.)
-which = logical_and(which1, which2)
+fig = pl.figure(figsize=(10, 10))
+ax = fig.add_subplot(2, 2, 1)
 
-img = histogram2d(xCatalog[which], yCatalog[which], bins=200, weights=fCatalog[which])[0].T[::-1]
-img = (img - img.min())/(img.max() - img.min())
-imshow(img**0.25, extent=(-1, 1, -1, 1), cmap='jet')
-axis([-1, 1, -1, 1])
-gca().set_xticks([-1, 0, 1])
-gca().set_yticks([-1, 0, 1])
-title('Expected True Scene', fontsize=16)
-#axis([-1, 1, -1, 1])
-#gca().set_xticks([-1, 0, 1])
-#gca().set_yticks([-1, 0, 1])
-xlabel('$x$', fontsize=20)
-ylabel('$y$', fontsize=20)
+which1 = np.logical_and(xCatalog > -1., xCatalog < 1.)
+which2 = np.logical_and(yCatalog > -1., yCatalog < 1.)
+which = np.logical_and(which1, which2)
 
-subplot(1,3,2)
-img = (mock_data_mean - mock_data_mean.min())/(mock_data_mean.max() - mock_data_mean.min())
-imshow(img**0.5, extent=(-1, 1, -1, 1), cmap='jet')
-title('Expected Noise-Free Scene', fontsize=16)
-axis([-1, 1, -1, 1])
-gca().set_xticks([-1, 0, 1])
-gca().set_yticks([-1, 0, 1])
-xlabel('$x$', fontsize=20)
-ylabel('$y$', fontsize=20)
+img = np.histogram2d(xCatalog[which], yCatalog[which],
+                     bins=200, weights=fCatalog[which])[0].T[::-1]
+pl.imshow(scale(img), extent=(-1, 1, -1, 1), interpolation="nearest",
+                                             cmap='gray')
+pl.axis([-1, 1, -1, 1])
+ax.set_xticks([-1, 0, 1])
+ax.set_yticks([-1, 0, 1])
+ax.set_title('Expected True Scene')
+ax.set_xlabel('$x$')
+ax.set_ylabel('$y$')
 
-subplot(1,3,3)
-img = mock_data_mean - data
-img = (img - img.min())/(img.max() - img.min())
-imshow(img, extent=(-1, 1, -1, 1), cmap='jet')
-title('Residuals', fontsize=16)
-axis([-1, 1, -1, 1])
-gca().set_xticks([-1, 0, 1])
-gca().set_yticks([-1, 0, 1])
-xlabel('$x$', fontsize=20)
-ylabel('$y$', fontsize=20)
-#savefig('summaries.eps', bbox_inches='tight')
+ax = fig.add_subplot(2, 2, 2)
+ax.imshow(scale(mock_data_mean), extent=(-1, 1, -1, 1), cmap='gray',
+                                                interpolation="nearest")
+ax.set_title('Expected Noise-Free Scene')
+ax.axis([-1, 1, -1, 1])
+ax.set_xticks([-1, 0, 1])
+ax.set_yticks([-1, 0, 1])
+ax.set_xlabel('$x$')
+ax.set_ylabel('$y$')
 
-show()
+ax = fig.add_subplot(2, 2, 3)
+ax.imshow(mock_data_mean - data, extent=(-1, 1, -1, 1), cmap='gray',
+                                                interpolation="nearest")
+ax.set_title('Residuals')
+ax.axis([-1, 1, -1, 1])
+ax.set_xticks([-1, 0, 1])
+ax.set_yticks([-1, 0, 1])
+ax.set_xlabel('$x$')
+ax.set_ylabel('$y$')
 
+ax = fig.add_subplot(2, 2, 4)
+plot_utils.hist((mock_data_mean - data).flatten(), 100)
+ax.set_yticklabels([])
+ax.set_xlim(-200, 200)
+ax.xaxis.set_major_locator(MaxNLocator(4))
+ax.set_xlabel('Residuals')
+
+pl.savefig('summaries.eps', bbox_inches='tight')

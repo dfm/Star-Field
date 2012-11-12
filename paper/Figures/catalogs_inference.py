@@ -85,7 +85,7 @@ for i in range(0, 9):
         pl.title('Catalogs')
     k += 1
 
-    mock_data_mean += mock / sample.shape[0]
+    mock_data_mean += mock / 9
 
     xCatalog = np.hstack([xCatalog, xStars[i, which]])
     yCatalog = np.hstack([yCatalog, yStars[i, which]])

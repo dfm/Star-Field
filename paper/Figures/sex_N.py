@@ -9,7 +9,7 @@ directories = ['break2', 'crowded']
 sigmas = ['0.5', '1.5', '2.5', '3.5', '4.5', '5.5', '6.5']
 files = ['stars.' + sigma + '.cat' for sigma in sigmas]
 
-pl.figure(figsize=(16, 6))
+pl.figure(figsize=(10, 4))
 loc = [3, 5]
 
 for i in xrange(0, 2):
@@ -25,12 +25,11 @@ for i in xrange(0, 2):
     N = np.array([cat.shape[0] for cat in catalogs])
 
     pl.subplot(1, 2, i + 1)
-    pl.plot(sigma, N, 'o-', color="#333333", ec="k")
+    pl.plot(sigma, N, 'ko-', mfc="#888888")
     pl.axhline(82 * 10 ** i, color='k', linestyle='--', linewidth=2)
-    pl.xlabel('Cutoff (number of $\\sigma$s)')
+    pl.xlabel(r'Detection Threshold ($\sigma$)')
     pl.ylabel('Number of Stars $N$')
     pl.ylim(0)
-    pl.legend(loc=loc[i])
     pl.title('Test Case ' + str(i + 1))
 
 pl.savefig('sex_N.eps', bbox_inches='tight')

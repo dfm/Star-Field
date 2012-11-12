@@ -1,0 +1,18 @@
+#   1 NUMBER                 Running object number                                     
+#   2 FLUXERR_ISO            RMS error for isophotal flux                               [count]
+#   3 FLUX_AUTO              Flux within a Kron-like elliptical aperture                [count]
+#   4 FLUXERR_AUTO           RMS error for AUTO flux                                    [count]
+#   5 X_IMAGE                Object position along x                                    [pixel]
+#   6 Y_IMAGE                Object position along y                                    [pixel]
+#   7 FLAGS                  Extraction flags                                          
+         1     164.9986     9226.081     488.0726     14.831      8.873   0
+         2      142.893     6983.638     459.3368     17.192     81.805   0
+         3      142.893     9579.972     534.6567     61.166     77.817   0
+         4     279.7688     12605.11     553.4223     40.051     73.408   0
+         5     164.9986     7146.173     477.4994     12.108     63.858   0
+         6     164.9986     8954.227     511.8948     20.871     53.820   0
+         7     373.5316     49676.69      767.288     19.116     42.878   0
+         8     193.4781     13116.61     659.9946     84.968     27.677   0
+         9     175.0075     8949.926     484.5738     44.044     25.082   0
+        10     130.4429      8488.75     494.9959     63.617     24.177   0
+        11     154.3421     6677.905     451.8674     71.290     15.044   0

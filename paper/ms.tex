@@ -104,7 +104,7 @@ the space of catalogs.
 
 Bayesian object detection (as this problem is sometimes called) has been
 implemented both inside and outside of astronomy
-\citep[e.g.][]{object, 2011MNRAS.415.3462F}. However, the 
+\citep[e.g.][]{object, 2011MNRAS.415.3462F}. However, the
 \citet{2011MNRAS.415.3462F} approach makes the assumption of a
 known number of objects $N$.
 This assumption is required for the
@@ -159,7 +159,7 @@ p(\theta|x=x^*) &\propto& p(\theta)p(x|\theta)|_{x=x^*} \\
 &=& p(\theta)\mathcal{L}(\theta; x)
 \end{eqnarray}
 The term $p(\theta)p(x|\theta)|_{x=x^*} = \mathcal{L}(\theta; x)$
-is the {\it likelihood function}, which is the 
+is the {\it likelihood function}, which is the
 probability of obtaining the actual data set $x^*$ as a function of the
 parameters\footnote{In the case that the sampling distribution is a probability
 density, the likelihood is the probability density evaluated at the observed
@@ -189,7 +189,7 @@ describe the distribution of fluxes (commonly known as the {\it luminosity
 function}) of the stars by some parameters denoted collectively by $\beta$.
 In summary, the unknown parameters are:
 \begin{eqnarray}
-\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
+\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N,
 \left\{f_i\right\}_{i=1}^N\right\}.
 \end{eqnarray}
 We note that models similar to this, have been implemented for general image
@@ -203,7 +203,7 @@ With a variety of independence assumptions, the prior
 can be factorized as:
 \begin{eqnarray}
 p(\theta) = p(\beta)p(N|\beta)\prod_{i=1}^N p(x_i, y_i)
-p(f_i | \beta) 
+p(f_i | \beta)
 \end{eqnarray}
 Here, we have assumed that the luminosity function does not depend on position.
 Finally, the fluxes of the stars come independently from
@@ -236,7 +236,7 @@ The image is assumed to be a noisy version of the true underlying intensity
 field. Thus, we need
 a prescription for simulating an image $\{I_{ij}\}$ from a catalog $\theta$:
 \begin{eqnarray}
-\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N, 
+\theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N,
 \left\{f_i\right\}_{i=1}^N\right\}.
 \end{eqnarray}
 If we knew the true catalog, we could compute the
@@ -277,7 +277,7 @@ intensity of the mock image \citep[e.g.][]{2011MNRAS.412.2521B}. Allowing
 the parameters of the pixel-convolved PSF to be unknown is another possible
 extension. For the generation of the simulated data in Section~\ref{sec:simulated_data},
 the values of the PSF parameters used were $s_1=0.02$, $s_2=0.1$ (one and
-five pixel widths respectively), and $w=0.5$. 
+five pixel widths respectively), and $w=0.5$.
 
 \subsection{The Prior Distribution}
 The prior distribution for the number of stars $N$ is assigned to be uniform
@@ -382,7 +382,7 @@ difference between the two test cases is the number of stars and the noise level
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.7]{Figures/test_cases.eps}
+\includegraphics[width=\textwidth]{Figures/test_cases.eps}
 \caption{Two simulated images.
 {\bf Left}: A field containing $\sim$100 stars.
 {\bf Right}: A field containing $\sim$1000 stars.\label{fig:simulated_data}}
@@ -405,7 +405,7 @@ this problem because of the presence of a first-order phase transition
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.33]{Figures/inference1.eps}
+\includegraphics[width=\textwidth]{Figures/inference1.eps}
 \end{center}
 \caption{Inference about the parameters for Test Case 1. Note that there is
 considerable uncertainty (particularly about $h_2$), which occurs because the
@@ -427,7 +427,7 @@ MCMC.
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.33]{Figures/inference2.eps}
+\includegraphics[width=\textwidth]{Figures/inference2.eps}
 \end{center}
 \caption{Inference about the parameters for Test Case 2. Note that the
 parameters are still not very well constrained even with the larger number of
@@ -442,7 +442,7 @@ features that differ are uncertain.
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.5]{Figures/catalogs.eps}
+\includegraphics[width=\textwidth]{Figures/catalogs.eps}
 \end{center}
 \caption{Nine example catalogs sampled from the posterior distribution for
 Test Case 2.\label{fig:catalogs}}
@@ -456,7 +456,7 @@ with the blurred (but still noise-free) version and the residuals.
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.4]{Figures/summaries.eps}
+\includegraphics[width=\textwidth]{Figures/summaries.eps}
 \end{center}
 \caption{Summary images for test case 2. The left panel shows the posterior
 mean high-resolution scene. The middle panel shows the posterior mean scene
@@ -480,7 +480,7 @@ possible values of the cutoff parameter.
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.45]{Figures/sex_N.eps}
+\includegraphics[width=\textwidth]{Figures/sex_N.eps}
 \end{center}
 \caption{The number of stars in the catalogs produced by \sex. The true numbers
 of stars shown in these plots are$\sim$82\% of the values listed in
@@ -498,7 +498,7 @@ to the inference of the luminosity function.
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.45]{Figures/sex_inference.eps}
+\includegraphics[width=\textwidth]{Figures/sex_inference.eps}
 \end{center}
 \caption{Inference of the luminosity function parameters using the $0.5\sigma$
 catalog from \sex.\label{fig:sex_inference}}
@@ -614,19 +614,19 @@ h_2^{-\alpha_1}\alpha_2^{-1}.
 The cumulative distribution (CDF) is a useful property of a probability
 distribution and is given by the antiderivative of the PDF:
 \begin{eqnarray}
-P(X \leq x) = F(x) &=& 
+P(X \leq x) = F(x) &=&
 \left\{
 \begin{array}{lcr}
 0, & & x < h_1 \\
 (Z_1\alpha_1)^{-1}\left(h_1^{-\alpha_1} - x^{-\alpha_1}\right), & & h_1 \leq x \leq h_2 \\
-1 - (Z_2\alpha_2)^{-1}x^{-\alpha_2}, & & x > h_2 
+1 - (Z_2\alpha_2)^{-1}x^{-\alpha_2}, & & x > h_2
 \end{array}
 \right.
 .
 \end{eqnarray}
 The inverse of the CDF is also useful and is given by:
 \begin{eqnarray}
-F^{-1}(u) &=& 
+F^{-1}(u) &=&
 \left\{
 \begin{array}{lcr}
 \left[h_1^{-\alpha_1} - uZ_1\alpha_1\right]^{-1/\alpha_1}, & & 0 < u < 1 - (Z_2\alpha_2)^{-1}h_2^{-\alpha_2}\\
@@ -638,7 +638,7 @@ F^{-1}(u) &=&
 An example of a broken power-law distribution is shown in Figure~\ref{fig:powerlaw}.
 \begin{figure}[h!]
 \begin{center}
-\includegraphics[scale=0.5]{Figures/broken.eps}
+\includegraphics[width=\textwidth]{Figures/broken.eps}
 \caption{A broken power-law distribution. The parameter values for this
 particular PDF were
 $\{h_1, h_2, \alpha_1, \alpha_2\} = \{0.3, 0.6, 1.1, 2\}$, i.e. the same
@@ -716,31 +716,31 @@ are of order $10^{-6}$ times the prior width.\label{tab:proposals}}
 
 
 \begin{thebibliography}{99}
-\bibitem[Bertin and 
+\bibitem[Bertin and
 Arnouts(1996)]{sextractor} Bertin, E., Arnouts, S.\ 1996.\ SExtractor: Software for source extraction.\ Astronomy and Astrophysics Supplement Series 117, 393-404.
 
-\bibitem[\protect\citeauthoryear{Brewer, P{\'a}rtay, 
+\bibitem[\protect\citeauthoryear{Brewer, P{\'a}rtay,
 \& Cs{\'a}nyi}{2011}]{dnest} Brewer B.~J., P{\'a}rtay L.~B.,
 Cs{\'a}nyi G., 2011, Statistics and Computing, 21, 4, 649-656. arXiv:0912.2380
 
-\bibitem[Brewer et al.(2011)]{2011MNRAS.412.2521B} Brewer, B.~J., Lewis, 
-G.~F., Belokurov, V., Irwin, M.~J., Bridges, T.~J., Evans, N.~W.\ 2011.\ 
-Modelling of the complex CASSOWARY/SLUGS gravitational lenses.\ Monthly 
+\bibitem[Brewer et al.(2011)]{2011MNRAS.412.2521B} Brewer, B.~J., Lewis,
+G.~F., Belokurov, V., Irwin, M.~J., Bridges, T.~J., Evans, N.~W.\ 2011.\
+Modelling of the complex CASSOWARY/SLUGS gravitational lenses.\ Monthly
 Notices of the Royal Astronomical Society 412, 2521-2529
 
-\bibitem[Caticha(2009)]{caticha} Caticha, A.\ 2009.\ 
-Quantifying Rational Belief.\ American Institute of Physics Conference 
-Series 1193, 60-68. 
+\bibitem[Caticha(2009)]{caticha} Caticha, A.\ 2009.\
+Quantifying Rational Belief.\ American Institute of Physics Conference
+Series 1193, 60-68.
 
 \bibitem[Cox(1946)]{cox} Cox, R.~T., 1946, Probability, Frequency, and Reasonable Expectation. 1946. American Journal of Physics 14 14, 1-13.
 
-\bibitem[Feroz et al.(2011)]{2011MNRAS.415.3462F} Feroz, F., Balan, S.~T., 
-Hobson, M.~P.\ 2011.\ Detecting extrasolar planets from stellar radial 
-velocities using Bayesian evidence.\ Monthly Notices of the Royal 
-Astronomical Society 415, 3462-3472. 
+\bibitem[Feroz et al.(2011)]{2011MNRAS.415.3462F} Feroz, F., Balan, S.~T.,
+Hobson, M.~P.\ 2011.\ Detecting extrasolar planets from stellar radial
+velocities using Bayesian evidence.\ Monthly Notices of the Royal
+Astronomical Society 415, 3462-3472.
 
-\bibitem[\protect\citeauthoryear{Feroz, Hobson, 
-\& Bridges}{2009}]{multinest} Feroz F., Hobson M.~P., Bridges M., 2009, MNRAS, 398, 1601 
+\bibitem[\protect\citeauthoryear{Feroz, Hobson,
+\& Bridges}{2009}]{multinest} Feroz F., Hobson M.~P., Bridges M., 2009, MNRAS, 398, 1601
 
 \bibitem[\protect\citeauthoryear{Green}{1995}]{rjmcmc}
 Green, P.~J., 1995, Reversible Jump Markov Chain Monte Carlo Computation and Bayesian Model Determination, Biometrika 82 (4): 711–732.
@@ -749,22 +749,22 @@ Green, P.~J., 1995, Reversible Jump Markov Chain Monte Carlo Computation and Bay
 Parallel chains, delayed rejection and reversible jump MCMC for object recognition,
 British Machine Vision Conference Proceedings.
 
-\bibitem[Hogg(2012)]{hogg} Hogg, D.~W.\ 2012.\ Data analysis 
-recipes: Probability calculus for inference.\ ArXiv e-prints 
-arXiv:1205.4446. 
+\bibitem[Hogg(2012)]{hogg} Hogg, D.~W.\ 2012.\ Data analysis
+recipes: Probability calculus for inference.\ ArXiv e-prints
+arXiv:1205.4446.
 
-\bibitem[Hogg and Lang(2011)]{2011EAS....45..351H} Hogg, D.~W., Lang, D.\ 
-2011.\ Telescopes don't make catalogues!.\ EAS Publications Series 45, 
-351-358. 
+\bibitem[Hogg and Lang(2011)]{2011EAS....45..351H} Hogg, D.~W., Lang, D.\
+2011.\ Telescopes don't make catalogues!.\ EAS Publications Series 45,
+351-358.
 
-\bibitem[Irwin(1985)]{irwin} Irwin, M.~J.\ 1985, \mnras, 214, 
-575 
+\bibitem[Irwin(1985)]{irwin} Irwin, M.~J.\ 1985, \mnras, 214,
+575
 
 \bibitem[Jaynes(2003)]{jaynes} Jaynes, E.~T., 2003, Probability Theory: The
 Logic of Science, ISBN 0521592712, Cambridge University Press, June 2003.
 
-\bibitem[Kelly et al.(2008)]{2008ApJ...682..874K} Kelly, B.~C., Fan, X., 
-\& Vestergaard, M.\ 2008, ApJ, 682, 874 
+\bibitem[Kelly et al.(2008)]{2008ApJ...682..874K} Kelly, B.~C., Fan, X.,
+\& Vestergaard, M.\ 2008, ApJ, 682, 874
 
 \bibitem[Lupton et al.(2001)]{photo}
 Lupton,~R., Gunn,~J.~E., Ivezic,~Z., Knapp,~G.~R., Kent,~S.~M., \& Yasuda,~N., 2001, ASPC, 238, 269
@@ -772,14 +772,14 @@ Lupton,~R., Gunn,~J.~E., Ivezic,~Z., Knapp,~G.~R., Kent,~S.~M., \& Yasuda,~N., 2
 \bibitem[Mackay(2003)]{mackay} Mackay, D.~J.~C., 2003, Information Theory,
 Inference and Learning Algorithms, Cambridge University Press, UK.
 
-\bibitem[\protect\citeauthoryear{Skilling}{1998}]{massinf} 
-Skilling J., 1998, Massive Inference and Maximum Entropy, in Maximum Entropy 
+\bibitem[\protect\citeauthoryear{Skilling}{1998}]{massinf}
+Skilling J., 1998, Massive Inference and Maximum Entropy, in Maximum Entropy
 and Bayesian Methods, Kluwer Academic Publishers, Dordrecht/Boston/London p.14
 
 \bibitem[\protect\citeauthoryear{Skilling}{2006}]{skilling} Skilling, J., 2006, Nested Sampling for General Bayesian Computation, Bayesian Analysis 4, pp. 833-860.
 
-\bibitem[Stetson(1987)]{1987PASP...99..191S} Stetson, P.~B.\ 1987, \pasp, 
-99, 191 
+\bibitem[Stetson(1987)]{1987PASP...99..191S} Stetson, P.~B.\ 1987, \pasp,
+99, 191
 \end{thebibliography}
 
 \end{document}

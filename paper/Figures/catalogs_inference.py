@@ -2,7 +2,6 @@ import plot_utils
 import matplotlib.pyplot as pl
 from matplotlib.ticker import MaxNLocator
 import numpy as np
-import time, os
 
 maxNumStars = 1200
 numHyperparams = 6  # Number of parameters before catalog begins
@@ -43,14 +42,18 @@ ax.xaxis.set_major_locator(MaxNLocator(4))
 ax.yaxis.set_major_locator(MaxNLocator(4))
 
 pl.savefig('inference.eps', bbox_inches='tight')
-assert 0
 
-params =   sample[:, 0:numHyperparams]
-catalogs = sample[:, numHyperparams:numHyperparams+3*maxNumStars]
+
+#
+# CATALOG SAMPLES.
+#
+
+params = sample[:, 0:numHyperparams]
+catalogs = sample[:, numHyperparams:numHyperparams + 3 * maxNumStars]
 xStars = catalogs[:, 0:maxNumStars]
-yStars = catalogs[:, maxNumStars:2*maxNumStars]
-fStars = catalogs[:, 2*maxNumStars:]
-images =   sample[:, numHyperparams+3*maxNumStars:]
+yStars = catalogs[:, maxNumStars:2 * maxNumStars]
+fStars = catalogs[:, 2 * maxNumStars:]
+images = sample[:, numHyperparams + 3 * maxNumStars:]
 
 xCatalog = np.array([])
 yCatalog = np.array([])
@@ -59,33 +62,41 @@ fCatalog = np.array([])
 mock_data_mean = np.zeros(data.shape)
 
 k = 1
-figure(figsize=(12, 12))
-subplots_adjust(hspace=0.02, wspace=0.02)
+
+pl.figure(figsize=(12, 12))
+pl.subplots_adjust(hspace=0.02, wspace=0.02)
+
 for i in range(0, 9):
-	mock = images[i,:].reshape(data.shape[0], data.shape[1])
-	ax = subplot(3,3,k)
-	which = nonzero(fStars[i, :] > 0)[0]
-	plot(xStars[i,which], yStars[i,which], 'k.', markersize=1)
-	axis('equal')
-	xlim([-1., 1.])
-	ylim([-1., 1.])
-	gca().set_xticks([])
-	gca().set_yticks([])
-	if k==2:
-		title('Catalogs', fontsize=14)
-	k += 1
+    mock = images[i, :].reshape(data.shape[0], data.shape[1])
+    ax = pl.subplot(3, 3, k)
+    which = np.nonzero(fStars[i, :] > 0)[0]
 
-	mock_data_mean += mock/sample.shape[0]
+    s = 50 * np.log(1 + fStars[i, which] - fStars[i, which].min())
+    c = [[1 - c0] * 3 for c0 in
+                        np.sqrt(fStars[i, which] / fStars[i, which].max())]
+    pl.scatter(xStars[i, which], yStars[i, which], c=c, s=s)
 
-	xCatalog = hstack([xCatalog, xStars[i,which]])
-	yCatalog = hstack([yCatalog, yStars[i,which]])
-	fCatalog = hstack([fCatalog, fStars[i,which]])
+    pl.axis('equal')
+    pl.xlim([-1., 1.])
+    pl.ylim([-1., 1.])
+    ax.set_xticks([])
+    ax.set_yticks([])
+    if k == 2:
+        pl.title('Catalogs')
+    k += 1
 
-	print(i+1, ((((data - mock)/30.)**2).sum()/10000. - 1.)/(sqrt(2.)/100.))
+    mock_data_mean += mock / sample.shape[0]
 
-##savefig('catalogs.eps', bbox_inches='tight')
-show()
+    xCatalog = np.hstack([xCatalog, xStars[i, which]])
+    yCatalog = np.hstack([yCatalog, yStars[i, which]])
+    fCatalog = np.hstack([fCatalog, fStars[i, which]])
 
+    print(i + 1, ((((data - mock) / 30.) ** 2).sum() / 10000. - 1.)
+            / (np.sqrt(2.) / 100.))
+
+pl.savefig('catalogs.eps', bbox_inches='tight')
+
+assert 0
 
 #subplot(1,3,1)
 #img = (data - data.min())/(data.max() - data.min())

@@ -1,28 +1,32 @@
-from pylab import *
+import plot_utils
+import matplotlib.pyplot as pl
+import numpy as np
 
-img1 = loadtxt('../../c++_dnest/SimulatedData/break2.txt')
-img2 = loadtxt('../../c++_dnest/SimulatedData/crowded.txt')
+img1 = np.loadtxt('../../c++_dnest/SimulatedData/break2.txt')
+img2 = np.loadtxt('../../c++_dnest/SimulatedData/crowded.txt')
 
-subplot(1,2,1)
-imshow((img1 - img1.min())**0.4)
-gca().set_xticks([0, 50, 100])
-gca().set_xticklabels(['-1', '0', '+1'])
-gca().set_yticks([0, 50, 100])
-gca().set_yticklabels(['+1', '0', '-1'])
-xlabel('$x$', fontsize=16)
-ylabel('$y$', fontsize=16)
-title('Test Case 1', fontsize=14)
+scale = lambda i: (i.max() - i.min()) ** 0.4 - (i - i.min()) ** 0.4
 
-subplot(1,2,2)
-imshow((img2 - img2.min())**0.4)
-gca().set_xticks([0, 50, 100])
-gca().set_xticklabels(['-1', '0', '+1'])
-gca().set_yticks([0, 50, 100])
-gca().set_yticklabels(['+1', '0', '-1'])
-xlabel('$x$', fontsize=16)
-ylabel('$y$', fontsize=16)
-title('Test Case 2', fontsize=14)
+fig = pl.figure(figsize=(11, 5))
 
-#savefig('test_cases.eps', bbox_inches='tight')
-show()
+pl.subplot(1,2,1)
+pl.imshow(scale(img1), interpolation="nearest", cmap="gray")
+pl.gca().set_xticks([0, 50, 100])
+pl.gca().set_xticklabels(['-1', '0', '+1'])
+pl.gca().set_yticks([0, 50, 100])
+pl.gca().set_yticklabels(['+1', '0', '-1'])
+pl.xlabel('$x$')
+pl.ylabel('$y$')
+pl.title('Test Case 1')
 
+pl.subplot(1,2,2)
+pl.imshow(scale(img2), interpolation="nearest", cmap="gray")
+pl.gca().set_xticks([0, 50, 100])
+pl.gca().set_xticklabels(['-1', '0', '+1'])
+pl.gca().set_yticks([0, 50, 100])
+pl.gca().set_yticklabels(['+1', '0', '-1'])
+pl.xlabel('$x$')
+pl.ylabel('$y$')
+pl.title('Test Case 2')
+
+pl.savefig('test_cases.eps', bbox_inches='tight')

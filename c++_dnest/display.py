@@ -37,7 +37,9 @@ for i in xrange(0, sample.shape[0]):
 	gca().set_yticks([])
 	ax = subplot(2,2,2)
 	which = nonzero(fStars[i, :] > 0)[0]
-	plot(xStars[i,which], yStars[i,which], 'k.', markersize=1)
+	ff = fStars[i, which]
+	ff = ff/ff.max()
+	scatter(xStars[i,which], yStars[i,which], s=30*ff, color='w', edgecolors='k')
 	xlim([-1., 1.])
 	ylim([-1., 1.])
 	ax.set_aspect('equal')

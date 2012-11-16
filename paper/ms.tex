@@ -61,9 +61,14 @@ in'' to our ideas about what astronomy is, we sometimes forget that
 the catalog is \emph{not} the fundamental data product of astronomy; catalogs are produced
 from imaging; their production involves many decisions and ideas
 that go way beyond the information provided to the telescope by the
-incident intensity field.
-Standard tools for generating catalogs from astronomical imaging include \sex~\citep{sextractor},
-DAOPHOT \citep{1987PASP...99..191S}, and SDSS PHOTO \citep{photo}.
+incident intensity field. In addition, catalogs are not usually the final
+\emph{goal} of any imaging project or survey. Typically, they are produced in
+order to facilitate the scientific study of populations of objects (e.g. the
+initial mass function of a population of stars), or to provide a sky-search
+capability to the community who might be interested in only a small subset of
+objects. Standard tools for generating catalogs from astronomical imaging
+include \sex~\citep{sextractor}, DAOPHOT \citep{1987PASP...99..191S}, and SDSS
+PHOTO \citep{photo}.
 
 Telescopes don't make catalogs \citep{2011EAS....45..351H}, they
 measure the intensity field.  Viewed through the lens of probabilistic
@@ -77,7 +82,8 @@ information.  Probability theory suggests that it will be much less
 ``lossy'' to pass forward not a catalog but a probabilisitic
 description of all the catalogs that could be consistent with the
 imaging---a posterior probability in (enormously large) catalog space.
-This Article represents an attempt at this ambitous goal.
+This article represents an attempt at this ambitous goal in the specific
+situation where the only objects in the field are stars.
 
 Beyond these extremely general concerns, there are practical issues:
 Standard methods for constructing catalogs can have difficulty in some

@@ -1,0 +1,54 @@
+data
+{
+	num_stars <- 100
+	num_pixels <- 100
+	s <- 0.02
+	tau <- 1.
+}
+
+
+model
+{
+	# Prior on Pareto parameters
+	# Lower cutoff
+	log_x1 ~ dunif(-10.0, 10.0)
+	x1 <- exp(log_x1)
+	# Slope
+	a ~ dunif(1.0, 5.0)
+
+	# Prior on star properties given hyperparameters
+	for(i in 1:num_stars)
+	{
+		# Star positions
+		x[i] ~ dunif(-1.1, 1.1)
+		y[i] ~ dunif(-1.1, 1.1)
+
+		# Star flux
+		flux[i] ~ dpar(x1, a)
+	}
+
+
+	for(i in 1:num_pixels)
+	{
+		for(j in 1:num_pixels)
+		{
+			for(k in 1:num_stars)
+			{
+				eval[i, j, k] <- 1.0
+			}
+			mu[i, j] <- sum(eval[i, j, ])
+		}
+	}
+
+
+	# Likelihood
+	for(i in 1:num_pixels)
+	{
+		for(j in 1:num_pixels)
+		{
+			F[i, j] ~ dnorm(mu[i, j], tau)
+		}
+	}
+
+}
+

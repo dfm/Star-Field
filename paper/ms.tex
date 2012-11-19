@@ -114,7 +114,7 @@ This can cause Markov Chain Monte Carlo (MCMC) algorithms difficulties -- they
 may take a long time to converge to the target posterior distribution over
 the space of catalogs. Thirdly, this problem is subject to the so-called
 label-switching problem that is commonly encountered in mixture modeling
-\citep{label_switching}. Given any proposed catalog, another catalog that is
+\citep[e.g.][]{label_switching}. Given any proposed catalog, another catalog that is
 equally plausible is the catalog obtained by shuffling the entries of the first
 catalog. This leads to a posterior distribution with $N!$ identical peaks in
 parameter space. This can lead to difficulties with certain (generally very
@@ -182,7 +182,7 @@ The term $p(\theta)p(x|\theta)|_{x=x^*} = \mathcal{L}(\theta; x)$
 is the {\it likelihood function}, which is the
 probability of obtaining the actual data set $x^*$ as a function of the
 parameters\footnote{In the case that the sampling distribution is a probability
-density, the likelihood is the probability density evaluated at the observed
+density, the likelihood is the probability density function evaluated at the observed
 data. This usually causes no problems, although one should be aware of the
 Borel-Kolmogorov paradox \citep{jaynes}.}.
 As suggested by the above notation, the likelihood function is obtained from the
@@ -304,12 +304,12 @@ image data that is then assumed to be known.
 \subsection{The Prior Distribution}
 The prior distribution for the number of stars $N$ is assigned to be uniform
 between 0 and some maximum number $N_{\rm max}$. The extent of the image is
-assumed to be from $x=-1$ to $x=1$ and from $y=-1$ to $y=1$ in arbitrary units,
-and the
+assumed to be from $x=x_{\rm min}$ to $x=x_{\rm max}$ and from
+$y=y_{\rm min}$ to $y=y_{\rm max}$ in arbitrary units, and the
 positions of the stars are assigned independent uniform priors:
 \begin{eqnarray}
-x_i &\sim& \textnormal{Uniform}(-1.1, 1.1) \\
-y_i &\sim& \textnormal{Uniform}(-1.1, 1.1)
+x_i &\sim& \textnormal{Uniform}(1.1 x_{\rm min}, 1.1 x_{\rm max}) \\
+y_i &\sim& \textnormal{Uniform}(1.1 y_{\rm min}, 1.1 y_{\rm max})
 \end{eqnarray}
 The stars are allowed to be slightly outside of the observed image because the
 PSF can scatter light from these stars into the image. Our model for the
@@ -324,14 +324,15 @@ slope of the distribution above $h_2$. For details on the broken power-law
 model, see Appendix~\ref{power_law}. The prior distribution on $h_1$, $h_2$,
 $\alpha_1$ and $\alpha_2$ is assigned to be:
 \begin{eqnarray}
-\log_e h_1 &\sim& \textnormal{Uniform}(\log_e(10^{-3}), \log_e(10^3)) \\
-\log_e h_2 &\sim& \textnormal{Uniform}(h_1, h_1 + 2.3) \\
+\ln h_1 &\sim& \textnormal{Uniform}(\ln(10^{-3}), \ln(10^3)) \\
+\ln h_2 &\sim& \textnormal{Uniform}(\ln(h_1), \ln(h_1) + 2.3) \\
 \alpha_1 &\sim& \textnormal{Uniform}(1, 5) \\
 \alpha_2 &\sim& \textnormal{Uniform}(1, 5).
 \end{eqnarray}
 These priors express vague prior knowledge about $\alpha_1$ and $\alpha_2$ in
 addition to vague prior knowledge about $h_1$ and $h_2$ apart from the fact
-that $h_2$ should be no more than an order of magnitude greater than $h_1$.
+that the flux units are not extreme and that $h_2$ should be no more than an
+order of magnitude greater than $h_1$.
 
 This simply-parameterized model for the luminosity function can be criticized
 on the basis that information from bright stars can be used to infer the
@@ -339,6 +340,16 @@ parameters of the luminosity function which then still apply at lower flux
 levels. In principle, this can be resolved by using a more flexible distribution
 \citep[e.g.][]{2008ApJ...682..874K} where each star's measured brightness
 affects the inference of the luminosity function locally but not globally.
+
+The priors for the PSF parameters and the noise parameters were:
+\begin{eqnarray}
+\ln s_1 &\sim& \textnormal{Uniform}(\ln(0.5L), \ln(50L)) \\
+\ln s_2 &\sim& \textnormal{Uniform}(\ln(s_1), \ln(s_1) + 2.3) \\
+w &\sim& \textnormal{Uniform}(0, 1)\\
+\ln \sigma_0 &\sim& \textnormal{Uniform}(\ln(10^{-3}), \ln(10^{3})) \\
+\ln \eta &\sim& \textnormal{Uniform}(\ln(10^{-3}), \ln(10^{3}))
+\end{eqnarray}
+where $L = (x_{\rm max} - x_{\rm min})/n$ is the width of a pixel.
 
 \section{MCMC Implementation}\label{sec:mcmc}
 The MCMC sampling was implemented using the Diffusive Nested Sampling
@@ -362,7 +373,8 @@ MCMC sampler. The MCMC may also be run using the standard Metropolis algorithm
 targeting the posterior distribution.
 
 \section{Simulated Data}\label{sec:simulated_data}
-We now apply the method to two illustrative simulated images generated from
+In order to test our approach, we applied the method to two illustrative
+simulated images generated from
 the above model. The purpose of this experiment was to test the computational
 feasibility of the model, as well as to compare the inferences from the model
 with those from more standard techniques.
@@ -370,7 +382,7 @@ with those from more standard techniques.
 The true parameter values for the two simulated data sets are listed in
 Table~\ref{tab:truth}. The broken power-law parameter values were chosen so that
 roughly half of the stars' fluxes were below and above the break-point
-respectively. Figure~\ref{fig:powerlaw} also shows the true flux distribution
+respectively. Figure~\ref{fig:powerlaw} in Appendix~\ref{power_law} also shows the true flux distribution
 used for the simulated images. Each of the images
 is $100 \times 100$ pixels in extent and covers a range from $-1$ to $1$ in
 arbitrary units for both the $x$ and $y$ axes. The first image contains
@@ -422,7 +434,7 @@ input values. Note that the uncertainty in $h_2$, $\alpha_1$, and $\alpha_2$ is
 quite large. This is because the broken power-law model
 (Figure~\ref{fig:powerlaw}) does not change drastically in shape as the
 parameters are varied. Therefore, a large number of stars would be required to
-tightly constrain the parameters. A Nested Sampling approach is required on
+tightly constrain the parameters. A Nested Sampling approach assists on
 this problem because of the presence of a first-order phase transition
 \citep{skilling}.
 
@@ -435,6 +447,9 @@ considerable uncertainty (particularly about $h_2$), which occurs because the
 shape of the broken power-law does not depend strongly on the parameters.
 \label{fig:results1}}
 \end{figure}
+
+The PSF parameters $\{s_1, s_2, w\}$ and the noise parameters $\{\sigma_0, \eta\}$
+were also inferred accurately with small uncertainties.
 
 \subsection{Test Case 2}
 Test Case 2 is more challenging than Test Case 1 because the image contains
@@ -487,6 +502,9 @@ when observed at the resolution of the data, and the right hand panel shows the
 model residuals.
 \label{fig:summaries}}
 \end{figure}
+
+The PSF parameters $\{s_1, s_2, w\}$ and the noise parameters $\sigma_0$ and
+$\eta$ were also inferred accurately with small uncertainties.
 
 \section{Comparison to SExtractor}\label{sec:sex}
 In the previous section we established that the inference of the catalogs from

@@ -48,7 +48,7 @@ void PSF::sync()
 void PSF::fromPrior()
 {
 	// Log-uniform between 0.3 and 30 pixel widths
-	sigma1 = exp(log(0.5*Data::get_instance().get_dx()) + log(100.)*randomU());
+	sigma1 = exp(log(0.3*Data::get_instance().get_dx()) + log(100.)*randomU());
 	double diff = 2.3*randomU();
 	sigma2 = exp(log(sigma1) + diff);
 	weight = randomU();

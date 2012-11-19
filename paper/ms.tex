@@ -216,9 +216,9 @@ In summary, the unknown parameters are:
 \theta = \left\{N, \beta, \left\{x_i, y_i\right\}_{i=1}^N,
 \left\{f_i\right\}_{i=1}^N\right\}.
 \end{eqnarray}
-We note that models similar to this, have been implemented for general image
-modeling \citep[e.g.][]{massinf}, however in this case it is more justified
-as point fluxes are actually what we are searching for.
+We note that models similar to this have been implemented for general image
+modeling and deconvolution \citep[e.g.][]{massinf}, however in this case it is
+more justified as we are actually searching for point fluxes.
 
 \subsection{The Prior}
 The prior probability distribution for the unknown parameters can be factorized
@@ -248,7 +248,7 @@ we have parameterized the luminosity function.
 The sampling distribution is a probabilistic model for the process that
 generates the data; it describes the probability distribution we would use
 to predict the data if we happened to know the true catalog. In our case,
-the data will be an $m \times m$ array of pixel intensities $I$:
+the data will be an $m \times n$ array of pixel intensities $I$:
 \begin{eqnarray}
 \{I_{ij}\}
 \end{eqnarray}
@@ -271,8 +271,8 @@ is given by:
 \mathcal{M}(x, y) &=& \sum_{i=1}^N f_i \mathcal{P}(x - x_i, y - y_i)
 \end{eqnarray}
 where $\mathcal{P}$ is the pixel-convolved point spread function (PSF).
-Throughout this paper we
-assume the pixel-convolved PSF is a known weighted mixture of two concentric
+Throughout this paper we will
+assume the pixel-convolved PSF is a weighted mixture of two concentric
 circular
 Gaussians with widths $s_1$ and $s_2$:
 \begin{eqnarray}
@@ -289,19 +289,17 @@ image (evaluated at the center of each pixel) plus Gaussian noise:
 \begin{eqnarray}
 I_{ij} &=& \mathcal{M}(X_{ij}, Y_{ij}) + \epsilon_{ij}
 \end{eqnarray}
-where the errors $\{\epsilon_{ij}\}$ are independent and normally distributed:
+where the errors $\{\epsilon_{ij}\}$ are independent and normally distributed.
+The variance of each pixel is determined by the brightness of the sky and the
+brightness of the mock image in that pixel:
 \begin{eqnarray}
-\epsilon_{ij} \sim \mathcal{N}(0, \sigma^2).
+\epsilon_{ij} \sim \mathcal{N}(0, \sigma_0^2 + \eta I_{ij}).
 \end{eqnarray}
-Throughout this paper, we will assume that the noise variance $\sigma^2$ is
-known. This is not usually true in practice (although it is often assumed).
-However it is straightforward to extend the model so that $\sigma$ is an
-unknown parameter or that the noise variance should be a function of the
-intensity of the mock image \citep[e.g.][]{2011MNRAS.412.2521B}. Allowing
-the parameters of the pixel-convolved PSF to be unknown is another possible
-extension. For the generation of the simulated data in Section~\ref{sec:simulated_data},
-the values of the PSF parameters used were $s_1=0.02$, $s_2=0.1$ (one and
-five pixel widths respectively), and $w=0.5$.
+where $\sigma_0$ is a constant noise level and $\eta$ is a coefficient allowing
+the noise to be higher in brighter regions of the image.
+This parameterisation has been used by \citet{2011MNRAS.412.2521B} and is an
+alternative to the common practice of producing a ``variance map'' from the
+image data that is then assumed to be known.
 
 \subsection{The Prior Distribution}
 The prior distribution for the number of stars $N$ is assigned to be uniform
@@ -392,7 +390,8 @@ $h_2$ & 0.6 & 0.6\\
 $\alpha_1$ & 1.1 & 1.1\\
 $\alpha_2$ & 2 & 2\\
 \hline
-$\sigma$ & 0.05 & 0.3\\
+$\sigma_0$ & 0.05 & 0.3\\
+$\eta$ & 0 & 0
 $s_1$ & 0.02 & 0.02\\
 $s_2$ & 0.1 & 0.1\\
 $w$ & 0.5 & 0.5\\

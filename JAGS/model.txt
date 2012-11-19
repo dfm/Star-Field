@@ -1,7 +1,7 @@
 data
 {
 	# Fixed number of stars for the time being
-	num_stars  <- 100
+	num_stars  <- 10
 	num_pixels <- 100
 
 	# Pixel width
@@ -33,7 +33,7 @@ model
 	log_x1 ~ dunif(-10.0, 10.0)
 	x1 <- exp(log_x1)
 	# Slope
-	a ~ dunif(1.0, 5.0)
+	alpha ~ dunif(1.0, 5.0)
 
 	# Prior on star properties given hyperparameters
 	for(i in 1:num_stars)
@@ -43,7 +43,7 @@ model
 		y[i] ~ dunif(-1.1, 1.1)
 
 		# Star flux
-		flux[i] ~ dpar(x1, a)
+		flux[i] ~ dpar(x1, alpha)
 	}
 
 
@@ -60,15 +60,8 @@ model
 
 			# Mock noise-free image
 			mu[i, j] <- sum(eval[i, j, ])
-		}
-	}
 
-
-	# Likelihood
-	for(i in 1:num_pixels)
-	{
-		for(j in 1:num_pixels)
-		{
+			# Likelihood
 			F[i, j] ~ dnorm(mu[i, j], tau)
 		}
 	}

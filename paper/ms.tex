@@ -62,7 +62,7 @@ the catalog is \emph{not} the fundamental data product of astronomy; catalogs ar
 from imaging; their production involves many decisions and ideas
 that go way beyond the information provided to the telescope by the
 incident intensity field. In addition, catalogs are not usually the final
-\emph{goal} of any imaging project or survey. Typically, they are produced in
+goal of any imaging project or survey. Typically, they are produced in
 order to facilitate the scientific study of populations of objects (e.g. the
 initial mass function of a population of stars), or to provide a sky-search
 capability to the community who might be interested in only a small subset of
@@ -79,7 +79,7 @@ possible.  Insertion of a catalog-generation step in the inference
 pipeline between the raw imaging and the final astrophysical analyses
 is typically very lossy; the hard decisions of catalog making destroy
 information.  Probability theory suggests that it will be much less
-``lossy'' to pass forward not a catalog but a probabilisitic
+lossy to pass forward not a catalog but a probabilisitic
 description of all the catalogs that could be consistent with the
 imaging---a posterior probability in (enormously large) catalog space.
 This article represents an attempt at this ambitous goal in the specific
@@ -99,14 +99,27 @@ Essentially, the creation of a catalog is an attempt to answer the question,
 ``Given the image we have obtained, what objects are present in the field and
 what are their properties?'' This motivates a probabilistic (Bayesian)
 approach to making catalogs. The output of such an approach would not be a
-single answer to this question (i.e. a single ``point estimate'' catalog), but rather a posterior probability distribution over the space of possible catalogs.
-Constructing such a probability distribution is
+single answer to this question (i.e. a single ``point estimate'' catalog), but
+rather a posterior probability distribution over the space of possible catalogs.
+Numerically, Bayesian Inference is often implemented using Markov Chain Monte
+Carlo (MCMC) algorithms in order to generate random samples from the posterior
+distribution.
+
+Sampling a posterior probability distribution for catalogs is likely to be
 challenging for a number of reasons. Firstly, the number $N$ of objects in the
-image (and that should be listed in the catalog) is itself unknown. Secondly, if $N$ is large, then the parameter space
+image (and that should therefore be listed in the catalog) is itself unknown.
+Secondly, if $N$ is large, then the parameter space
 of positions and properties (flux, size, etc) of the objects is also large.
 This can cause Markov Chain Monte Carlo (MCMC) algorithms difficulties -- they
 may take a long time to converge to the target posterior distribution over
-the space of catalogs.
+the space of catalogs. Thirdly, this problem is subject to the so-called
+label-switching problem that is commonly encountered in mixture modeling
+\citep{label_switching}. Given any proposed catalog, another catalog that is
+equally plausible is the catalog obtained by shuffling the entries of the first
+catalog. This leads to a posterior distribution with $N!$ identical peaks in
+parameter space. This can lead to difficulties with certain (generally very
+effective) MCMC algorithms such as the affine-invariant stretch move
+\citep{goodman, emcee}.
 
 Bayesian object detection (as this problem is sometimes called) has been
 implemented both inside and outside of astronomy
@@ -120,7 +133,8 @@ run, it is possible (under certain circumstances) to reconstruct what the
 results would have been if a variable-$N$ simulation had been used. However,
 this will not work well in situations where there is significant confusion
 (i.e. two or more sources overlap). What is really required is a variable
-dimension model, where $N$ is an unknown quantity to be inferred from the data.
+dimension model, where $N \in \{0, 1, 2, ... \}$ is an unknown quantity to be
+inferred from the data.
 The computational implementation of these models will require tools such as
 reversible jump Markov Chain Monte Carlo \citep{rjmcmc}. Other statistical
 methods such as maximum likelihood have also been used to model crowded fields
@@ -748,6 +762,12 @@ Astronomical Society 415, 3462-3472.
 \bibitem[\protect\citeauthoryear{Feroz, Hobson,
 \& Bridges}{2009}]{multinest} Feroz F., Hobson M.~P., Bridges M., 2009, MNRAS, 398, 1601
 
+\bibitem[Foreman-Mackey et al.(2012)]{emcee} Foreman-Mackey, 
+D., Hogg, D.~W., Lang, D., \& Goodman, J.\ 2012, emcee: The MCMC Hammer, arXiv:1202.3665 
+
+\bibitem[\protect\citeauthoryear{Goodman \& Weare}{2010}]{goodman}
+Goodman, J., Weare, J., 2010, Ensemble Samplers with Affine Invariance, Comm. App. Math. Comp. Sci., 5, 6.
+
 \bibitem[\protect\citeauthoryear{Green}{1995}]{rjmcmc}
 Green, P.~J., 1995, Reversible Jump Markov Chain Monte Carlo Computation and Bayesian Model Determination, Biometrika 82 (4): 711–732.
 
@@ -765,6 +785,11 @@ arXiv:1205.4446.
 
 \bibitem[Irwin(1985)]{irwin} Irwin, M.~J.\ 1985, \mnras, 214,
 575
+
+\bibitem[Jasra et al(2005)]{label_switching} Jasra, A., Holmes, C.~C, and
+Stephens, D.~A., Markov Chain Monte Carlo Methods and the Label Switching
+Problem in Bayesian Mixture Modeling, Statistical Science
+Vol. 20, No. 1, pp. 50-67
 
 \bibitem[Jaynes(2003)]{jaynes} Jaynes, E.~T., 2003, Probability Theory: The
 Logic of Science, ISBN 0521592712, Cambridge University Press, June 2003.

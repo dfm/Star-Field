@@ -130,7 +130,7 @@ This assumption is required for the
 {\tt MultiNest} sampler \citep{multinest} to be applicable.
 Using the results from the known $N$
 run, it is possible (under certain circumstances) to reconstruct what the
-results would have been if a variable-$N$ simulation had been used. However,
+results would have been if an unknown-$N$ model had been used. However,
 this will not work well in situations where there is significant confusion
 (i.e. two or more sources overlap). What is really required is a variable
 dimension model, where $N \in \{0, 1, 2, ... \}$ is an unknown quantity to be
@@ -193,10 +193,14 @@ To proceed with the model for inferring catalogs (stellar positions and fluxes)
 from image data, we must
 specify a definite hypothesis space and choices for the prior distribution
 and the sampling distribution. These choices are presented and discussed in
-Section~\ref{sec:model}. Throughout this paper we make a number of simplifications
-for the purposes of testing the computational feasibility and performance of
-the method. In real applications, some of these assumptions (such as known PSF
-and noise variance) may be relaxed.
+Section~\ref{sec:model}. In Section~\ref{sec:mcmc} we briefly discuss our
+MCMC implementation. Section~\ref{sec:simulated_data} describes the tests we
+carried out on simulated data, and a comparison with \sex~results is presented
+in Section~\ref{sec:sex}. We conclude in Section~\ref{sec:conclusion}.
+%Throughout this paper we make a number of simplifications
+%for the purposes of testing the computational feasibility and performance of
+%the method. In real applications, some of these assumptions (such as known PSF
+%and noise variance) may be relaxed.
 
 \section{The Specific Model for Stellar Fields}\label{sec:model}
 \subsection{The Hypothesis Space}
@@ -338,7 +342,7 @@ levels. In principle, this can be resolved by using a more flexible distribution
 \citep[e.g.][]{2008ApJ...682..874K} where each star's measured brightness
 affects the inference of the luminosity function locally but not globally.
 
-\section{MCMC Implementation}
+\section{MCMC Implementation}\label{sec:mcmc}
 The MCMC sampling was implemented using the Diffusive Nested Sampling
 \citep{dnest} method (hereafter DNS). DNS is a variant of the
 Nested Sampling \citep{skilling} algorithm that uses Metropolis-Hastings
@@ -485,7 +489,7 @@ model residuals.
 \label{fig:summaries}}
 \end{figure}
 
-\section{Comparison to SExtractor}
+\section{Comparison to SExtractor}\label{sec:sex}
 In the previous section we established that the inference of the catalogs from
 the data is computationally feasible and that the number of stars and the
 luminosity function can be inferred from the image data, albeit with moderate
@@ -524,7 +528,7 @@ to the inference of the luminosity function.
 catalog from \sex.\label{fig:sex_inference}}
 \end{figure}
 
-\section{Discussion}
+\section{Discussion and Conclusions}\label{sec:conclusion}
 
 What have we achieved?
 

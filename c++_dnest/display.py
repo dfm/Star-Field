@@ -1,7 +1,7 @@
 from pylab import *
 import time, os
 
-saveFrames = True # For making movies
+saveFrames = False # For making movies
 if saveFrames:
 	os.system('rm Frames/*.png')
 

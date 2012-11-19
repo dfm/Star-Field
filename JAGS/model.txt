@@ -1,14 +1,33 @@
 data
 {
-	num_stars <- 100
+	# Fixed number of stars for the time being
+	num_stars  <- 100
 	num_pixels <- 100
-	s <- 0.02
-	tau <- 1.
-}
 
+	# Pixel width
+	L <- 2./num_pixels
+
+	# Pixel-convolved PSF parameters
+	s1 <- 0.02
+	s2 <- 0.10
+	w  <- 0.5
+
+	# Noise variance
+	sig <- 0.05
+	tau <- pow(sig, -2)
+
+	pi <- 3.141592653589793
+}
 
 model
 {
+	# Coordinates at the pixel centers
+	for(i in 1:num_pixels)
+	{
+		xx[i] <- -1. + (i - 0.5)*L
+		yy[i] <-  1. - (i - 0.5)*L
+	}
+
 	# Prior on Pareto parameters
 	# Lower cutoff
 	log_x1 ~ dunif(-10.0, 10.0)
@@ -28,14 +47,18 @@ model
 	}
 
 
+	# Compute evaluation of all stars' contributions at all pixels
 	for(i in 1:num_pixels)
 	{
 		for(j in 1:num_pixels)
 		{
 			for(k in 1:num_stars)
 			{
-				eval[i, j, k] <- 1.0
+				eval[i, j, k] <- w/(2*pi*s1**2)*exp(-0.5*((xx[j] - x[k])**2 + (yy[i] - y[k])**2)/s1**2)
+							+ (1. - w)/(2*pi*s2**2)*exp(-0.5*((xx[j] - x[k])**2 + (yy[i] - y[k])**2)/s2**2)
 			}
+
+			# Mock noise-free image
 			mu[i, j] <- sum(eval[i, j, ])
 		}
 	}

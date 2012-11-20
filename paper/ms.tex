@@ -461,7 +461,7 @@ likelihood) is longer because of the larger number of stars. Using DNS, some
 samples from the posterior distribution can be obtained in about a day on a
 modern PC. However, this problem does not have a first-order phase transition
 like Test Case 1. Therefore, it is tractable to run standard Metropolis-Hastings
-MCMC.
+MCMC targeting the posterior distribution.
 
 \begin{figure}
 \begin{center}
@@ -474,16 +474,18 @@ stars.\label{fig:results2}}
 
 Some summary results from Test Case 2 are shown in Figures~\ref{fig:catalogs}
 and~\ref{fig:summaries}. Figure~\ref{fig:catalogs} shows nine possible catalogs
-(just the positions of the stars are shown) sampled from the posterior
+sampled from the posterior
 distribution. Features that are common to these nine samples are plausible, and
 features that differ are uncertain.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=\textwidth]{Figures/catalogs.eps}
+\includegraphics[scale=0.6]{Figures/catalogs.eps}
 \end{center}
 \caption{Nine example catalogs sampled from the posterior distribution for
-Test Case 2.\label{fig:catalogs}}
+Test Case 2. Features in common represent features with high probability,
+and differences between the catalogs represent conclusions that are uncertain.
+The area of each circle is proportional to the flux of the star.\label{fig:catalogs}}
 \end{figure}
 
 Each catalog in the posterior sample represents a scenario for the true
@@ -503,21 +505,22 @@ model residuals.
 \label{fig:summaries}}
 \end{figure}
 
-The PSF parameters $\{s_1, s_2, w\}$ and the noise parameters $\{\sigma_0, \eta\}$
+As with test case 1, the PSF parameters $\{s_1, s_2, w\}$ and the noise parameters $\{\sigma_0, \eta\}$
 were also inferred accurately with small uncertainties.
 
 \section{Comparison to SExtractor}\label{sec:sex}
 In the previous section we established that the inference of the catalogs from
 the data is computationally feasible and that the number of stars and the
 luminosity function can be inferred from the image data, albeit with moderate
-uncertainty. We now compare this approach with the output from the standard
-tool \sex. To achieve this, we executed \sex~on the two test cases, for various
-values of the significance level cutoff. This results in a set of catalogs
-for each image, with more conservative cutoffs resulting in less stars detected
-as compared to more agressive cutoffs. The results for the number of stars in
+uncertainty. We now compare this approach to an alternative analysis that makes
+use of the standard
+tool \sex. To achieve this, we executed \sex~on the two test images, for various
+values of the detection threshold. This results in a set of catalogs
+for each image, with more conservative thresholds resulting in less stars detected
+as compared to more aggressive thresholds. The results for the number of stars in
 the images are shown in Figure~\ref{fig:sex_N}. The main result is that
 \sex~significantly underestimates the number of stars in the image for all
-possible values of the cutoff parameter.
+possible values of the detection threshold.
 
 \begin{figure}
 \begin{center}
@@ -530,8 +533,9 @@ in $[-1, 1] \times [-1, 1]$.
 \label{fig:sex_N}}
 \end{figure}
 
+
 For Test Case 2, we then took the catalog produced by \sex~for the $0.5\sigma$
-cutoff and fitted a broken power-law model to the list of fluxes in the catalog.
+threshold and fitted a broken power-law model to the list of fluxes in the catalog.
 The results of this inference are shown in Figure~\ref{fig:sex_inference}.
 The inference spuriously rules out the true values of the parameters. This
 occurs because the uncertainty in the stellar fluxes is not propagated through

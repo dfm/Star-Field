@@ -411,14 +411,15 @@ $w$ & 0.5 & 0.5\\
 \end{tabular}
 \end{center}
 \caption{True parameter values used to generate the simulated data. The main
-difference between the two test cases is the number of stars and the noise level.
+difference between the two test cases is the number of stars and the noise
+level, both of which are higher in test case 2.
 \label{tab:truth}}
 \end{table}
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/test_cases.eps}
-\caption{Two simulated images.
+\caption{The two simulated images used to test our methodology.
 {\bf Left}: A field containing $\sim$100 stars.
 {\bf Right}: A field containing $\sim$1000 stars.\label{fig:simulated_data}}
 \end{center}
@@ -461,7 +462,9 @@ likelihood) is longer because of the larger number of stars. Using DNS, some
 samples from the posterior distribution can be obtained in about a day on a
 modern PC. However, this problem does not have a first-order phase transition
 like Test Case 1. Therefore, it is tractable to run standard Metropolis-Hastings
-MCMC targeting the posterior distribution.
+MCMC targeting the posterior distribution. In fact, this can be more efficient
+because the degree of compression from the prior distribution to the posterior
+distribution is very large ($\sim e^{3000}$) in this case.
 
 \begin{figure}
 \begin{center}
@@ -500,9 +503,9 @@ scene provides a useful visual guide to the uncertainties present in the catalog
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/summaries.eps}
 \end{center}
-\caption{Summary images for test case 2. The left panel shows the posterior
-mean high-resolution scene. The middle panel shows the posterior mean scene
-when observed at the resolution of the data, and the right hand panel shows the
+\caption{Summary images for test case 2. The upper left panel shows the posterior
+mean high-resolution scene. The upper right panel shows the posterior mean scene
+when observed at the resolution of the data, and the bottom panels show the
 model residuals.
 \label{fig:summaries}}
 \end{figure}
@@ -534,7 +537,7 @@ stars actually present. This is to be expected in the high-$\sigma$ case as
 \sex~then only searches for stars above a certain flux, but at the low-$\sigma$
 end the number of stars is still drastically underestimated. Note that the true
 numbers
-of stars shown in these plots are$\sim$82\% of the values listed in
+of stars shown in these plots are $\sim$82\% of the values listed in
 Figure~\ref{tab:truth} because here we only count those stars with positions
 in $[-1, 1] \times [-1, 1]$.
 \label{fig:sex_N}}

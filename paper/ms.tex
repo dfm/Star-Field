@@ -416,7 +416,7 @@ level, both of which are higher in test case 2.
 \label{tab:truth}}
 \end{table}
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/test_cases.eps}
 \caption{The two simulated images used to test our methodology.
@@ -439,7 +439,7 @@ tightly constrain the parameters. A Nested Sampling approach assists on
 this problem because of the presence of a first-order phase transition
 \citep{skilling}.
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/inference1.eps}
 \end{center}
@@ -467,7 +467,7 @@ MCMC targeting the posterior distribution. In fact, this can be more efficient
 because the degree of compression from the prior distribution to the posterior
 distribution is very large ($\sim e^{3000}$) in this case.
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/inference2.eps}
 \end{center}
@@ -482,7 +482,7 @@ sampled from the posterior
 distribution. Features that are common to these nine samples are plausible, and
 features that differ are uncertain.
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{center}
 \includegraphics[scale=0.6]{Figures/catalogs.eps}
 \end{center}
@@ -500,7 +500,7 @@ with the blurred (but still noise-free) version and the residuals. The residuals
 provide a check on the validity of the model, and the posterior expected true
 scene provides a useful visual guide to the uncertainties present in the catalogs.
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/summaries.eps}
 \end{center}
@@ -528,7 +528,7 @@ the images are shown in Figure~\ref{fig:sex_N}. The main result is that
 \sex~significantly underestimates the number of stars in the image for all
 possible values of the detection threshold.
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/sex_N.eps}
 \end{center}
@@ -552,7 +552,7 @@ The inference spuriously rules out the true values of the parameters. This
 occurs because the uncertainty in the stellar fluxes is not propagated through
 to the inference of the luminosity function.
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/sex_inference.eps}
 \end{center}
@@ -728,7 +728,7 @@ F^{-1}(u) &=&
 \right.
 \end{eqnarray}
 An example of a broken power-law distribution is shown in Figure~\ref{fig:powerlaw}.
-\begin{figure}[ht!]
+\begin{figure}[ht!][ht!]
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/broken.eps}
 \caption{A broken power-law distribution. The parameter values for this

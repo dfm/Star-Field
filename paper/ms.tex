@@ -559,13 +559,23 @@ and fluxes of the faint stars are not taken into account.
 
 In this paper we have developed and demonstrated a fully Bayesian approach to
 making catalogs from astronomical images in the case where the image contains
-only stars (or other point sources).
+only stars (or other point sources). The key idea is that instead of computing
+a single catalog, the method creates a posterior probability distribution on
+the space of possible catalogs that represents our state of knowledge about
+the presence and properties of objects in the image. When this is done, the
+uncertainties in the imaging are accurately propagated through to scientific
+conclusions, for example about the luminosity function of the stars.
+This approach was contrasted with a standard method of running \sex~and then
+fitting a luminosity function to the fluxes in the catalog. This latter approach
+was shown to produce incorrect inferences about the luminosity function.
 
 We note that there are many limitations to the model presented in this paper.
-One such limitation is that we have not considered multi-epoch or multi-band
-imaging. In the former case, stellar motions may be relevant \citep{lang}, and
-in the latter, variations in the spectral energy distributions of stars will
-need to be considered.
+In principle, our model should be a model of the physical state of the universe,
+and not a simple model where the only stellar properties are a $2-D$ position and
+a flux. Another limitation is that we have not considered multi-epoch or multi-band
+imaging. In the former case, PSF variations and stellar motions may be relevant
+\citep{lang}, and in the latter, a model for the spectral energy distributions
+of the stars will need to be considered.
 
 In practice, it may also be necessary to improve the model for the prior
 distribution
@@ -582,8 +592,6 @@ Throughout this paper, we have also assumed that the pixel-convolved PSF can
 be adequately modeled using simple components and that there are no PSF
 variations across the field. Relaxing this assumption provides a significant
 challenge for the future.
-
-{\bf Needs more words}
 
 %What are the limitations of what we have done?  Limitations include
 %PSF knowledge (and simplicity), simple number--flux relationship, no

@@ -503,8 +503,8 @@ model residuals.
 \label{fig:summaries}}
 \end{figure}
 
-The PSF parameters $\{s_1, s_2, w\}$ and the noise parameters $\sigma_0$ and
-$\eta$ were also inferred accurately with small uncertainties.
+The PSF parameters $\{s_1, s_2, w\}$ and the noise parameters $\{\sigma_0, \eta\}$
+were also inferred accurately with small uncertainties.
 
 \section{Comparison to SExtractor}\label{sec:sex}
 In the previous section we established that the inference of the catalogs from
@@ -590,7 +590,7 @@ variable $x$ (given a lower cutoff $x=h$ and a slope $\alpha$) is defined by:
 \begin{eqnarray}
 p(x) &\propto&
 \left\{
-\begin{array}{lcr}
+\begin{array}{lcl}
 0, & & x < h \\
 x^{-\alpha - 1} & & x \geq h.
 \end{array}
@@ -605,7 +605,7 @@ p(x) &\propto&
 \begin{array}{lcrl}
 0, & & x < h_1 & \\
 x^{-\alpha_1 - 1} & & h_1 \leq x \leq h_2 & \\
-x^{-\alpha_2 - 1} & & x > h_2 & .
+x^{-\alpha_2 - 1} & & x > h_2.
 \end{array}
 \right.
 \end{eqnarray}
@@ -660,10 +660,9 @@ P(X \leq x) = F(x) &=&
 \begin{array}{lcr}
 0, & & x < h_1 \\
 (Z_1\alpha_1)^{-1}\left(h_1^{-\alpha_1} - x^{-\alpha_1}\right), & & h_1 \leq x \leq h_2 \\
-1 - (Z_2\alpha_2)^{-1}x^{-\alpha_2}, & & x > h_2
+1 - (Z_2\alpha_2)^{-1}x^{-\alpha_2}, & & x > h_2.
 \end{array}
 \right.
-.
 \end{eqnarray}
 The inverse of the CDF is also useful and is given by:
 \begin{eqnarray}
@@ -671,10 +670,9 @@ F^{-1}(u) &=&
 \left\{
 \begin{array}{lcr}
 \left[h_1^{-\alpha_1} - uZ_1\alpha_1\right]^{-1/\alpha_1}, & & 0 < u < 1 - (Z_2\alpha_2)^{-1}h_2^{-\alpha_2}\\
-\left[Z_2\alpha_2(1-u)\right]^{-1/\alpha_2},& & 1 - (Z_2\alpha_2)^{-1}h_2^{-\alpha_2}< u < 1
+\left[Z_2\alpha_2(1-u)\right]^{-1/\alpha_2},& & 1 - (Z_2\alpha_2)^{-1}h_2^{-\alpha_2}< u < 1.
 \end{array}
 \right.
-.
 \end{eqnarray}
 An example of a broken power-law distribution is shown in Figure~\ref{fig:powerlaw}.
 \begin{figure}[ht!]

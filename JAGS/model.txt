@@ -13,7 +13,7 @@ data
 	w  <- 0.5
 
 	# Noise variance
-	sig <- 0.05
+	sig <- 30.
 	tau <- pow(sig, -2)
 
 	pi <- 3.141592653589793

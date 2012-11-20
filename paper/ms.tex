@@ -146,7 +146,7 @@ in the image which are actually due to noise.
 \section{Bayesian Inference}
 To quantitatively model uncertainties and transform noise in observed data
 into uncertainties in parameters of interest, Bayesian Inference is the appropriate
-framework \citep{cox, jaynes, caticha}. Suppose there exist unknown parameters
+framework \citep{cox, jaynes, caticha, mackay}. Suppose there exist unknown parameters
 (denoted
 collectively by $\theta$) and we expect to obtain some data $x$. Our prior
 state of knowledge about the parameters is modelled by a prior
@@ -492,7 +492,9 @@ Each catalog in the posterior sample represents a scenario for the true
 underlying image that we would observe if we had a hypothetical noise-free,
 infinite resolution telescope. From these samples, we can construct the
 posterior expected true scene. This is shown in Figure~\ref{fig:summaries} along
-with the blurred (but still noise-free) version and the residuals.
+with the blurred (but still noise-free) version and the residuals. The residuals
+provide a check on the validity of the model, and the posterior expected true
+scene provides a useful visual guide to the uncertainties present in the catalogs.
 
 \begin{figure}
 \begin{center}
@@ -533,10 +535,10 @@ in $[-1, 1] \times [-1, 1]$.
 \label{fig:sex_N}}
 \end{figure}
 
-
 For Test Case 2, we then took the catalog produced by \sex~for the $0.5\sigma$
 threshold and fitted a broken power-law model to the list of fluxes in the catalog.
-The results of this inference are shown in Figure~\ref{fig:sex_inference}.
+Such an approach might be used to study the luminosity function of a set of stars
+in a field. The results of this inference are shown in Figure~\ref{fig:sex_inference}.
 The inference spuriously rules out the true values of the parameters. This
 occurs because the uncertainty in the stellar fluxes is not propagated through
 to the inference of the luminosity function.
@@ -546,10 +548,20 @@ to the inference of the luminosity function.
 \includegraphics[width=\textwidth]{Figures/sex_inference.eps}
 \end{center}
 \caption{Inference of the luminosity function parameters using the $0.5\sigma$
-catalog from \sex.\label{fig:sex_inference}}
+catalog from \sex. Note that the inference appears to rule out regions around
+the true input values. This occurs because the uncertainties in the existence
+and fluxes of the faint stars are not taken into account.
+\label{fig:sex_inference}}
 \end{figure}
 
 \section{Discussion and Conclusions}\label{sec:conclusion}
+
+
+We note that there are many limitations to the model presented in this paper.
+One such limitation is that we have not considered multi-epoch or multi-band
+imaging. In the former case, stellar motions may be relevant \citep{lang}, and
+in the latter, variations in the spectral energy distributions of stars will
+need to be considered.
 
 What have we achieved?
 
@@ -799,6 +811,9 @@ Logic of Science, ISBN 0521592712, Cambridge University Press, June 2003.
 
 \bibitem[Kelly et al.(2008)]{2008ApJ...682..874K} Kelly, B.~C., Fan, X.,
 \& Vestergaard, M.\ 2008, ApJ, 682, 874
+
+\bibitem[Lang et al.(2009)]{lang} Lang, D., Hogg, D.~W., 
+Jester, S., \& Rix, H.-W.\ 2009, \aj, 137, 4400 
 
 \bibitem[Lupton et al.(2001)]{photo}
 Lupton,~R., Gunn,~J.~E., Ivezic,~Z., Knapp,~G.~R., Kent,~S.~M., \& Yasuda,~N., 2001, ASPC, 238, 269

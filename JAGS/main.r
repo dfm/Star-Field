@@ -8,7 +8,7 @@ data <- list(F=data)
 m <- jags.model(file = "model.txt", data=data)
 
 # Run JAGS (no burn-in)
-draw <- coda.samples(m, 10000, thin=10, variable.names=c("alpha"))
+draw <- coda.samples(m, 10, thin=1, variable.names=c("alpha"))
 
 # Turn results into matrix
 samples <- as.matrix(draw)

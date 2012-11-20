@@ -555,7 +555,11 @@ and fluxes of the faint stars are not taken into account.
 \end{figure}
 
 \section{Discussion and Conclusions}\label{sec:conclusion}
+%What have we achieved?
 
+In this paper we have developed and demonstrated a fully Bayesian approach to
+making catalogs from astronomical images in the case where the image contains
+only stars (or other point sources).
 
 We note that there are many limitations to the model presented in this paper.
 One such limitation is that we have not considered multi-epoch or multi-band
@@ -563,23 +567,39 @@ imaging. In the former case, stellar motions may be relevant \citep{lang}, and
 in the latter, variations in the spectral energy distributions of stars will
 need to be considered.
 
-What have we achieved?
+In practice, it may also be necessary to improve the model for the prior
+distribution
+of stellar positions and fluxes. One area where this is clearly needed is the
+application of this approach to images of stellar clusters. The model would need
+to be revised to take into account the fact that we expect the stars' positions
+to be clustered together, whereas the current model implies a large prior
+probability for the stars being scattered evenly across the image. In this and
+other applications, the luminosity function would also require multiple
+components, for example consisting of stars that are associated with a cluster
+or a stream and those that are not.
 
-What are the limitations of what we have done?  Limitations include
-PSF knowledge (and simplicity), simple number--flux relationship, no
-astrophysical model.  On the latter, I mean: No model of temperatures,
-masses, distances, reddening and so on.  We also haven't thought about
-multi-epoch, multi-band imaging, where you have to consider the
-motions and variations and spectral energy distributions of stars.  On
-this latter point, we should cite Lang et al (faint motion).  Each of
-these limitations should get its own paragraph, really.
+Throughout this paper, we have also assumed that the pixel-convolved PSF can
+be adequately modeled using simple components and that there are no PSF
+variations across the field. Relaxing this assumption provides a significant
+challenge for the future.
 
-What kinds of new science will this enable?  One example would be IMF
-inference in dense stellar clusters.  Another could be modeling of
-distant galaxies in terms of their stellar components.  Most
-importantly, astrophysics can proceed without taking the hard,
-information-lossy step of fixing a catalog, somewhere between the raw
-data and the science of interest!
+{\bf Needs more words}
+
+%What are the limitations of what we have done?  Limitations include
+%PSF knowledge (and simplicity), simple number--flux relationship, no
+%astrophysical model.  On the latter, I mean: No model of temperatures,
+%masses, distances, reddening and so on.  We also haven't thought about
+%multi-epoch, multi-band imaging, where you have to consider the
+%motions and variations and spectral energy distributions of stars.  On
+%this latter point, we should cite Lang et al (faint motion).  Each of
+%these limitations should get its own paragraph, really.
+
+%What kinds of new science will this enable?  One example would be IMF
+%inference in dense stellar clusters.  Another could be modeling of
+%distant galaxies in terms of their stellar components.  Most
+%importantly, astrophysics can proceed without taking the hard,
+%information-lossy step of fixing a catalog, somewhere between the raw
+%data and the science of interest!
 
 \section{Acknowledgements}
 It is a pleasure to thank

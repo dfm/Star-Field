@@ -364,7 +364,7 @@ prior distribution with more constrained versions of the prior distribution.
 The modified target distribution assists the sampling in several ways.
 Firstly, the target distribution shrinks at a constant rate with time during the
 initial phase of the exploration. This is similar to the popular ``simulated
-annealing'' method but with an optimal annealing schedule. Secondly,
+annealing'' method \citep{annealing, neal} but with an optimal annealing schedule. Secondly,
 communication with the prior is maintained: once a catalog is found that
 fits the data, the catalog can ``disintegrate'' back to the prior distribution
 and re-fit, allowing different peaks in the parameter space to be explored
@@ -848,6 +848,10 @@ Logic of Science, ISBN 0521592712, Cambridge University Press, June 2003.
 \bibitem[Kelly et al.(2008)]{2008ApJ...682..874K} Kelly, B.~C., Fan, X.,
 \& Vestergaard, M.\ 2008, ApJ, 682, 874
 
+\bibitem[Kirkpatrick et al.(1983)]{annealing}
+Kirkpatrick, S., Gelatt, C.~D., Vecchi, M.~P., 1983,
+Optimization by Simulated Annealing, Science 220 (4598): 671–680.
+
 \bibitem[Lang et al.(2009)]{lang} Lang, D., Hogg, D.~W., 
 Jester, S., \& Rix, H.-W.\ 2009, \aj, 137, 4400 
 
@@ -856,6 +860,9 @@ Lupton,~R., Gunn,~J.~E., Ivezic,~Z., Knapp,~G.~R., Kent,~S.~M., \& Yasuda,~N., 2
 
 \bibitem[Mackay(2003)]{mackay} Mackay, D.~J.~C., 2003, Information Theory,
 Inference and Learning Algorithms, Cambridge University Press, UK.
+
+\bibitem[Neal(2001)]{neal} Neal, R.~M., 2001, 
+Annealed importance sampling, Statistics and Computing, vol. 11, pp. 125-139.
 
 \bibitem[\protect\citeauthoryear{Skilling}{1998}]{massinf}
 Skilling J., 1998, Massive Inference and Maximum Entropy, in Maximum Entropy

@@ -15,9 +15,11 @@
 
 \title{Probabilistic Catalogs for Crowded Stellar Fields}
 
-\author{Brendon J. Brewer}
+\author{Brendon J. Brewer\thanks{\texttt{bj.brewer@auckland.ac.nz}}}
 \affil{Department of Statistics, The University of Auckland,
 Private Bag 92019, Auckland 1142, New Zealand}
+
+%\author{}
 
 \author{Daniel Foreman-Mackey}
 \affil{Center for Cosmology and Particle Physics, Department of Physics,
@@ -137,11 +139,13 @@ dimension model, where $N \in \{0, 1, 2, ... \}$ is an unknown quantity to be
 inferred from the data.
 The computational implementation of these models will require tools such as
 reversible jump Markov Chain Monte Carlo \citep{rjmcmc}. Other statistical
-methods such as maximum likelihood have also been used to model crowded fields
-\citep[e.g.][]{irwin}. However, maximum likelihood is not completely appropriate
+methods have also been used to model crowded fields
+\citep[e.g. maximum likelihood][]{irwin}.
+However, maximum likelihood is not completely appropriate in flexible models
 because it may lead to overfitting. In this situation overfitting would result
 in more stars being added to the model to explain small positive fluctuations
-in the image which are actually due to noise.
+in the image which are actually due to noise. Various other techniques have
+also been proposed in the literature \citep[e.g.][]{2002MNRAS.335...73M, 2007A&A...461..373M, 2009PASP..121.1429Z}.
 
 \section{Bayesian Inference}
 To quantitatively model uncertainties and transform noise in observed data
@@ -861,6 +865,12 @@ Lupton,~R., Gunn,~J.~E., Ivezic,~Z., Knapp,~G.~R., Kent,~S.~M., \& Yasuda,~N., 2
 \bibitem[Mackay(2003)]{mackay} Mackay, D.~J.~C., 2003, Information Theory,
 Inference and Learning Algorithms, Cambridge University Press, UK.
 
+\bibitem[Magain et 
+al.(2007)]{2007A&A...461..373M} Magain, P., Courbin, F., Gillon, M., et al.\ 2007, \aap, 461, 373 
+
+\bibitem[Metchev 
+\& Grindlay(2002)]{2002MNRAS.335...73M} Metchev, S.~A., \& Grindlay, J.~E.\ 2002, \mnras, 335, 73 
+
 \bibitem[Neal(2001)]{neal} Neal, R.~M., 2001, 
 Annealed importance sampling, Statistics and Computing, vol. 11, pp. 125-139.
 
@@ -872,6 +882,9 @@ and Bayesian Methods, Kluwer Academic Publishers, Dordrecht/Boston/London p.14
 
 \bibitem[Stetson(1987)]{1987PASP...99..191S} Stetson, P.~B.\ 1987, \pasp,
 99, 191
+
+\bibitem[Zhang et al.(2009)]{2009PASP..121.1429Z} Zhang, Z.-W., Kim, D.-W., 
+Wang, J.-H., et al.\ 2009, \pasp, 121, 1429 
 \end{thebibliography}
 
 \end{document}

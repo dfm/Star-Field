@@ -289,7 +289,7 @@ Gaussians with widths $s_1$ and $s_2$:
 \right].
 \end{eqnarray}
 The pixellated observed image is assumed to be generated from the mock
-image (evaluated at the center of each pixel) plus Gaussian noise:
+image (evaluated at the center of each pixel) plus noise:
 \begin{eqnarray}
 I_{ij} &=& \mathcal{M}(X_{ij}, Y_{ij}) + \epsilon_{ij}
 \end{eqnarray}
@@ -326,7 +326,7 @@ where $h_1$ is a lower flux limit, $h_2$ is a break-point, $\alpha_1$ is
 the slope of the distribution between $h_1$ and $h_2$, and $\alpha_2$ is the
 slope of the distribution above $h_2$. For details on the broken power-law
 model, see Appendix~\ref{power_law}. The prior distribution on $h_1$, $h_2$,
-$\alpha_1$ and $\alpha_2$ is assigned to be:
+$\alpha_1$, and $\alpha_2$ is assigned to be:
 \begin{eqnarray}
 \ln h_1 &\sim& \textnormal{Uniform}(\ln(10^{-3}), \ln(10^3)) \\
 \ln h_2 &\sim& \textnormal{Uniform}(\ln(h_1), \ln(h_1) + 2.3) \\

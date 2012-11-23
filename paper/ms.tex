@@ -308,12 +308,12 @@ image data that is then assumed to be known.
 \subsection{The Prior Distribution}
 The prior distribution for the number of stars $N$ is assigned to be uniform
 between 0 and some maximum number $N_{\rm max}$. The extent of the image is
-assumed to be from $x=x_{\rm min}$ to $x=x_{\rm max}$ and from
-$y=y_{\rm min}$ to $y=y_{\rm max}$ in arbitrary units, and the
+assumed to be from $x=x_{\rm min}$ to $x=x_{\rm max}=x_{\rm min} + x_{\rm range}$ and from
+$y=y_{\rm min}$ to $y=y_{\rm max}=y_{\rm min} + y_{\rm range}$ in arbitrary units, and the
 positions of the stars are assigned independent uniform priors:
 \begin{eqnarray}
-x_i &\sim& \textnormal{Uniform}(1.1 x_{\rm min}, 1.1 x_{\rm max}) \\
-y_i &\sim& \textnormal{Uniform}(1.1 y_{\rm min}, 1.1 y_{\rm max})
+x_i &\sim& \textnormal{Uniform}(x_{\rm min} - 0.05x_{\rm range}, x_{\rm max} + 0.05x_{\rm range}) \\
+y_i &\sim& \textnormal{Uniform}(y_{\rm min} - 0.05y_{\rm range}, y_{\rm max} + 0.05y_{\rm range})
 \end{eqnarray}
 The stars are allowed to be slightly outside of the observed image because the
 PSF can scatter light from these stars into the image. Our model for the

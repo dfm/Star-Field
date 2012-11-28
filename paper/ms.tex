@@ -3,6 +3,7 @@
 \usepackage{natbib}	% For citet and citep
 \usepackage{amsmath}	% for \iint
 \usepackage{bbm}	% for blackboard bold numbers
+\usepackage[breaklinks]{hyperref}
 
 \newcommand{\sex}{{\tt SExtractor}}
 
@@ -33,12 +34,13 @@ New York University, Washington Place, New York, NY, 10003, USA}
 
 \begin{abstract}
 We introduce a probabilistic (Bayesian) method for producing catalogs
-from images of crowded stellar fields. The method is capable of handling the
-challenges introduced by overlapping sources and is able to determine the luminosity
-function of the stars even when the precise luminosity of each star is uncertain.
+from images of crowded stellar fields. The method is capable of inferring the
+number of sources $N$ in the image and can also handle the
+challenges introduced by overlapping sources. The luminosity
+function of the stars can also be inferred even when the precise luminosity of each star is uncertain.
 This is in contrast with standard techniques which produce a single catalog,
 potentially underestimating the uncertainties in any study of the stellar
-population. The method is implemented using advanced Markov Chain Monte Carlo
+population and discarding information about sources at or below the detection limit. The method is implemented using advanced Markov Chain Monte Carlo
 (MCMC) techniques including Reversible Jump and Nested Sampling.
 The computational feasibility of the method is
 demonstrated on simulated data where the luminosity function of the stars is a
@@ -883,8 +885,8 @@ and Bayesian Methods, Kluwer Academic Publishers, Dordrecht/Boston/London p.14
 \bibitem[Stetson(1987)]{1987PASP...99..191S} Stetson, P.~B.\ 1987, \pasp,
 99, 191
 
-\bibitem[Zhang et al.(2009)]{2009PASP..121.1429Z} Zhang, Z.-W., Kim, D.-W., 
-Wang, J.-H., et al.\ 2009, \pasp, 121, 1429 
+\bibitem[Zhang et al.(2009)]{2009PASP..121.1429Z} Zhang, Z.~W., Kim, D.~W., 
+Wang, J.~H., et al.\ 2009, \pasp, 121, 1429 
 \end{thebibliography}
 
 \end{document}

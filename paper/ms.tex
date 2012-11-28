@@ -297,7 +297,7 @@ where the errors $\{\epsilon_{ij}\}$ are independent and normally distributed.
 The variance of each pixel is determined by the brightness of the sky and the
 brightness of the mock image in that pixel:
 \begin{eqnarray}
-\epsilon_{ij} \sim \mathcal{N}(0, \sigma_0^2 + \eta I_{ij}).
+\epsilon_{ij} \sim \mathcal{N}(0, \sigma_0^2 + \eta \mathcal{M}(X_{ij}, Y_{ij})).
 \end{eqnarray}
 where $\sigma_0$ is a constant noise level and $\eta$ is a coefficient allowing
 the noise to be higher in brighter regions of the image.

@@ -46,6 +46,7 @@ void StarFieldModel<HyperType>::fromPrior()
 	for(int i=0; i<numStars; i++)
 		stars.push_back(hyperparameters.generateStar());
 	calculateMockImage();
+	calculateLogLikelihood();
 }
 
 template<class HyperType>
@@ -69,6 +70,7 @@ double StarFieldModel<HyperType>::perturb()
 		logH = perturb4();
 	else if(which == 4)
 		logH = perturb5();
+	calculateLogLikelihood();
 
 	return logH;
 }
@@ -226,9 +228,9 @@ void StarFieldModel<HyperType>::calculateMockImage()
 }
 
 template<class HyperType>
-double StarFieldModel<HyperType>::logLikelihood() const
+void StarFieldModel<HyperType>::calculateLogLikelihood()
 {
-	double logL = 0.;
+	logL = 0.;
 
 	double var;
 	for(int i=0; i<Data::get_instance().get_ni(); i++)
@@ -240,8 +242,6 @@ double StarFieldModel<HyperType>::logLikelihood() const
 				- 0.5*pow(Data::get_instance()(i, j)
 				- mockImage(i, j), 2)/var;
 		}
-
-	return logL;
 }
 
 template<class HyperType>

@@ -44,8 +44,10 @@ class StarFieldModel:public DNest3::Model
 
 		Array mockImage;
 		int staleness;
+		double logL;
 
 		void calculateMockImage();
+		void calculateLogLikelihood();
 		double perturb1();
 		double perturb2();
 		double perturb3();
@@ -62,7 +64,7 @@ class StarFieldModel:public DNest3::Model
 		double perturb();
 
 		// Likelihood function
-		double logLikelihood() const;
+		double logLikelihood() const { return logL; }
 
 		// Print to stream
 		void print(std::ostream& out) const;

@@ -20,15 +20,15 @@ def CDF(flux, params=[0.3, 0.6, 1.1, 2.]):
 _flux = np.linspace(0., 20., 10001)
 _F = CDF(_flux)
 
-catalog = np.loadtxt('break2/stars.3.5.cat')
+catalog = np.loadtxt('crowded/stars.0.5.cat')
 
-flux = np.sort(catalog[:,2]/1E4)
+flux = np.sort(catalog[:,2]*0.0004)
 dm = 1./flux.size
 
 mass = np.linspace(0.5*dm, 1. - 0.5*dm, flux.size)
 
 plt.loglog(flux, (1. - mass)*flux.size, 'b.')
-plt.loglog(_flux, (1. - _F)*82, 'r')
+plt.loglog(_flux, (1. - _F)*820, 'r')
 plt.show()
 
 

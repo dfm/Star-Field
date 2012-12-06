@@ -28,7 +28,7 @@ plt.figure(figsize=(14, 6))
 # Plot true cumulative LF
 for i in xrange(0, 2):
 	plt.subplot(1,2,i+1)
-	plt.loglog(_flux, (1. - _F)*82*10**i, 'k--', label='True')
+	plt.loglog(_flux, (1. - _F)*82*10**i, 'g--', linewidth=2, label='True')
 
 
 # Plot SExtractor empirical cumulative LF
@@ -41,7 +41,8 @@ for i in xrange(0, 2):
 	mass = np.linspace(0.5*dm, 1. - 0.5*dm, flux.size)
 
 	plt.subplot(1,2,i+1)
-	plt.loglog(flux, (1. - mass)*flux.size, 'b*', label='SExtractor')
+	plt.loglog(flux, (1. - mass)*flux.size, 'ks', markersize=8, mfc='none', label='SExtractor')
+	plt.xlim([0.01, 10.])
 
 # Plot DolPhot empirical cumulative LF
 for i in xrange(0, 2):
@@ -53,12 +54,13 @@ for i in xrange(0, 2):
 	mass = np.linspace(0.5*dm, 1. - 0.5*dm, flux.size)
 
 	plt.subplot(1,2,i+1)
-	plt.loglog(flux, (1. - mass)*flux.size, 'r.', label='DOLPHOT')
-	plt.xlabel('Flux', fontsize=15)
-	plt.ylabel('Number Brighter', fontsize=15)
+	plt.loglog(flux, (1. - mass)*flux.size, 'ko', markersize=10, mfc='none', label='DOLPHOT')
+	plt.xlabel('$x$', fontsize=15)
+	plt.ylabel('Number (Flux > $x$)', fontsize=15)
 	plt.title(titles[i], fontsize=16)
-	plt.legend(numpoints=1)
+	plt.legend(numpoints=1, loc='lower left')
+	plt.xlim([0.01, 10.])
 
-
+plt.savefig('luminosity_function.eps', bbox_inches='tight', dpi=600)
 plt.show()
 

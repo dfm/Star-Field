@@ -11,7 +11,7 @@ numHyperparams = 11	# Number of parameters before catalog begins
 			# luminosity function parameters
 
 sample = atleast_2d(loadtxt('posterior_sample.txt'))
-data = loadtxt('SimulatedData/break2.txt')
+data = loadtxt('SimulatedData/100.txt')
 
 params =   sample[:, 0:numHyperparams]
 catalogs = sample[:, numHyperparams:numHyperparams+3*maxNumStars]
@@ -63,8 +63,6 @@ for i in xrange(0, sample.shape[0]):
 	xCatalog = hstack([xCatalog, xStars[i,which]])
 	yCatalog = hstack([yCatalog, yStars[i,which]])
 	fCatalog = hstack([fCatalog, fStars[i,which]])
-
-	print(i+1, ((((data - mock)/5.)**2).sum()/10000. - 1.)/(sqrt(2.)/100.))
 
 	if saveFrames:
 		savefig('Frames/' + '%0.4d'%(i+1) + '.png', bbox_inches='tight')

@@ -237,7 +237,7 @@ void StarFieldModel<HyperType>::calculateLogLikelihood()
 		for(int j=0; j<Data::get_instance().get_nj(); j++)
 		{
 			var = pow(noiseSigma, 2)
-				+ pow(noiseCoeff*mockImage(i, j), 2);
+				+ noiseCoeff*mockImage(i, j);
 			logL += -0.5*log(2*M_PI*var)
 				- 0.5*pow(Data::get_instance()(i, j)
 				- mockImage(i, j), 2)/var;

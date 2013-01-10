@@ -2,8 +2,8 @@ import plot_utils
 import matplotlib.pyplot as pl
 import numpy as np
 
-img1 = np.loadtxt('../../c++_dnest/SimulatedData/break2.txt')
-img2 = np.loadtxt('../../c++_dnest/SimulatedData/crowded.txt')
+img1 = np.loadtxt('../../c++_dnest/SimulatedData/100.txt')
+img2 = np.loadtxt('../../c++_dnest/SimulatedData/1000.txt')
 
 scale = lambda i: (i.max() - i.min()) ** 0.4 - (i - i.min()) ** 0.4
 

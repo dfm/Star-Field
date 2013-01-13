@@ -61,15 +61,15 @@ double StarFieldModel<HyperType>::perturb()
 		which = DNest3::randInt(4);
 
 	if(which == 0)
-		logH = perturb1();
+		logH += perturb1();
 	else if(which == 1)
-		logH = perturb2();
+		logH += perturb2();
 	else if(which == 2)
-		logH = perturb3();
+		logH += perturb3();
 	else if(which == 3)
-		logH = perturb4();
+		logH += perturb4();
 	else if(which == 4)
-		logH = perturb5();
+		logH += perturb5();
 	calculateLogLikelihood();
 
 	return logH;

@@ -3,12 +3,12 @@ import matplotlib.pyplot as pl
 from matplotlib.ticker import MaxNLocator
 import numpy as np
 
-maxNumStars = 1200
-numHyperparams = 6  # Number of parameters before catalog begins
+maxNumStars = 200
+numHyperparams = 11  # Number of parameters before catalog begins
                     # maxNumStars, staleness, hyperparameters
 
-sample = np.atleast_2d(np.loadtxt('posterior_sample.txt'))
-data = np.loadtxt('../../c++_dnest/SimulatedData/crowded.txt')
+sample = np.atleast_2d(np.loadtxt('../../c++_dnest/posterior_sample.txt'))
+data = np.loadtxt('../../c++_dnest/SimulatedData/100.txt')
 
 #sample = sample[::2, :]
 
@@ -17,14 +17,14 @@ fig = pl.figure(figsize=(22, 5))
 ax = fig.add_axes([0.1, 0.1, 0.2, 0.85])
 n, b, p = plot_utils.hist(sample[:, 0], 20)
 ax.set_ylim(0, n.max() * 1.1)
-ax.axvline(1000, color='k', linewidth=2)
+ax.axvline(100, color='k', linewidth=2)
 ax.set_xlabel('Number of Stars ($N$)')
 ax.set_ylabel('Posterior Probability')
 ax.set_yticklabels([])
 ax.xaxis.set_major_locator(MaxNLocator(4))
 
 ax = fig.add_axes([0.35, 0.1, 0.2, 0.85])
-ax.plot(sample[:, 2], sample[:, 3], '.', color="#888888", mec="#888888",
+ax.plot(sample[:, 7], sample[:, 8], '.', color="#888888", mec="#888888",
         markersize=3)
 ax.plot(0.3, 0.6, "rs", markersize=8)
 ax.set_xlabel('$h_1$')
@@ -34,21 +34,22 @@ ax.xaxis.set_major_locator(MaxNLocator(4))
 ax.yaxis.set_major_locator(MaxNLocator(4))
 
 ax = fig.add_axes([0.6, 0.1, 0.2, 0.85])
-ax.plot(sample[:, 4], sample[:, 5], '.', color="#888888", mec="#888888",
+ax.plot(sample[:, 9], sample[:, 10], '.', color="#888888", mec="#888888",
         markersize=3)
 ax.plot(1.1, 2, "rs", markersize=8)
-ax.set_xlabel(r'$\alpha_1$')
-ax.set_ylabel(r'$\alpha_2$')
+ax.set_xlabel('$\\alpha_1$')
+ax.set_ylabel('$\\alpha_2$')
 ax.set_xlim([-0.01, 5.01])
 ax.xaxis.set_major_locator(MaxNLocator(4))
 ax.yaxis.set_major_locator(MaxNLocator(4))
 
 pl.savefig('inference.eps', bbox_inches='tight')
+pl.show()
 
 
-#
+
 # CATALOG SAMPLES.
-#
+
 
 params = sample[:, 0:numHyperparams]
 catalogs = sample[:, numHyperparams:numHyperparams + 3 * maxNumStars]
@@ -97,7 +98,7 @@ for i in range(0, 9):
             / (np.sqrt(2.) / 100.))
 
 pl.savefig('catalogs.eps', bbox_inches='tight')
-
+pl.show()
 
 #
 # SUMMARY IMAGES
@@ -134,7 +135,8 @@ ax.set_xlabel('$x$')
 ax.set_ylabel('$y$')
 
 ax = fig.add_subplot(2, 2, 3)
-ax.imshow(mock_data_mean - data, extent=(-1, 1, -1, 1), cmap='gray',
+var = 10.**2 + 10.*mock_data_mean
+ax.imshow((mock_data_mean - data)/np.sqrt(var), extent=(-1, 1, -1, 1), cmap='gray',
                                                 interpolation="nearest")
 ax.set_title('Residuals')
 ax.axis([-1, 1, -1, 1])
@@ -151,3 +153,5 @@ ax.xaxis.set_major_locator(MaxNLocator(4))
 ax.set_xlabel('Residuals')
 
 pl.savefig('summaries.eps', bbox_inches='tight')
+pl.show()
+

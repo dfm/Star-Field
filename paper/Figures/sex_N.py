@@ -22,7 +22,8 @@ flux = np.linspace(0., 20., 10001)
 F = CDF(flux)
 
 # Directories
-directories = ['break2', 'crowded']
+directories = ['../../sextractor/100', 'crowded']
+counts = [63, 640]
 
 # Catalog filenames
 sigmas = ['0.5', '1.5', '2.5', '3.5', '4.5', '5.5', '6.5']
@@ -46,7 +47,7 @@ for i in xrange(0, 2):
 
     pl.subplot(1, 2, i + 1)
     pl.plot(sigma, N, 'ko-', mfc="#888888", mew=1.5, lw=2)
-    pl.axhline(82 * 10 ** i, color='k', linestyle='--', linewidth=2)
+    pl.axhline(counts[i], color='k', linestyle='--', linewidth=2)
 #    pl.plot(13*flux, 82*10**i*(1. - F), color='r', linewidth=2)
     pl.xlabel(r'Detection Threshold ($\sigma$)')
     pl.ylabel('Number of Stars $N$')
@@ -57,4 +58,5 @@ for i in xrange(0, 2):
     pl.title('Test Case ' + str(i + 1))
 
 pl.savefig('sex_N.eps', bbox_inches='tight')
+pl.show()
 

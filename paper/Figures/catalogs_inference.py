@@ -69,33 +69,29 @@ k = 1
 pl.figure(figsize=(12, 12))
 pl.subplots_adjust(hspace=0.02, wspace=0.02)
 
-for i in range(0, 9):
+for i in range(0, sample.shape[0]):
     mock = images[i, :].reshape(data.shape[0], data.shape[1])
-    ax = pl.subplot(3, 3, k)
-    which = np.nonzero(fStars[i, :] > 0)[0]
+    mock_data_mean += mock / sample.shape[0]
+    if k <= 9:
+        ax = pl.subplot(3, 3, k)
+	which = np.nonzero(fStars[i, :] > 0)[0]
 
-    s = 50 * np.log(1 + fStars[i, which] - fStars[i, which].min())
-    c = [[1 - c0] * 3 for c0 in
-                        np.sqrt(fStars[i, which] / fStars[i, which].max())]
-    pl.scatter(xStars[i, which], yStars[i, which], c=c, s=s)
+	s = 50 * np.log(1 + fStars[i, which] - fStars[i, which].min())
+	c = [[1 - c0] * 3 for c0 in
+	             np.sqrt(fStars[i, which] / fStars[i, which].max())]
+	pl.scatter(xStars[i, which], yStars[i, which], c=c, s=s)
 
-    pl.axis('equal')
-    pl.xlim([-1., 1.])
-    pl.ylim([-1., 1.])
-    ax.set_xticks([])
-    ax.set_yticks([])
-    if k == 2:
-        pl.title('Catalogs')
-    k += 1
-
-    mock_data_mean += mock / 9
-
+	pl.axis('equal')
+	pl.xlim([-1., 1.])
+	pl.ylim([-1., 1.])
+	ax.set_xticks([])
+	ax.set_yticks([])
+	if k == 2:
+	    pl.title('Catalogs')
+	k += 1
     xCatalog = np.hstack([xCatalog, xStars[i, which]])
     yCatalog = np.hstack([yCatalog, yStars[i, which]])
     fCatalog = np.hstack([fCatalog, fStars[i, which]])
-
-    print(i + 1, ((((data - mock) / 30.) ** 2).sum() / 10000. - 1.)
-            / (np.sqrt(2.) / 100.))
 
 pl.savefig('catalogs.eps', bbox_inches='tight')
 pl.show()

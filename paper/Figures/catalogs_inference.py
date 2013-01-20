@@ -39,7 +39,7 @@ ax.plot(sample[:, 9], sample[:, 10], '.', color="#888888", mec="#888888",
 ax.plot(1.1, 2, "rs", markersize=8)
 ax.set_xlabel('$\\alpha_1$')
 ax.set_ylabel('$\\alpha_2$')
-ax.set_xlim([-0.01, 5.01])
+ax.set_xlim([1, 5])
 ax.xaxis.set_major_locator(MaxNLocator(4))
 ax.yaxis.set_major_locator(MaxNLocator(4))
 

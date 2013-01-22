@@ -15,7 +15,7 @@ data = np.loadtxt('../../c++_dnest/SimulatedData/100.txt')
 fig = pl.figure(figsize=(22, 5))
 
 ax = fig.add_axes([0.1, 0.1, 0.2, 0.85])
-n, b, p = plot_utils.hist(sample[:, 0], 20)
+n, b, p = plot_utils.hist(sample[:, 0], 30)
 ax.set_ylim(0, n.max() * 1.1)
 ax.axvline(100, color='k', linewidth=2)
 ax.set_xlabel('Number of Stars ($N$)')

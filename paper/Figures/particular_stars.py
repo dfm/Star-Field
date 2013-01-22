@@ -44,7 +44,7 @@ yy = yc + radius*np.sin(theta)
 plt.plot(xStars, yStars, 'k.')
 plt.plot(xx, yy, 'k', linewidth=1)
 plt.axis('scaled')
-plt.show()
+#plt.show()
 
 # Check number of stars within the circle
 rsq = (xStars - xc)**2 + (yStars - yc)**2
@@ -73,10 +73,24 @@ for i in xrange(0, posterior_sample.shape[0]):
 	posterior_flux[i] = np.sum(fStars[within])
 	print((i, within.sum()))
 
+
+
+# Load SExtractor catalog
+sex_catalog = np.loadtxt('../../sextractor/100/stars.0.5.cat')
+xSex =  sex_catalog[:,4]*0.02 - 1. - 0.01
+ySex = -(sex_catalog[:,5]*0.02 - 1.) + 0.01
+fSex = sex_catalog[:,2]*0.0004
+plt.plot(xSex, ySex, 'bo', alpha=0.5)
+plt.axis('scaled')
+plt.show()
+
+rsq = (xSex - xc)**2 + (ySex - yc)**2
+within = rsq < radius**2
+print(fSex[within].sum())
+
 plt.hist(posterior_flux, 30, alpha=0.5, normed=True)
 plt.axvline(true_flux, color='k', linewidth=2)
 plt.xlabel('Flux', fontsize=16)
 plt.ylabel('Posterior PDF', fontsize=16)
 plt.show()
-
 

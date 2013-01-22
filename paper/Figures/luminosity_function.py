@@ -19,11 +19,12 @@ def CDF(flux, params=[0.3, 0.6, 1.1, 2.]):
 	return F
 
 # Compute CDF
-_flux = np.linspace(0., 20., 10001)
-_F = CDF(_flux)
+_flux = 10.**(np.linspace(-2., 2., 5001))
+F = np.empty(_flux.shape)
 
 names = ['100', '1000']
 titles = ['Test Case 1', 'Test Case 2']
+sex_files = ['3.5']
 counts = [63, 640]
 
 plt.figure(figsize=(14, 6))
@@ -34,22 +35,64 @@ plt.figure(figsize=(14, 6))
 #	plt.loglog(_flux, (1. - _F)*counts[i], 'g-', linewidth=1, label='Smooth')
 
 
-# Plot SExtractor empirical cumulative LF
+
+
+
+
+
+# Plot inference empirical cumulative LF
 for i in xrange(0, 2):
-	catalog = np.loadtxt('../../sextractor/' + names[i] + '/stars.4.5.cat')
+	sample = np.loadtxt('../../Runs/' + names[i] + '/posterior_sample.txt')
 
-	flux = np.sort(catalog[:,2]*0.0004)
-	dm = 1./flux.size
-
-	mass = np.linspace(0.5*dm, 1. - 0.5*dm, flux.size)
+	# Dumb hack because the data had 2000 maxNumStars
+	# but inference was run with 1200
+	if i==0:
+		maxNumStars = 200
+	if i==1:
+		maxNumStars = 1200
 
 	plt.subplot(1,2,i+1)
-	plt.loglog(flux, (1. - mass)*flux.size, 'k*', markersize=5, alpha=0.3, label='SExtractor')
-#	plt.xlim([0.01, 10.])
+	plt.hold(True)
+	theLabel = 'Inference'
+	for k in xrange(0, 20):
+		if k > 0:
+			theLabel = None
+		params =   sample[k, 0:numHyperparams]
+		catalogs = sample[k, numHyperparams:numHyperparams+3*maxNumStars]
+		xStars = catalogs[0:maxNumStars]
+		yStars = catalogs[maxNumStars:2*maxNumStars]
+		fStars = catalogs[2*maxNumStars:]
+		fStars = fStars[np.logical_and(np.abs(xStars) < 1., np.abs(yStars) < 1.)]
+
+		flux = fStars[fStars > 0.]
+		for j in xrange(0, _flux.size):
+			F[j] = np.sum(flux >= _flux[j])
+
+		plt.loglog(_flux, F, 'r', alpha=0.25, label=theLabel)
+
+	plt.xlabel('$x$', fontsize=15)
+	plt.ylabel('Number (Flux > $x$)', fontsize=15)
+	plt.title(titles[i], fontsize=16)
+	plt.legend(numpoints=1, loc='lower left')
+	#plt.xlim([0.01, 10.])
+
 	if i==0:
 		plt.ylim([0.6667, 150.])
 	elif i==1:
 		plt.ylim([0.6667, 1500.])
+
+# Plot SExtractor empirical cumulative LF
+for i in xrange(0, 2):
+	for j in xrange(0, len(sex_files)):
+		catalog = np.loadtxt('../../sextractor/' + names[i] + '/stars.' + sex_files[j] + '.cat')
+
+		flux = catalog[:,2]*0.0004
+		for j in xrange(0, _flux.size):
+			F[j] = np.sum(flux >= _flux[j])
+
+		plt.subplot(1,2,i+1)
+		plt.loglog(_flux, F, 'b--', linewidth=3, label='SExtractor')
+#	plt.xlim([0.01, 10.])
 
 # Plot data empirical cumulative LF
 for i in xrange(0, 2):
@@ -69,14 +112,13 @@ for i in xrange(0, 2):
 	fStars = catalogs[2*maxNumStars:]
 	fStars = fStars[np.logical_and(np.abs(xStars) < 1., np.abs(yStars) < 1.)]
 
-	flux = np.sort(fStars[fStars > 0.])
-	dm = 1./flux.size
-
-	mass = np.linspace(0.5*dm, 1. - 0.5*dm, flux.size)
-	print(flux.size)
+	flux = fStars[fStars > 0.]
+	for j in xrange(0, _flux.size):
+		F[j] = np.sum(flux >= _flux[j])
 
 	plt.subplot(1,2,i+1)
-	plt.loglog(flux, (1. - mass)*flux.size, 'bo', markersize=5, alpha=0.3, label='True')
+	plt.loglog(_flux, F, 'k', linewidth=3, label='True')
+
 	plt.xlabel('$x$', fontsize=15)
 	plt.ylabel('Number (Flux > $x$)', fontsize=15)
 	plt.title(titles[i], fontsize=16)
@@ -85,44 +127,12 @@ for i in xrange(0, 2):
 		plt.ylim([0.6667, 150.])
 	elif i==1:
 		plt.ylim([0.6667, 1500.])
-
-# Plot inference empirical cumulative LF
-for i in xrange(0, 2):
-	sample = np.loadtxt('../../Runs/' + names[i] + '/posterior_sample.txt')
-
-	# Dumb hack because the data had 2000 maxNumStars
-	# but inference was run with 1200
 	if i==0:
-		maxNumStars = 200
-	if i==1:
-		maxNumStars = 1200
-
-	params =   sample[0, 0:numHyperparams]
-	catalogs = sample[0, numHyperparams:numHyperparams+3*maxNumStars]
-	xStars = catalogs[0:maxNumStars]
-	yStars = catalogs[maxNumStars:2*maxNumStars]
-	fStars = catalogs[2*maxNumStars:]
-	fStars = fStars[np.logical_and(np.abs(xStars) < 1., np.abs(yStars) < 1.)]
-
-	flux = np.sort(fStars[fStars > 0.])
-	dm = 1./flux.size
-
-	mass = np.linspace(0.5*dm, 1. - 0.5*dm, flux.size)
-	print(flux.size)
-
-	plt.subplot(1,2,i+1)
-	plt.loglog(flux, (1. - mass)*flux.size, 'ro', markersize=5, alpha=0.3, label='Inference')
-	plt.xlabel('$x$', fontsize=15)
-	plt.ylabel('Number (Flux > $x$)', fontsize=15)
-	plt.title(titles[i], fontsize=16)
-	plt.legend(numpoints=1, loc='lower left')
-	plt.xlim([0.01, 10.])
-
-	if i==0:
-		plt.ylim([0.6667, 150.])
+		plt.xlim([0.1, 3.])
 	elif i==1:
-		plt.ylim([0.6667, 1500.])		
+		plt.xlim([0.1, 25.])	
 
 plt.savefig('luminosity_function.eps', bbox_inches='tight', dpi=600)
+plt.savefig('luminosity_function.png', bbox_inches='tight', dpi=600)
 plt.show()
 

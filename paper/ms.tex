@@ -33,15 +33,22 @@ New York University, Washington Place, New York, NY, 10003, USA}
 New York University, Washington Place, New York, NY, 10003, USA}
 
 \begin{abstract}
-We introduce a probabilistic (Bayesian) method for producing catalogs
-from images of crowded stellar fields. The method is capable of inferring the
+We present a probabilistic (Bayesian) method for producing catalogs
+from images of stellar fields. The method is capable of inferring the
 number of sources $N$ in the image and can also handle the
 challenges introduced by overlapping sources. The luminosity
-function of the stars can also be inferred even when the precise luminosity of each star is uncertain.
-This is in contrast with standard techniques which produce a single catalog,
+function of the stars can also be inferred even when the precise luminosity
+of each star is uncertain. The method is implemented using advanced
+Markov Chain Monte Carlo (MCMC) techniques including Reversible Jump
+and Nested Sampling.
+This is in contrast with standard techniques which typically produce a single catalog,
 potentially underestimating the uncertainties in any study of the stellar
-population and discarding information about sources at or below the detection limit. The method is implemented using advanced Markov Chain Monte Carlo
-(MCMC) techniques including Reversible Jump and Nested Sampling.
+population and discarding information about sources at or below the detection limit.
+While standard approaches are often successful, they are more likely to fail
+when the image contains many overlapping sources.
+
+
+ 
 The computational feasibility of the method is
 demonstrated on simulated data where the luminosity function of the stars is a
 broken power-law. The parameters of the luminosity function can be recovered

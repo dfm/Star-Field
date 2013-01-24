@@ -1,4 +1,4 @@
-#include "Uniform.h"
+#include "Exponential.h"
 #include <Utils.h>
 #include <RandomNumberGenerator.h>
 #include <cmath>
@@ -7,7 +7,7 @@
 using namespace std;
 using namespace DNest3;
 
-Uniform::Uniform()
+Exponential::Exponential()
 :minLogMu(log(1E-3))
 ,maxLogMu(log(1E3))
 ,rangeLogMu(maxLogMu - minLogMu)
@@ -21,12 +21,12 @@ Uniform::Uniform()
 	yMax = Data::get_instance().get_yMax() + 0.1*Data::get_instance().get_yRange();
 }
 
-void Uniform::fromPrior()
+void Exponential::fromPrior()
 {
 	mu = exp(minLogMu + rangeLogMu*randn());
 }
 
-double Uniform::perturbMu()
+double Exponential::perturbMu()
 {
 	double logH = 0.;
 	mu = log(mu);
@@ -36,7 +36,7 @@ double Uniform::perturbMu()
 	return logH;
 }
 
-double Uniform::perturb1(vector<Star>& stars)
+double Exponential::perturb1(vector<Star>& stars)
 {
 	double logH = 0.;
 
@@ -51,7 +51,7 @@ double Uniform::perturb1(vector<Star>& stars)
 	return logH;
 }
 
-double Uniform::perturb2(const vector<Star>& stars)
+double Exponential::perturb2(const vector<Star>& stars)
 {
 	double logH = 0.;
 
@@ -66,12 +66,12 @@ double Uniform::perturb2(const vector<Star>& stars)
 	return logH;
 }
 
-void Uniform::print(ostream& out) const
+void Exponential::print(ostream& out) const
 {
 	out<<mu;
 }
 
-Star Uniform::generateStar() const
+Star Exponential::generateStar() const
 {
 	double x = xMin + (xMax - xMin)*randomU();
 	double y = yMin + (yMax - yMin)*randomU();
@@ -79,7 +79,7 @@ Star Uniform::generateStar() const
 	return Star(x, y, f);
 }
 
-double Uniform::perturbStar1(Star& star, double scale) const
+double Exponential::perturbStar1(Star& star, double scale) const
 {
 	double logH = 0.;
 
@@ -91,7 +91,7 @@ double Uniform::perturbStar1(Star& star, double scale) const
 	return logH;
 }
 
-double Uniform::perturbStar2(Star& star, double scale) const
+double Exponential::perturbStar2(Star& star, double scale) const
 {
 	double logH = 0.;
 
@@ -103,17 +103,17 @@ double Uniform::perturbStar2(Star& star, double scale) const
 	return logH;
 }
 
-double Uniform::fluxCDF(double f) const
+double Exponential::fluxCDF(double f) const
 {
 	return 1. - exp(-f/mu);
 }
 
-double Uniform::fluxInvCDF(double u) const
+double Exponential::fluxInvCDF(double u) const
 {
 	return -mu*log(1. - u);
 }
 
-double Uniform::fluxLogPDF(double f) const
+double Exponential::fluxLogPDF(double f) const
 {
 	if(f < 0.)
 		return -1E300;

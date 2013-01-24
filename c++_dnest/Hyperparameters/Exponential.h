@@ -1,5 +1,5 @@
-#ifndef _Uniform_
-#define _Uniform_
+#ifndef _Exponential_
+#define _Exponential_
 
 #include "../Hyperparameters.h"
 #include <ostream>
@@ -7,7 +7,7 @@
 /*
 * Stars can be anywhere, but their fluxes are tied together
 */
-class Uniform:public Hyperparameters
+class Exponential:public Hyperparameters
 {
 	private:
 		double minLogMu, maxLogMu, rangeLogMu;
@@ -24,7 +24,7 @@ class Uniform:public Hyperparameters
 		double fluxLogPDF(double f) const;
 
 	public:
-		Uniform();
+		Exponential();
 
 		// Generate hyperparameters from the prior
 		void fromPrior();

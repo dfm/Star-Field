@@ -1,4 +1,4 @@
-COVER LETTER
+Cover Letter
 ============
 
 Dear Dr. Gallagher,
@@ -18,8 +18,20 @@ Regards,
 Brewer, Foreman-Mackey, Hogg
 
 
+Itemized Responses
+==================
 
-ORIGINAL REFEREE REPORT EMAIL APPEARS BELOW
+"Abstract seems to be overselling the case in multiple instances; for example, "introduce" may be too strong given Stetson's work on DAOPHOT; SExtractor "significantly underestimates" and "incorrect inferences"? What do "significant" and "incorrect" mean here - something of practical importance that astronomers should be scared of? The results presented in the paper didn't convince me."
+
+- We have changed "introduce" to "present". Related approaches definitely exist.
+- We were referring to the fact that SExtractor couldn't find all the stars.
+This would be of practical importance in some instances but not others.
+- 
+
+
+
+
+Original Referee Report Email Appears Below
 ===========================================
 
 2013-1-7

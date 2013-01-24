@@ -532,13 +532,13 @@ tool \sex. To achieve this, we executed \sex~on the two test images, for various
 values of the detection threshold. This results in a set of catalogs
 for each image, with more conservative thresholds resulting in less stars detected
 as compared to more aggressive thresholds. The results for the number of stars in
-the images are shown in Figure~\ref{fig:sex_N}. The main result is that
+the images are shown in Figure~\ref{fig:luminosity_function}. The main result is that
 \sex~significantly underestimates the number of stars in the image for all
 possible values of the detection threshold.
 
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics[width=\textwidth]{Figures/sex_N.eps}
+\includegraphics[width=\textwidth]{Figures/luminosity_function.eps}
 \end{center}
 \caption{The number of stars in the catalogs produced by \sex~compared with the
 actual number of stars in the images. \sex~finds only a small fraction of the
@@ -549,7 +549,7 @@ numbers
 of stars shown in these plots are $\sim$82\% of the values listed in
 Figure~\ref{tab:truth} because here we only count those stars with positions
 in $[-1, 1] \times [-1, 1]$.
-\label{fig:sex_N}}
+\label{fig:luminosity_function}}
 \end{figure}
 
 For Test Case 2, we then took the catalog produced by \sex~for the $0.5\sigma$

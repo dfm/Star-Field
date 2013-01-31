@@ -38,24 +38,10 @@ from images of stellar fields. The method is capable of inferring the
 number of sources $N$ in the image and can also handle the
 challenges introduced by overlapping sources. The luminosity
 function of the stars can also be inferred even when the precise luminosity
-of each star is uncertain. The method is implemented using advanced
-Markov Chain Monte Carlo (MCMC) techniques including Reversible Jump
-and Nested Sampling.
-This is in contrast with standard techniques which typically produce a single catalog,
-potentially underestimating the uncertainties in any study of the stellar
-population and discarding information about sources at or below the detection limit.
-While standard approaches are often successful, they are more likely to fail
-when the image contains many overlapping sources.
-
-
- 
-The computational feasibility of the method is
+of each star is uncertain. The computational feasibility of the method is
 demonstrated on simulated data where the luminosity function of the stars is a
-broken power-law. The parameters of the luminosity function can be recovered
-with moderate uncertainties. We compare the results obtained from our method
-with those obtained from the \sex~software and find that the latter significantly
-underestimates the number of stars in the image and leads to incorrect
-inferences about the luminosity function of the stars.
+broken power-law. We compare the results obtained from our method
+with those obtained from the \sex~software and find that the latter ...
 \end{abstract}
 
 \keywords{catalogs --- methods: data analysis --- methods: statistical ---
@@ -88,25 +74,24 @@ telescope-generated records of the intensity field and deliver it to
 the quantities of astronomical interest with as little loss as
 possible.  Insertion of a catalog-generation step in the inference
 pipeline between the raw imaging and the final astrophysical analyses
-is typically very lossy; the hard decisions of catalog making destroy
-information.  Probability theory suggests that it will be much less
+is potentially very lossy; the hard decisions of catalog making destroy
+information.  Probability theory suggests that it may be less
 lossy to pass forward not a catalog but a probabilisitic
 description of all the catalogs that could be consistent with the
 imaging---a posterior probability in (enormously large) catalog space.
 This article represents an attempt at this ambitous goal in the specific
-situation where the only objects in the field are stars.
+situation where the only objects in the field are stars or other point sources.
 
 Beyond these extremely general concerns, there are practical issues:
 Standard methods for constructing catalogs can have difficulty in some
 challenging situations. For example, when multiple sources overlap partially
 or completely, it can be difficult to determine how many sources are present,
-and how much flux belongs to each source. In principle, uncertainty should be
-taken into account. Instead of simply {\it estimating} the position and flux of
-each object in the image, we should fully describe the fact that sometimes we
-are not certain of the position and flux of each source. This uncertainty
-should then be propagated into any inferences about the stellar population.
+and how much flux belongs to each source. In principle, the uncertainty about
+the existence and properties of the stars can be significant and should be
+propagated into any inferences about the stellar population.
 
-Essentially, the creation of a catalog is an attempt to answer the question,
+Essentially, the creation of a catalog is an
+attempt to answer the question,
 ``Given the image we have obtained, what objects are present in the field and
 what are their properties?'' This motivates a probabilistic (Bayesian)
 approach to making catalogs. The output of such an approach would not be a
@@ -156,7 +141,15 @@ in more stars being added to the model to explain small positive fluctuations
 in the image which are actually due to noise. Various other techniques have
 also been proposed in the literature \citep[e.g.][]{2002MNRAS.335...73M, 2007A&A...461..373M, 2009PASP..121.1429Z}.
 
-\section{Bayesian Inference}
+The remainder of this paper is structured as follows. In Section~\ref{sec:bayes}
+we give a brief overview of Bayesian inference. In Section~\ref{sec:model} we
+discuss the model assumptions we make in our method. In Section~\ref{sec:mcmc}
+we briefly discuss our
+MCMC implementation. Section~\ref{sec:simulated_data} describes the tests we
+carried out on simulated data, and a comparison with \sex~results is presented
+in Section~\ref{sec:sex}. We conclude in Section~\ref{sec:conclusion}.
+
+\section{Bayesian Inference}\label{sec:bayes}
 To quantitatively model uncertainties and transform noise in observed data
 into uncertainties in parameters of interest, Bayesian Inference is the appropriate
 framework \citep{cox, jaynes, caticha, mackay}. Suppose there exist unknown parameters
@@ -180,9 +173,10 @@ distribution for each possible value
 of $\theta$. Note that the choice of
 the sampling distribution is also an assumption about prior knowledge:
 It models prior information about the fact that the data $x$ is connected to
-the parameters $\theta$ in some way. Without this prior knowledge, learning is
-impossible: there has to be some relationship between the parameters and the
-data, otherwise new data tells you about nothing but itself.
+the parameters $\theta$ in some way \citep{caticha}. Without this prior
+knowledge, learning is impossible: there has to be some relationship between
+the parameters and the data, otherwise new data tells you about nothing but
+itself.
 
 When specific data $x^*$ have been obtained, our state of knowledge about $\theta$
 gets updated from the prior distribution to the posterior distribution
@@ -202,14 +196,11 @@ As suggested by the above notation, the likelihood function is obtained from the
 sampling distribution with the actual data substituted in and is therefore
 a function of the parameters only.
 
-To proceed with the model for inferring catalogs (stellar positions and fluxes)
+To proceed with the model for inferring catalogs
 from image data, we must
 specify a definite hypothesis space and choices for the prior distribution
 and the sampling distribution. These choices are presented and discussed in
-Section~\ref{sec:model}. In Section~\ref{sec:mcmc} we briefly discuss our
-MCMC implementation. Section~\ref{sec:simulated_data} describes the tests we
-carried out on simulated data, and a comparison with \sex~results is presented
-in Section~\ref{sec:sex}. We conclude in Section~\ref{sec:conclusion}.
+Section~\ref{sec:model}.
 %Throughout this paper we make a number of simplifications
 %for the purposes of testing the computational feasibility and performance of
 %the method. In real applications, some of these assumptions (such as known PSF
@@ -247,7 +238,8 @@ Finally, the fluxes of the stars come independently from
 a common distribution. If we knew the luminosity
 function of the stars, then the location and flux of a particular star would
 not tell us anything about the location and flux of another star. Really, this
-is just a way of implementing exchangeability of the stars.
+is just a way of implementing exchangeability of the stars, and is often
+called a {\it hierarchical model}.
 
 For simplicity, we assume a uniform prior probability distribution for the
 position of each star. This creates a strong preference for catalogs where
@@ -309,7 +301,10 @@ brightness of the mock image in that pixel:
 \epsilon_{ij} \sim \mathcal{N}(0, \sigma_0^2 + \eta \mathcal{M}(X_{ij}, Y_{ij})).
 \end{eqnarray}
 where $\sigma_0$ is a constant noise level and $\eta$ is a coefficient allowing
-the noise to be higher in brighter regions of the image.
+the noise to be higher in brighter regions of the image. This dependence of the
+noise variances on the model intensity arises as a result of the Poissonian
+nature of photon counts, but allows for the fact that a ``sky'' background may
+have already been subtracted from the image.
 This parameterisation has been used by \citet{2011MNRAS.412.2521B} and is an
 alternative to the common practice of producing a ``variance map'' from the
 image data that is then assumed to be known.
@@ -479,8 +474,10 @@ samples from the posterior distribution can be obtained in about a day on a
 modern PC. However, this problem does not have a first-order phase transition
 like Test Case 1. Therefore, it is tractable to run standard Metropolis-Hastings
 MCMC targeting the posterior distribution. In fact, this can be more efficient
-because the degree of compression from the prior distribution to the posterior
-distribution is very large ($\sim e^{3000}$) in this case.
+because the efficiency of Nested Sampling methods is sensitive to the ``information'',
+or the amount of prior mass occupied by the posterior distribution. In this case,
+because of the large number of parameters, the information is very large, about
+3000 nats.
 
 \begin{figure}[ht!]
 \begin{center}

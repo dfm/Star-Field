@@ -86,11 +86,13 @@ plt.show()
 
 rsq = (xSex - xc)**2 + (ySex - yc)**2
 within = rsq < radius**2
-print(fSex[within].sum())
+sex_flux = fSex[within].sum()
 
 plt.hist(posterior_flux, 30, alpha=0.5, normed=True)
-plt.axvline(true_flux, color='k', linewidth=2)
+plt.axvline(true_flux, color='k', linewidth=2, label='Inference')
+plt.axvline(sex_flux, color='r', linewidth=2, label='SExtractor')
 plt.xlabel('Flux', fontsize=16)
 plt.ylabel('Posterior PDF', fontsize=16)
+plt.legend()
 plt.show()
 

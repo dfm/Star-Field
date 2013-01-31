@@ -25,12 +25,16 @@ Itemized Responses
 
 - We have changed "introduce" to "present". Related approaches definitely exist.
 
- SExtractor "significantly underestimates" and "incorrect inferences"? What do "significant" and "incorrect" mean here - something of practical importance that astronomers should be scared of? The results presented in the paper didn't convince me."
+"SExtractor "significantly underestimates" and "incorrect inferences"? What do "significant" and "incorrect" mean here - something of practical importance that astronomers should be scared of? The results presented in the paper didn't convince me."
 
 - We were referring to the fact that SExtractor couldn't find all the stars.
-This would be of practical importance in some instances but not others.
+This would be of practical importance in some instances but not others, it depends on whether finding all the stars or quantifying the faint stars is important.
+The abstract has (**NOT YET**) been clarified to be more specific and realistic about the differences between the methods.
 
-- 
+
+"The analysis of test cases is very superficial and the reader is left wondering about the actual performance. For example, what is the difference in photometric ans astrometric precision between the new method and SExtractor on an *object-by-object* basis? Surely at the bright end objects must be identical! What is completeness and contamination as a function of brightness? I return to this point below - something *must be wrong* with Fig. 6 and corresponding discussion. The bottom line is that currently Sections 5 and 6 are insufficient to assess the performance of this method, both in absolute sense and relative to SExtractor's performance. The unbelievable claims about SExtractor are not substantiated."
+
+- The idea of comparing precision on an object-by-object basis is a very good one. (**I'm working on it**).
 
 
 

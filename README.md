@@ -1,41 +1,44 @@
 # Copyright
 
-This repository is (c) 2012 Daniel Foreman-Mackey, David W. Hogg and Brendon
-J. Brewer. All rights reserved.
+This repository is (c) 2012, 2013 Brendon
+J. Brewer, Daniel Foreman-Mackey, David W. Hogg. All rights reserved.
 
-# Synthetic Star Field Generator
+Probabilistic Catalogs for Stellar Fields
+-----
 
-Generate some sweet fake crowded stellar fields for fun & profit.
+<!--# Synthetic Star Field Generator-->
 
-## Example
+<!--Generate some sweet fake crowded stellar fields for fun & profit.-->
 
-Run this...
+<!--## Example-->
 
-```python
-from starfield import PSF, StarField
-import matplotlib.pyplot as pl
+<!--Run this...-->
 
-psf = PSF([1.0, 0.6], [1.0, 4.0])
+<!--```python-->
+<!--from starfield import PSF, StarField-->
+<!--import matplotlib.pyplot as pl-->
 
-sf = StarField(psf, 200, 200)
-sf.generate_bg_stars(100)
-sf.generate_gaussian_stars(50, 95, 83.5, [[8.**2, 0], [0, 8.**2]])
-img = sf.image()
+<!--psf = PSF([1.0, 0.6], [1.0, 4.0])-->
 
-fig = pl.figure(figsize=(8,8))
-ax = fig.add_subplot(111, aspect="equal")
-ax.pcolor(-img, cmap="gray")
-pl.savefig("example.png")
-```
+<!--sf = StarField(psf, 200, 200)-->
+<!--sf.generate_bg_stars(100)-->
+<!--sf.generate_gaussian_stars(50, 95, 83.5, [[8.**2, 0], [0, 8.**2]])-->
+<!--img = sf.image()-->
 
-...to get this...
+<!--fig = pl.figure(figsize=(8,8))-->
+<!--ax = fig.add_subplot(111, aspect="equal")-->
+<!--ax.pcolor(-img, cmap="gray")-->
+<!--pl.savefig("example.png")-->
+<!--```-->
 
-!["Just some stars"](https://github.com/dfm/Star-Field/raw/master/example.png)
+<!--...to get this...-->
 
-...and you can save it to a file...
+<!--!["Just some stars"](https://github.com/dfm/Star-Field/raw/master/example.png)-->
 
-```python
-sf.save("starfield.h5")
-sf.save("starfield.fits")
-```
+<!--...and you can save it to a file...-->
+
+<!--```python-->
+<!--sf.save("starfield.h5")-->
+<!--sf.save("starfield.fits")-->
+<!--```-->
 

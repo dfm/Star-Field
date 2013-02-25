@@ -51,6 +51,8 @@ STARNNW_NAME     default.nnw    # Neural-Network_Weight table filename
  
 BACK_SIZE        64             # Background mesh: <size> or <width>,<height>
 BACK_FILTERSIZE  3              # Background filter: <size> or <width>,<height>
+BACK_TYPE        MANUAL
+BACK_VALUE       0.0,0.0
  
 BACKPHOTO_TYPE   GLOBAL         # can be GLOBAL or LOCAL
  

@@ -24,7 +24,7 @@ F = np.empty(_flux.shape)
 
 names = ['100', '1000']
 titles = ['Test Case 1', 'Test Case 2']
-sex_files = ['3.5']
+sex_files = ['1.5', '2.5', '3.5', '4.5']
 counts = [63, 640]
 
 plt.figure(figsize=(14, 6))
@@ -84,14 +84,19 @@ for i in xrange(0, 2):
 # Plot SExtractor empirical cumulative LF
 for i in xrange(0, 2):
 	for j in xrange(0, len(sex_files)):
+		if j > 0:
+			theLabel = None
+		else:
+			theLabel = 'SExtractor'
+
 		catalog = np.loadtxt('../../sextractor/' + names[i] + '/stars.' + sex_files[j] + '.cat')
 
-		flux = catalog[:,2]*0.0004
+		flux = catalog[:,1]*0.0004/0.69666
 		for j in xrange(0, _flux.size):
 			F[j] = np.sum(flux >= _flux[j])
 
 		plt.subplot(1,2,i+1)
-		plt.loglog(_flux, F, 'b--', linewidth=3, label='SExtractor')
+		plt.loglog(_flux, F, 'b--', linewidth=1, label=theLabel)
 #	plt.xlim([0.01, 10.])
 
 # Plot data empirical cumulative LF

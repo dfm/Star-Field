@@ -76,10 +76,10 @@ for i in xrange(0, posterior_sample.shape[0]):
 
 
 # Load SExtractor catalog
-sex_catalog = np.loadtxt('../../sextractor/100/stars.0.5.cat')
-xSex =  sex_catalog[:,4]*0.02 - 1. - 0.01
-ySex = -(sex_catalog[:,5]*0.02 - 1.) + 0.01
-fSex = sex_catalog[:,2]*0.0004
+sex_catalog = np.loadtxt('../../sextractor/100/stars.2.5.cat')
+xSex =  sex_catalog[:,5]*0.02 - 1. - 0.01
+ySex = -(sex_catalog[:,6]*0.02 - 1.) + 0.01
+fSex = sex_catalog[:,1]*0.0004/0.69666
 plt.plot(xSex, ySex, 'bo', alpha=0.5)
 plt.axis('scaled')
 plt.show()

@@ -31,3 +31,17 @@ void Array::set(double value)
 			pixels[i][j] = value;
 }
 
+void Array::increment(double value)
+{
+	for(int i=0; i<ni; i++)
+		for(int j=0; j<nj; j++)
+			pixels[i][j] += value;
+}
+
+void Array::decrement(double value)
+{
+	for(int i=0; i<ni; i++)
+		for(int j=0; j<nj; j++)
+			pixels[i][j] -= value;
+}
+

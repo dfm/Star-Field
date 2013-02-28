@@ -18,6 +18,8 @@ class Array
 
 		// Set all pixels to given value
 		void set(double value);
+		void increment(double value);
+		void decrement(double value);
 
 		// Const and non-const getter
 		double operator() (int i, int j) const { return pixels[i][j]; }

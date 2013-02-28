@@ -4,7 +4,7 @@ from matplotlib.ticker import MaxNLocator
 import numpy as np
 
 maxNumStars = 200
-numHyperparams = 11  # Number of parameters before catalog begins
+numHyperparams = 12  # Number of parameters before catalog begins
                     # maxNumStars, staleness, hyperparameters
 
 sample = np.atleast_2d(np.loadtxt('../../c++_dnest/posterior_sample.txt'))
@@ -24,7 +24,7 @@ ax.set_yticklabels([])
 ax.xaxis.set_major_locator(MaxNLocator(4))
 
 ax = fig.add_axes([0.35, 0.1, 0.2, 0.85])
-ax.plot(sample[:, 7], sample[:, 8], '.', color="#888888", mec="#888888",
+ax.plot(sample[:, 8], sample[:, 9], '.', color="#888888", mec="#888888",
         markersize=3)
 ax.plot(0.3, 0.6, "rs", markersize=8)
 ax.set_xlabel('$h_1$')

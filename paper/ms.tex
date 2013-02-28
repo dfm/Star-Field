@@ -43,7 +43,8 @@ The computational feasibility of the method is
 demonstrated on two simulated images with different numbers of stars.
 We find that our method
 successfully recovers the input parameter values along with principled
-uncertainties. We also compare our results with those obtained from the
+uncertainties even when the field is crowded.
+We also compare our results with those obtained from the
 \sex~software and find that the latter underestimates the number of stars in the
 crowded case and ...
 \end{abstract}
@@ -78,35 +79,32 @@ telescope-generated records of the intensity field and deliver it to
 the quantities of astronomical interest with as little loss as
 possible.  Insertion of a catalog-generation step in the inference
 pipeline between the raw imaging and the final astrophysical analyses
-is potentially very lossy; the hard decisions of catalog making destroy
+is potentially lossy; the hard decisions of catalog making destroy
 information.  Probability theory suggests that it may be less
 lossy to pass forward not a catalog but a probabilisitic
 description of all the catalogs that could be consistent with the
-imaging---a posterior probability in (enormously large) catalog space.
+imaging---a posterior probability in (enormously large) space of possible catalogs.
+Essentially, the creation of a catalog is an
+attempt to answer the question,
+``Given the image we have obtained, what objects are present in the field and
+what are their properties?''.
 This article represents an attempt at this ambitous goal in the specific
 situation where the only objects in the field are stars or other point sources.
 
-Beyond these extremely general concerns, there are practical issues:
+Beyond these philosophical concerns, there are practical issues:
 Standard methods for constructing catalogs can have difficulty in some
 challenging situations. For example, when multiple sources overlap partially
 or completely, it can be difficult to determine how many sources are present,
 and how much flux belongs to each source. In principle, the uncertainty about
 the existence and properties of the stars can be significant and should be
-propagated into any inferences about the stellar population.
+propagated into any inferences about the stellar population. A Bayesian approach
+that obtains the posterior distribution over catalog space (rather than a single
+catalog estimate) has the potential to overcome these problems by deblending
+objects when it is possible, and clearly indicating the uncertainty remaining
+when it is not possible.
 
-Essentially, the creation of a catalog is an
-attempt to answer the question,
-``Given the image we have obtained, what objects are present in the field and
-what are their properties?'' This motivates a probabilistic (Bayesian)
-approach to making catalogs. The output of such an approach would not be a
-single answer to this question (i.e. a single ``point estimate'' catalog), but
-rather a posterior probability distribution over the space of possible catalogs.
-Numerically, Bayesian Inference is often implemented using Markov Chain Monte
-Carlo (MCMC) algorithms in order to generate random samples from the posterior
-distribution.
-
-Sampling a posterior probability distribution for catalogs is likely to be
-challenging for a number of reasons. Firstly, the number $N$ of objects in the
+Sampling a posterior probability distribution for catalogs is a challenging
+numerical task for a number of reasons. Firstly, the number $N$ of objects in the
 image (and that should therefore be listed in the catalog) is itself unknown.
 Secondly, if $N$ is large, then the parameter space
 of positions and properties (flux, size, etc) of the objects is also large.
@@ -134,7 +132,7 @@ results would have been if an unknown-$N$ model had been used. However,
 this will not work well in situations where there is significant confusion
 (i.e. two or more sources overlap). What is really required is a variable
 dimension model, where $N \in \{0, 1, 2, ... \}$ is an unknown quantity to be
-inferred from the data.
+inferred from the data \citep[e.g.][]{2003MNRAS.338..765H}.
 The computational implementation of these models will require tools such as
 reversible jump Markov Chain Monte Carlo \citep{rjmcmc}. Other statistical
 methods have also been used to model crowded fields
@@ -179,10 +177,10 @@ the sampling distribution is also an assumption about prior knowledge:
 It models prior information about the fact that the data $x$ is connected to
 the parameters $\theta$ in some way \citep{caticha}. Without this prior
 knowledge, learning is impossible: there has to be some relationship between
-the parameters and the data, otherwise new data tells you about nothing but
-itself.
+the parameters and the data, otherwise it would be impossible to learn about
+parameters by obtaining data.
 
-When specific data $x^*$ have been obtained, our state of knowledge about $\theta$
+When specific data $x^*$ are taken into account, our state of knowledge about $\theta$
 gets updated from the prior distribution to the posterior distribution
 via Bayes' rule:
 \begin{eqnarray}
@@ -193,7 +191,7 @@ The term $p(x|\theta)|_{x=x^*} = \mathcal{L}(\theta; x)$
 is the {\it likelihood function}, which is the
 probability of obtaining the actual data set $x^*$ as a function of the
 parameters. In the case that the sampling distribution is a probability
-density, the likelihood is the probability density function evaluated at the observed
+density function, the likelihood is the probability density function evaluated at the observed
 data. This usually causes no problems, although one should be aware of the
 Borel-Kolmogorov paradox \citep{jaynes}.
 As suggested by the above notation, the likelihood function is obtained from the
@@ -247,7 +245,7 @@ called a {\it hierarchical model}.
 
 For simplicity, we assume a uniform prior probability distribution for the
 position of each star. This creates a strong preference for catalogs where
-the stars are uniformly distributed across the image. Thus, this model is
+the stars are uniformly scattered across the image. Thus, this model is
 appropriate for small patches of sky where the density of stars is approximately
 uniform. In other scenarios, such as images of stellar clusters, it is possible
 to parameterize the spatial distribution of the stars in a similar way to how
@@ -279,11 +277,16 @@ is given by:
 \begin{eqnarray}
 \mathcal{M}(x, y) &=& \sum_{i=1}^N f_i \mathcal{P}(x - x_i, y - y_i)
 \end{eqnarray}
-where $\mathcal{P}$ is the pixel-convolved point spread function (PSF).
+where $\mathcal{P}$ is the pixel-convolved point spread function (PSF). The use
+of a pixel-convolved PSF is computationally advantageous because the PSF need
+only be evaluated at the center of each pixel, rather than integrated over each
+pixel.
+
 Throughout this paper we will
 assume the pixel-convolved PSF is a weighted mixture of two concentric
 circular
-Gaussians with widths $s_1$ and $s_2$:
+Gaussians (this model is also used by \citet{1987PASP...99..191S}) with widths
+$s_1$ and $s_2$:
 \begin{eqnarray}
 \mathcal{P}(x, y) = \frac{w}{2\pi s_1^2}\exp
 \left[
@@ -324,7 +327,9 @@ x_i &\sim& \textnormal{Uniform}(x_{\rm min} - 0.1x_{\rm range}, x_{\rm max} + 0.
 y_i &\sim& \textnormal{Uniform}(y_{\rm min} - 0.1y_{\rm range}, y_{\rm max} + 0.1y_{\rm range})
 \end{eqnarray}
 The stars are allowed to be slightly outside of the observed image because the
-PSF can scatter light from these stars into the image. Our model for the
+PSF can scatter light from these stars into the image.
+
+For the purposes of this paper, we model the luminosity function as a
 luminosity function is a broken power-law with four
 free parameters:
 \begin{eqnarray}
@@ -332,8 +337,12 @@ free parameters:
 \end{eqnarray}
 where $h_1$ is a lower flux limit, $h_2$ is a break-point, $\alpha_1$ is
 the slope of the distribution between $h_1$ and $h_2$, and $\alpha_2$ is the
-slope of the distribution above $h_2$. For details on the broken power-law
-model, see Appendix~\ref{power_law}. The prior distribution on $h_1$, $h_2$,
+slope of the distribution above $h_2$. For mathematical details on the broken power-law
+model, see Appendix~\ref{power_law}. While the broken power-law is likely to be
+unrealistic in many cases, it is a reasonably flexible distribution and this is
+sufficient for demonstrating the properties of out method.
+
+The prior distribution on $h_1$, $h_2$,
 $\alpha_1$, and $\alpha_2$ is assigned to be:
 \begin{eqnarray}
 \ln h_1 &\sim& \textnormal{Uniform}(\ln(10^{-3}), \ln(10^3)) \\
@@ -353,7 +362,7 @@ levels. In principle, this can be resolved by using a more flexible distribution
 \citep[e.g.][]{2008ApJ...682..874K} where each star's measured brightness
 affects the inference of the luminosity function locally but not globally.
 
-The priors for the PSF parameters and the noise parameters were:
+The priors for the PSF parameters and the noise parameters were assigned to be:
 \begin{eqnarray}
 \ln s_1 &\sim& \textnormal{Uniform}(\ln(0.3L), \ln(30L)) \\
 \ln s_2 &\sim& \textnormal{Uniform}(\ln(s_1), \ln(s_1) + 2.3) \\
@@ -361,7 +370,11 @@ w &\sim& \textnormal{Uniform}(0, 1)\\
 \ln \sigma_0 &\sim& \textnormal{Uniform}(\ln(10^{-3}), \ln(10^{3})) \\
 \ln \eta &\sim& \textnormal{Uniform}(\ln(10^{-3}), \ln(10^{3}))
 \end{eqnarray}
-where $L = (x_{\rm max} - x_{\rm min})/n$ is the width of a pixel.
+where $L = (x_{\rm max} - x_{\rm min})/n$ is the width of a pixel. These priors
+describe vague prior knowledge about the overall scale of the PSF except that the
+wider component is less than 10 times as wide as the narrow component, as well
+as the knowledge that the noise variance is not extreme relative to the fluxes
+of the stars.
 
 \section{MCMC Implementation}\label{sec:mcmc}
 The MCMC sampling was implemented using the Diffusive Nested Sampling
@@ -387,7 +400,8 @@ targeting the posterior distribution.
 \section{Simulated Data}\label{sec:simulated_data}
 In order to test our approach, we applied the method to two illustrative
 simulated images generated from
-the above model. The purpose of this experiment was to test the computational
+the above model (Figure~\ref{fig:simulated_data}). The purpose of this
+experiment was to test the computational
 feasibility of the model, as well as to compare the inferences from the model
 with those from more standard techniques.
 
@@ -398,13 +412,11 @@ respectively. Figure~\ref{fig:powerlaw} in Appendix~\ref{power_law} also shows t
 used for the simulated images. Each of the images
 is $100 \times 100$ pixels in extent and covers a range from $-1$ to $1$ in
 arbitrary units for both the $x$ and $y$ axes. The first image contains
-100 stars (including stars just outside of the image; there are 63 stars actually
-centered within the image) and the second
-image contains $\sim$1000 stars (699 of which are centered within the image).
-The two simulated images themselves
-are shown in Figure~\ref{fig:simulated_data}.
+100 stars (including stars just outside of the image; there are 63 stars whose central
+positions lie within the image) and the second
+image contains $\sim$1000 stars (699 of which are positioned within the image).
 
-\begin{table}\footnotesize
+\begin{table}[ht!]\footnotesize
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
@@ -424,9 +436,9 @@ $w$ & 0.5 & 0.5\\
 \hline
 \end{tabular}
 \end{center}
-\caption{True parameter values used to generate the simulated data. The main
-difference between the two test cases is the number of stars and the noise
-level, both of which are higher in test case 2.
+\caption{True parameter values used to generate the simulated data. The only
+difference between the two images is that Test Case 2 contains more stars than
+Test Case 1.
 \label{tab:truth}}
 \end{table}
 
@@ -449,9 +461,7 @@ input values. Note that the uncertainty in $h_2$, $\alpha_1$, and $\alpha_2$ is
 quite large. This is because the broken power-law model
 (Figure~\ref{fig:powerlaw}) does not change drastically in shape as the
 parameters are varied. Therefore, a large number of stars would be required to
-tightly constrain the parameters. A Nested Sampling approach assists on
-this problem because of the presence of a first-order phase transition
-\citep{skilling}.
+tightly constrain these parameters.
 
 \begin{figure}[ht!]
 \begin{center}
@@ -470,18 +480,13 @@ were also inferred accurately with small uncertainties.
 \subsection{Test Case 2}
 Test Case 2 is more challenging than Test Case 1 because the image contains
 more stars. This increases the size of the computational task in a number of
-ways: firstly, there will be more unknown parameters to infer, so the
-convergence of the MCMC algorithm will take longer. Secondly, the time taken
-to compute the predicted image from a catalog (in order to evaluate the
+ways: firstly, there will be more unknown parameters to infer, so any MCMC
+algorithm will require more iterations in order to converge to the posterior
+distribution. Secondly, the time taken
+to compute the predicted image from a proposed catalog (in order to evaluate the
 likelihood) is longer because of the larger number of stars. Using DNS, some
 samples from the posterior distribution can be obtained in about a day on a
-modern PC. However, this problem does not have a first-order phase transition
-like Test Case 1. Therefore, it is tractable to run standard Metropolis-Hastings
-MCMC targeting the posterior distribution. In fact, this can be more efficient
-because the efficiency of Nested Sampling methods is sensitive to the ``information'',
-or the amount of prior mass occupied by the posterior distribution. In this case,
-because of the large number of parameters, the information is very large, about
-3000 nats.
+modern PC.
 
 \begin{figure}[ht!]
 \begin{center}
@@ -764,7 +769,7 @@ To implement Metropolis-Hastings moves for the space of possible catalogs,
 proposal distributions are required. See Table~\ref{tab:proposals} for a list of
 proposal distributions used in this study.
 
-\begin{table}\footnotesize
+\begin{table}[ht!]\footnotesize
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline

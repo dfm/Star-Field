@@ -37,6 +37,7 @@ class StarFieldModel:public DNest3::Model
 
 		PSF psf;
 		double noiseSigma, noiseCoeff; // Noise properties
+		double background;
 
 		HyperType hyperparameters;
 		int numStars;

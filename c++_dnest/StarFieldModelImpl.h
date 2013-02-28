@@ -37,6 +37,7 @@ void StarFieldModel<HyperType>::fromPrior()
 {
 	noiseSigma = exp(log(1E-3) + log(1E6)*DNest3::randomU());
 	noiseCoeff = exp(log(1E-3) + log(1E6)*DNest3::randomU());
+	background = -1000. + 2000.*DNest3::randomU();
 
 	psf.fromPrior();
 	hyperparameters.fromPrior();
@@ -79,7 +80,7 @@ template<class HyperType>
 double StarFieldModel<HyperType>::perturb4()
 {
 	double logH = 0.;
-	int which = DNest3::randInt(2);
+	int which = DNest3::randInt(3);
 	if(which == 0)
 	{
 		noiseSigma = log(noiseSigma);
@@ -87,14 +88,21 @@ double StarFieldModel<HyperType>::perturb4()
 		noiseSigma = DNest3::mod(noiseSigma - log(1E-3), log(1E6)) + log(1E-3);
 		noiseSigma = exp(noiseSigma);
 	}
-	else
+	else if(which == 1)
 	{
 		noiseCoeff = log(noiseCoeff);
 		noiseCoeff += log(1E6)*pow(10., 1.5 - 6.*DNest3::randomU())*DNest3::randn();
 		noiseCoeff = DNest3::mod(noiseCoeff - log(1E-3), log(1E6)) + log(1E-3);
 		noiseCoeff = exp(noiseCoeff);
 	}
-
+	else
+	{
+		mockImage.decrement(background);
+		background += 2000.*pow(10., 1.5 - 6.*DNest3::randomU())*DNest3::randn();
+		background = DNest3::mod(background + 1000., 2000.) - 1000.;
+		mockImage.increment(background);
+		staleness++;
+	}
 
 	return logH;
 }
@@ -221,7 +229,7 @@ double StarFieldModel<HyperType>::perturb3()
 template<class HyperType>
 void StarFieldModel<HyperType>::calculateMockImage()
 {
-	mockImage.set(0.);
+	mockImage.set(background);
 	for(size_t i=0; i<stars.size(); i++)
 		stars[i].incrementImage(mockImage, psf);
 	staleness = 0;
@@ -237,7 +245,8 @@ void StarFieldModel<HyperType>::calculateLogLikelihood()
 		for(int j=0; j<Data::get_instance().get_nj(); j++)
 		{
 			var = pow(noiseSigma, 2)
-				+ noiseCoeff*mockImage(i, j);
+				+ noiseCoeff*(mockImage(i, j) - background);
+
 			logL += -0.5*log(2*M_PI*var)
 				- 0.5*pow(Data::get_instance()(i, j)
 				- mockImage(i, j), 2)/var;
@@ -248,7 +257,7 @@ template<class HyperType>
 void StarFieldModel<HyperType>::print(std::ostream& out) const
 {
 	out<<numStars<<' '<<staleness<<' ';
-	out<<psf<<' '<<noiseSigma<<' '<<noiseCoeff<<' ';
+	out<<psf<<' '<<noiseSigma<<' '<<noiseCoeff<<' '<<background<<' ';
 	hyperparameters.print(out); out<<' ';
 
 	// Print x, pad with zeros

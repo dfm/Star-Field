@@ -11,12 +11,11 @@ work, which was very valuable.
 We have modified the manuscript significantly to address the concerns
 of the referee. We list the changes below.
 
-
-
-
 Regards,
-Brewer, Foreman-Mackey, Hogg
 
+Brendon J. Brewer
+Daniel Foreman-Mackey
+David W. Hogg
 
 Itemized Responses
 ==================
@@ -27,16 +26,74 @@ Itemized Responses
 
 "SExtractor "significantly underestimates" and "incorrect inferences"? What do "significant" and "incorrect" mean here - something of practical importance that astronomers should be scared of? The results presented in the paper didn't convince me."
 
-- We were referring to the fact that SExtractor couldn't find all the stars.
-This would be of practical importance in some instances but not others, it depends on whether finding all the stars or quantifying the faint stars is important.
-The abstract has (**NOT YET**) been clarified to be more specific and realistic about the differences between the methods.
-
+- We were referring to the fact that SExtractor could not correctly infer the number of stars in the crowded case, even if you make the threshold settings very aggressive. This would be of practical importance in some instances but not others, it depends on whether finding all the stars or quantifying the faint stars is important. The abstract has been clarified to be more specific and realistic about the differences between the methods.
 
 "The analysis of test cases is very superficial and the reader is left wondering about the actual performance. For example, what is the difference in photometric ans astrometric precision between the new method and SExtractor on an *object-by-object* basis? Surely at the bright end objects must be identical! What is completeness and contamination as a function of brightness? I return to this point below - something *must be wrong* with Fig. 6 and corresponding discussion. The bottom line is that currently Sections 5 and 6 are insufficient to assess the performance of this method, both in absolute sense and relative to SExtractor's performance. The unbelievable claims about SExtractor are not substantiated."
 
+- We do not believe that there is anything wrong (technically) with Figure 6 or the discussion surrounding it (after extensive experimentation with parameters we have not been able to SExtract 600 stars in Test Case 2). However, we realise that this choice of Figure is very dramatic and we have decided to do something else instead to clear up the discussion relating to SExtractor. We have replaced this figure with one showing the true (cumulative) luminosity function along with inferences from our model and from SExtractor.
+
 - The idea of comparing precision on an object-by-object basis is a very good one. (**I'm working on it**).
 
+"- p. 2: PHOTO should be photo"
 
+- Fixed
+
+"p. 2, first paragraph: Can't you simplify this long discussion by just stating that catalogs are lists of best-fit model parameters?"
+
+- Sometimes they are, sometimes they are not. It depends on how they were produced. SExtractor, for example, doesn't do anything resembling fitting. It's point estimation.
+
+"very lossy", "destroy information" etc. - this makes it sound like the end of the world. Either be quantitative or add appropriate caveats; (overselling this method may be counterproductive).
+
+- We have moderated the language significantly here.
+
+
+"p. 2, third paragraph: I am *very* confused by the statement that "Instead of estimating..." First, there is nothing more than "estimating" that we can do whatever the method. Second, and more importantly, standard methods (as in SExtractor, photo, and most other codes) *do* estimate errors for flux, positions, and many other parameters, and these error estimates *are* propagated (in most papers) to subsequent analysis. What is *not* probabilistic about giving flux+-error?"
+
+- This is a language issue. We were using estimation in the sense of point estimates. Standard errors are related to probability but usually not in a very principled way.
+
+"general comment on Introduction: typically, one knows what exactly the paper is about after reading it - not the case here."
+
+"section 3.3: it is a major omission not to give credit to Stetson and DAOPHOT here"
+
+"minor question: after eq. 11: why is the image not *integrated* over the pixel?"
+
+- For computational reasons it is faster to evaluate at the center of the pixel and then reinterpret the PSF model as having been convolved with a square kernel, with *almost* equivalent results. We have added a small point about this.
+
+"minor comment: after eq. 13: I don't quite understand the purpose of eta"
+
+- The noise variance isn't constant, but may increase as a function of brightness. Eta controls whether, and to what extent, this happens.
+
+"minor comment: eqs. 14 and 15: don't you want the tolerance to be +-0.1*(xmax-xmin)? That is, what if xmin=0?"
+
+- This was an error, it has been fixed
+
+"Section 5: words like BIC and Bayesian model comparison are never mentioned; looking at the left panel in Fig. 5 I wonder if high-N models should be penalized for having more parameters (or if perhaps you already included this effect); I also wonder if the scatter in h1 and other global parameters is much larger than for the case when all the fluxes are perfectly known and only LF is determined."
+
+- BIC is an approximation that shouldn't be used (in my opinion). Model comparison is implicit in this analysis and doesn't need to be added on after the fact. That is because N is a parameter that we can propose to change. The Occam penalty occurs naturally in our model without us having to do anything.
+
+"Section 5: given that you discussed most basic features of Bayesian methodology, it would make sense to explain what is "the degree of compression" and why is it important (especially when a number such as exp(3000) is floated around)."
+
+- We have removed this discussion as it was aimed at Nested Sampling experts, which is not the intended audience of this paper.
+
+"fig. 4: pretty but useless! What is the reader supposed to do - stare at it and count all the points? It would be better to use images such as Fig. 1 and 2, and show the mean image for all catalogs, and then a few residual images (perhaps normalized by statistical errors)."
+
+- We do show these summary images in Figure 5. We would like to retain Figure 4 primarily because it shows the fundamental output of this approach, which is samples, not point estimates. We also like the fact that it is pretty!
+
+"fig. 5: what are the stretch and scale in the lower left panel? How do residuals compare to statistical fluctuations?"
+
+- The residuals are just the statistical fluctuations and pass all traditional tests such as reduced chi-squared. This essentially has to be true because we know the model is correct. In practice this may not be the case, but that is a separate issue.
+
+"Section 6: Fig. 6 is very misleading (it implies that SExtractor, which was so many times successfully tested, is lousy). A much more informative plot (I tried it in practice in a similar context) would be to plot cumulative counts vs. log(flux) (bright to faint) for your method and for SExtractor on the same panel. Additional useful plot would be to match sources from the two lists within some small radius and compare their photometry and astrometry with true values. It wouldn't be surprising if SExtractor has biases in crowded field case, and such biases would be *a really strong* argument in favor of your method!"
+
+- We have replaced Figure 6 with the suggested luminosity function plot. It shows that the SExtractor catalogs lie within the uncertainties from the posterior distribution but *only* at the bright end, as you suspect. Our method outperforms SExtractor at the faint end. This can be partially explained by our use of a known parametric form for the LF. To clarify this we have added some discussion of this point.
+
+"Section 6: running SExtractor down to 0.5sigma and computing LF with all these sources is pretty silly (as the sample will have a lot of faint junk; also large errors and Malmquist bias will be important). I find the clustering of alpha1 ~ alpha2 ~ 1 strongly suspect. Also, even for a clean sample with vanishing errors, there are many pitfalls when fitting power-law LFs. I strongly suggest the authors take a look at Clauset, Shalizi, and Newman (2009). Power-Law Distributions in Empirical Data. SIAM Review 51, 661-703."
+
+- I do not understand how else one would compute the LF from a traditional catalog apart from computing the catalog and then fitting the power-law. We are aware of the pitfalls of power laws and have added a caveat saying that it's mostly for demonstration purposes.
+
+"Discussion: second paragraph on p. 15: I don't think your model is limited for what you wanted to do - that is, to assess your method from a statistical point of view. What you listed are limitations for applying your procedure to real data."
+
+- Correct. We still think these are interesting points to mention.
 
 
 Original Referee Report Email Appears Below

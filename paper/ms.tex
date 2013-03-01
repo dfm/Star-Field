@@ -81,7 +81,7 @@ the quantities of astronomical interest with as little loss as
 possible.  Insertion of a catalog-generation step in the inference
 pipeline between the raw imaging and the final astrophysical analyses
 is potentially lossy; the hard decisions of catalog making destroy
-information.  Probability theory suggests that it may be less
+information, at least in principle.  Probability theory suggests that it may be less
 lossy to pass forward not a catalog but a probabilisitic
 description of all the catalogs that could be consistent with the
 imaging---a posterior probability in (enormously large) space of possible catalogs.
@@ -142,9 +142,16 @@ However, maximum likelihood is not completely appropriate in flexible models
 because it may lead to overfitting. In this situation overfitting would result
 in more stars being added to the model to explain small positive fluctuations
 in the image which are actually due to noise. Various other techniques have
-also been proposed in the literature \citep[e.g.][]{2002MNRAS.335...73M, 2007A&A...461..373M, 2009PASP..121.1429Z}.
+also been proposed in the literature
+\citep[e.g.][]{2002MNRAS.335...73M, 2007A&A...461..373M, 2009PASP..121.1429Z}.
 
-The remainder of this paper is structured as follows. In Section~\ref{sec:bayes}
+In this paper, we develop a Bayesian object detection model with the following
+features: i) the number $N$ of objects in the image is an unknown parameter
+to be inferred, ii) the objects that we expect to find are point sources such
+as stars, and iii) the point-spread function is unknown (but a parametric model is
+used) and must be inferred from
+the data (but a single bright star may not be available to help with estimating it).
+This paper is structured as follows. In Section~\ref{sec:bayes}
 we give a brief overview of Bayesian inference. In Section~\ref{sec:model} we
 discuss the model assumptions we make in our method. In Section~\ref{sec:mcmc}
 we briefly discuss our
@@ -245,12 +252,13 @@ is just a way of implementing exchangeability of the stars, and is often
 called a {\it hierarchical model}.
 
 For simplicity, we assume a uniform prior probability distribution for the
-position of each star. This creates a strong preference for catalogs where
+position of each star. The use of independent priors for the positions creates
+a strong preference for catalogs where
 the stars are uniformly scattered across the image. Thus, this model is
-appropriate for small patches of sky where the density of stars is approximately
-uniform. In other scenarios, such as images of stellar clusters, it is possible
+appropriate for small images where the density of stars is approximately
+uniform across the imaeg. In other scenarios, such as images of stellar clusters, it is possible
 to parameterize the spatial distribution of the stars in a similar way to how
-we have parameterized the luminosity function.
+we have parameterized the luminosity function, i.e. as a hierarchical model.
 
 \subsection{The Sampling Distribution}
 The sampling distribution is a probabilistic model for the process that
@@ -286,7 +294,7 @@ pixel.
 Throughout this paper we will
 assume the pixel-convolved PSF is a weighted mixture of two concentric
 circular
-Gaussians (a similar model is also used by \citet{1987PASP...99..191S}) with widths
+Gaussians (a similar mixture model is also used by DAOPHOT, \citet{1987PASP...99..191S}) with widths
 $s_1$ and $s_2$:
 \begin{eqnarray}
 \mathcal{P}(x, y) = \frac{w}{2\pi s_1^2}\exp
@@ -303,8 +311,10 @@ image (evaluated at the center of each pixel) plus noise:
 I_{ij} &=& \mathcal{M}(X_{ij}, Y_{ij}) + \epsilon_{ij}
 \end{eqnarray}
 where the errors $\{\epsilon_{ij}\}$ are independent and normally distributed.
-The variance of each pixel is determined by the brightness of the sky and the
-brightness of the mock image in that pixel:
+The variance of the normal distribution for each pixel is determined by the
+brightness of the sky and the
+brightness of the mock image in that pixel. This can be modelled by assuming the
+following distribution:
 \begin{eqnarray}
 \epsilon_{ij} \sim \mathcal{N}(0, \sigma_0^2 + \eta \mathcal{M}(X_{ij}, Y_{ij})).
 \end{eqnarray}
@@ -312,7 +322,7 @@ where $\sigma_0$ is a constant noise level and $\eta$ is a coefficient allowing
 the noise to be higher in brighter regions of the image. This dependence of the
 noise variances on the model intensity arises as a result of the Poissonian
 nature of photon counts, but allows for the fact that a ``sky'' background may
-have already been subtracted from the image.
+have already been subtracted from the image in the reduction process.
 This parameterisation has been used by \citet{2011MNRAS.412.2521B} and is an
 alternative to the common practice of producing a ``variance map'' from the
 image data that is then assumed to be known.
@@ -480,7 +490,8 @@ were also inferred accurately with small uncertainties.
 
 \subsection{Test Case 2}
 Test Case 2 is more challenging than Test Case 1 because the image contains
-more stars. This increases the size of the computational task in two ways: firstly, there will be more unknown parameters to infer, so any MCMC
+more stars. This increases the size of the computational task in two ways:
+firstly, there will be more unknown parameters to infer, so any MCMC
 algorithm will require more iterations in order to converge to the posterior
 distribution. Secondly, the time taken
 to compute the predicted image from a proposed catalog (in order to evaluate the
@@ -521,21 +532,27 @@ sampled from the posterior distribution. Features that are common to these nine 
 
 From these samples, we can construct the
 posterior expected true scene and other summaries. Summary images are shown in Figure~\ref{fig:summaries}. The residuals
-provide a check on the validity of the model, and the posterior expected true
-scene provides a useful visual guide to the uncertainties present in the catalogs.
+provide a check on the validity of the model assumptions, and the posterior expected true
+scene provides a useful visual guide to the uncertainties present in the catalogs. In this example,
+the residuals show only noise because the simulated images were actually generated from the model.
 
 \begin{figure}[ht!]
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/summaries.eps}
 \end{center}
-\caption{Summary images for test case 2. The upper left panel shows the posterior
+\caption{Summary images for Test Case 2. The upper left panel shows the posterior
 mean high-resolution scene. The upper right panel shows the posterior mean scene
 when observed at the resolution of the data, and the bottom panels show the
 standardized model residuals.
 \label{fig:summaries}}
 \end{figure}
 
-As with test case 1, the PSF parameters $\{s_1, s_2, w\}$ and the noise parameters $\{\sigma_0, \eta\}$ were also inferred accurately with small uncertainties.
+The inferences on the number of stars $N$ and the luminosity function parameters
+are shown in Figure~\ref{fig:results2}. The uncertainty about the luminosity
+function parameters is still considerable despite the larger number of stars, as the fluxes of the fainter stars
+are not well constrained by the data. The true values are still well within
+the range of plausible values in the posterior distribution.
+As with Test Case 1, the PSF parameters $\{s_1, s_2, w\}$ and the noise parameters $\{\sigma_0, \eta\}$ were also inferred accurately with small uncertainties.
 
 \section{Comparison to SExtractor}\label{sec:sex}
 In the previous section we established that the inference of the catalogs from
@@ -555,45 +572,39 @@ known to contain 70\% of the mass of the PSF. The \sex~flux estimates were then
 scaled up to account for this finite aperture.
 
 In Figure~\ref{fig:luminosity_function}, we present the cumulative luminosity
-function of the stars in the two fields, defined as the number of stars above
-a given flux. The true cumulative luminosity function is plotted along with
-posterior samples from the Bayesian method and catalogs produced by \sex.
+function (CLF) of the stars in the two fields, defined as the number of stars above
+a given flux. The true CLF is plotted along with several
+posterior samples from the Bayesian method and catalogs produced by \sex~for
+various values of the detection and analysis thresholds.
+We note that the true CLF is typical of the posterior samples, as expected.
+For both test cases, the \sex~catalog is also consistent with the posterior
+distribution at the bright end. However, the inferences from \sex~and the Bayesian
+method differ at the faint end, with the former significantly underestimating
+the number of faint stars.
+
+This result may be attributable to the fact that the Bayesian method knows
+about the existence and form of the luminosity function, even though it
+does not know the values of the parameters. To test this, we ran the inference
+on the data using an incorrect exponential distribution for the luminosity
+function. The resulting CLF from this run did underestimate the number of low stars.
+However, the
+Bayesian evidence for the exponential model was significantly lower (by a factor of
+approximately $10^7$) than
+for the (correct) broken power-law model.
 
 \begin{figure}[ht!]
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/luminosity_function.eps}
 \end{center}
 \caption{The cumulative luminosity functions produced by the Bayesian method
+(several posterior samples shown)
 and
-\sex, compared with the
-actual cumulative LF. \sex~finds only a small fraction of the
-stars actually present. This is to be expected in the high-$\sigma$ case as
-\sex~then only searches for stars above a certain flux, but at the low-$\sigma$
-end the number of stars is still drastically underestimated. Note that the true
-numbers
-of stars shown in these plots are $\sim$82\% of the values listed in
-Figure~\ref{tab:truth} because here we only count those stars with positions
-in $[-1, 1] \times [-1, 1]$.
+\sex~(for various values of the threshold parameters), compared with the
+actual cumulative LF. Both methods correctly identify the fluxes at the bright
+end, with some uncertainty due to overlapping sources. However, at the lower
+end \sex~is unable to detect all of the stars whereas the true CLF is typical
+of the posterior distribution.
 \label{fig:luminosity_function}}
-\end{figure}
-
-For Test Case 2, we then took the catalog produced by \sex~for the $0.5\sigma$
-threshold and fitted a broken power-law model to the list of fluxes in the catalog.
-Such an approach might be used to study the luminosity function of a set of stars
-in a field. The results of this inference are shown in Figure~\ref{fig:sex_inference}.
-The inference spuriously rules out the true values of the parameters. This
-occurs because the uncertainty in the stellar fluxes is not propagated through
-to the inference of the luminosity function.
-
-\begin{figure}[ht!]
-\begin{center}
-\includegraphics[width=\textwidth]{Figures/sex_inference.eps}
-\end{center}
-\caption{Inference of the luminosity function parameters using the $0.5\sigma$
-catalog from \sex. Note that the inference appears to rule out regions around
-the true input values. This occurs because the uncertainties in the existence
-and fluxes of the faint stars are not taken into account. The true input values are plotted as filled squares.
-\label{fig:sex_inference}}
 \end{figure}
 
 \section{Discussion and Conclusions}\label{sec:conclusion}
@@ -607,17 +618,23 @@ the space of possible catalogs that represents our state of knowledge about
 the presence and properties of objects in the image. When this is done, the
 uncertainties in the imaging are accurately propagated through to scientific
 conclusions, for example about the luminosity function of the stars.
-This approach was contrasted with a standard method of running \sex~and then
-fitting a luminosity function to the fluxes in the catalog. This latter approach
-was shown to produce incorrect inferences about the luminosity function.
+This approach was contrasted with the results from the standard \sex~software.
+For the bright sources the results were essentially consistent, however the
+Bayesian approach was more successful at modelling the distribution of faint
+stars. Of course, the Bayesian method is much more computationally intensive,
+which is a significant issue in practice. To build a more complete picture of
+when our approach is necessary in practice, it will need to be tested against
+a wider variety of alternative methods.
 
-We note that there are many limitations to the model presented in this paper.
+We note that there are many limitations to the model presented in this paper,
+some of which will be important to relax when applying it to real data.
 In principle, our model should be a model of the physical state of the universe,
 and not a simple model where the only stellar properties are a 2-D position and
 a flux. Another limitation is that we have not considered multi-epoch or multi-band
 imaging. In the former case, PSF variations and stellar motions may be relevant
 \citep{lang}, and in the latter, a model for the spectral energy distributions
-of the stars will need to be considered.
+of the stars will need to be considered: essentially, the luminosity function
+will need to be a probability distribution over more than one dimension.
 
 In practice, it may also be necessary to improve the model for the prior
 distribution
@@ -632,7 +649,7 @@ or a stream and those that are not.
 
 Throughout this paper, we have also assumed that the pixel-convolved PSF can
 be adequately modeled using simple components and that there are no PSF
-variations across the field. Relaxing this assumption provides a significant
+variations across the field. Relaxing these assumption provides a significant
 challenge for the future.
 
 %What are the limitations of what we have done?  Limitations include

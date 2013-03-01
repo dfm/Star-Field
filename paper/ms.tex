@@ -33,7 +33,7 @@ New York University, Washington Place, New York, NY, 10003, USA}
 New York University, Washington Place, New York, NY, 10003, USA}
 
 \begin{abstract}
-We present a probabilistic (Bayesian) method for producing catalogs
+We present and implement a probabilistic (Bayesian) method for producing catalogs
 from images of stellar fields. The method is capable of inferring the
 number of sources $N$ in the image and can also handle the
 challenges introduced by noise and overlapping sources. The luminosity
@@ -286,7 +286,7 @@ pixel.
 Throughout this paper we will
 assume the pixel-convolved PSF is a weighted mixture of two concentric
 circular
-Gaussians (this model is also used by \citet{1987PASP...99..191S}) with widths
+Gaussians (a similar model is also used by \citet{1987PASP...99..191S}) with widths
 $s_1$ and $s_2$:
 \begin{eqnarray}
 \mathcal{P}(x, y) = \frac{w}{2\pi s_1^2}\exp
@@ -330,8 +330,8 @@ y_i &\sim& \textnormal{Uniform}(y_{\rm min} - 0.1y_{\rm range}, y_{\rm max} + 0.
 The stars are allowed to be slightly outside of the observed image because the
 PSF can scatter light from these stars into the image.
 
-For the purposes of this paper, we model the luminosity function as a
-luminosity function is a broken power-law with four
+For the purposes of this paper, we model the luminosity function as a broken
+power-law distribution, which has four
 free parameters:
 \begin{eqnarray}
 \beta = \{h_1, h_2, \alpha_1, \alpha_2\}.
@@ -341,7 +341,7 @@ the slope of the distribution between $h_1$ and $h_2$, and $\alpha_2$ is the
 slope of the distribution above $h_2$. For mathematical details on the broken power-law
 model, see Appendix~\ref{power_law}. While the broken power-law is likely to be
 unrealistic in many cases, it is a reasonably flexible distribution and this is
-sufficient for demonstrating the properties of out method.
+sufficient for demonstrating the properties of our method.
 
 The prior distribution on $h_1$, $h_2$,
 $\alpha_1$, and $\alpha_2$ is assigned to be:
@@ -480,14 +480,14 @@ were also inferred accurately with small uncertainties.
 
 \subsection{Test Case 2}
 Test Case 2 is more challenging than Test Case 1 because the image contains
-more stars. This increases the size of the computational task in a number of
-ways: firstly, there will be more unknown parameters to infer, so any MCMC
+more stars. This increases the size of the computational task in two ways: firstly, there will be more unknown parameters to infer, so any MCMC
 algorithm will require more iterations in order to converge to the posterior
 distribution. Secondly, the time taken
 to compute the predicted image from a proposed catalog (in order to evaluate the
-likelihood) is longer because of the larger number of stars. Using DNS, some
+likelihood) is longer because of the larger number of stars. Hence, each MCMC
+step also takes more time. Using DNS, some
 samples from the posterior distribution can be obtained in about a day on a
-modern PC.
+modern multi-core PC.
 
 \begin{figure}[ht!]
 \begin{center}
@@ -495,30 +495,32 @@ modern PC.
 \end{center}
 \caption{Inference about the parameters for Test Case 2. Note that the
 parameters are still not very well constrained even with the larger number of
-stars. The true input values are plotted as filled squares.\label{fig:results2}}
+stars. This occurs because the fluxes of faint stars are not accurately measured
+and because the shape of the broken power-law distribution does not vary rapidly
+as a function of the parameters. The true input values are plotted as filled squares.\label{fig:results2}}
 \end{figure}
-
-Some summary results from Test Case 2 are shown in Figures~\ref{fig:catalogs}
-and~\ref{fig:summaries}. Figure~\ref{fig:catalogs} shows nine possible catalogs
-sampled from the posterior
-distribution. Features that are common to these nine samples are plausible, and
-features that differ are uncertain.
 
 \begin{figure}[ht!]
 \begin{center}
 \includegraphics[scale=0.6]{Figures/catalogs.eps}
 \end{center}
-\caption{Nine example catalogs sampled from the posterior distribution for
+\caption{Fundamentally, the output from our method is samples from the posterior
+distribution over the catalog space. Nine example catalogs are shown, sampled from the posterior distribution for
 Test Case 2. Features in common represent features with high probability,
 and differences between the catalogs represent conclusions that are uncertain.
-The area of each circle is proportional to the flux of the star.\label{fig:catalogs}}
+The area of each circle is proportional to the flux of the star.
+The posterior samples may be used to compute summary images; these are presented
+in Figure~\ref{fig:summaries}.
+\label{fig:catalogs}}
 \end{figure}
 
 Each catalog in the posterior sample represents a scenario for the true
 underlying image that we would observe if we had a hypothetical noise-free,
-infinite resolution telescope. From these samples, we can construct the
-posterior expected true scene. This is shown in Figure~\ref{fig:summaries} along
-with the blurred (but still noise-free) version and the residuals. The residuals
+infinite resolution telescope. Figure~\ref{fig:catalogs} shows nine possible catalogs
+sampled from the posterior distribution. Features that are common to these nine samples are plausible, and features that differ are uncertain.
+
+From these samples, we can construct the
+posterior expected true scene and other summaries. Summary images are shown in Figure~\ref{fig:summaries}. The residuals
 provide a check on the validity of the model, and the posterior expected true
 scene provides a useful visual guide to the uncertainties present in the catalogs.
 
@@ -529,33 +531,42 @@ scene provides a useful visual guide to the uncertainties present in the catalog
 \caption{Summary images for test case 2. The upper left panel shows the posterior
 mean high-resolution scene. The upper right panel shows the posterior mean scene
 when observed at the resolution of the data, and the bottom panels show the
-model residuals.
+standardized model residuals.
 \label{fig:summaries}}
 \end{figure}
 
-As with test case 1, the PSF parameters $\{s_1, s_2, w\}$ and the noise parameters $\{\sigma_0, \eta\}$
-were also inferred accurately with small uncertainties.
+As with test case 1, the PSF parameters $\{s_1, s_2, w\}$ and the noise parameters $\{\sigma_0, \eta\}$ were also inferred accurately with small uncertainties.
 
 \section{Comparison to SExtractor}\label{sec:sex}
 In the previous section we established that the inference of the catalogs from
 the data is computationally feasible and that the number of stars and the
 luminosity function can be inferred from the image data, albeit with moderate
-uncertainty. We now compare this approach to an alternative analysis that makes
+uncertainties. We now compare this approach to an alternative analysis that makes
 use of the standard
-tool \sex. To achieve this, we executed \sex~on the two test images, for various
-values of the detection threshold. This results in a set of catalogs
+tool \sex~\citep{sextractor}. To achieve this, we executed \sex~on the two test images, for various
+values of the detection threshold parameters {\tt DETECT\_THRESH} and {\tt ANALYSIS\_THRESH}
+ranging from 0.5 to 6.5. This results in a set of catalogs
 for each image, with more conservative thresholds resulting in less stars detected
 as compared to more aggressive thresholds. The results for the number of stars in
-the images are shown in Figure~\ref{fig:luminosity_function}. The main result is that
-\sex~significantly underestimates the number of stars in the image for all
-possible values of the detection threshold.
+the images are shown in Figure~\ref{fig:luminosity_function}. To compute flux
+estimates that are directly comparable to the fluxes in our input catalogs, we
+configured \sex~to compute object fluxes within fixed circular apertures that were
+known to contain 70\% of the mass of the PSF. The \sex~flux estimates were then
+scaled up to account for this finite aperture.
+
+In Figure~\ref{fig:luminosity_function}, we present the cumulative luminosity
+function of the stars in the two fields, defined as the number of stars above
+a given flux. The true cumulative luminosity function is plotted along with
+posterior samples from the Bayesian method and catalogs produced by \sex.
 
 \begin{figure}[ht!]
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/luminosity_function.eps}
 \end{center}
-\caption{The number of stars in the catalogs produced by \sex~compared with the
-actual number of stars in the images. \sex~finds only a small fraction of the
+\caption{The cumulative luminosity functions produced by the Bayesian method
+and
+\sex, compared with the
+actual cumulative LF. \sex~finds only a small fraction of the
 stars actually present. This is to be expected in the high-$\sigma$ case as
 \sex~then only searches for stars above a certain flux, but at the low-$\sigma$
 end the number of stars is still drastically underestimated. Note that the true

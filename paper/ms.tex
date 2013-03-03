@@ -36,7 +36,8 @@ New York University, Washington Place, New York, NY, 10003, USA}
 We present and implement a probabilistic (Bayesian) method for producing catalogs
 from images of stellar fields. The method is capable of inferring the
 number of sources $N$ in the image and can also handle the
-challenges introduced by noise and overlapping sources. The luminosity
+challenges introduced by noise, overlapping sources, and an unknown
+point spread function (PSF). The luminosity
 function of the stars can also be inferred even when the precise luminosity
 of each star is uncertain, via the use of a hierarchical Bayesian model.
 The computational feasibility of the method is
@@ -63,7 +64,7 @@ galaxies.  Indeed, the process of catalog construction is so ``baked
 in'' to our ideas about what astronomy is, we sometimes forget that
 the catalog is \emph{not} the fundamental data product of astronomy; catalogs are produced
 from imaging; their production involves many decisions and ideas
-that go way beyond the information provided to the telescope by the
+that go beyond the information provided to the telescope by the
 incident intensity field. In addition, catalogs are not usually the final
 goal of any imaging project or survey. Typically, they are produced in
 order to facilitate the scientific study of populations of objects (e.g. the
@@ -77,8 +78,8 @@ Photo \citep{photo}.
 Telescopes don't make catalogs \citep{2011EAS....45..351H}, they
 measure the intensity field.  Viewed through the lens of probabilistic
 inference, the goals of astronomy are to take the information in the
-telescope-generated records of the intensity field and deliver it to
-the quantities of astronomical interest with as little loss as
+telescope-generated records of the intensity field and use this information
+to obtain quantities of astronomical interest with as little loss as
 possible.  Insertion of a catalog-generation step in the inference
 pipeline between the raw imaging and the final astrophysical analyses
 is potentially lossy; the hard decisions of catalog making destroy
@@ -90,7 +91,7 @@ Essentially, the creation of a catalog is an
 attempt to answer the question,
 ``Given the image we have obtained, what objects are present in the field and
 what are their properties?''.
-This article represents an attempt at this ambitous goal in the specific
+This article represents an attempt at implementing this ambitous goal in the specific
 situation where the only objects in the field are stars or other point sources.
 
 Beyond these philosophical concerns, there are practical issues:
@@ -98,13 +99,15 @@ Standard methods for constructing catalogs can have difficulty in some
 challenging situations. For example, when multiple sources overlap partially
 or completely, it can be difficult to determine how many sources are present,
 and how much flux belongs to each source. In principle, the uncertainty about
-the existence and properties of the stars can be significant and should be
+the existence and properties of the objects can be significant and should be
 propagated into any inferences about the stellar population. A Bayesian approach
 that obtains the posterior distribution over catalog space (rather than a single
 catalog estimate) has the potential to overcome these problems by deblending
 objects when it is possible, and clearly indicating the uncertainty remaining
 when it is not possible.
 
+In practice, Bayesian Inferences are often implemented using Markov Chain Monte
+Carlo (MCMC) methods \citep{mackay} to sample from the posterior distribution.
 Sampling a posterior probability distribution for catalogs is a challenging
 numerical task for a number of reasons. Firstly, the number $N$ of objects in the
 image (and that should therefore be listed in the catalog) is itself unknown.
@@ -117,7 +120,7 @@ label-switching problem that is commonly encountered in mixture modeling
 \citep[e.g.][]{label_switching}. Given any proposed catalog, another catalog that is
 equally plausible is the catalog obtained by shuffling the entries of the first
 catalog. This leads to a posterior distribution with $N!$ identical peaks in
-parameter space. This can lead to difficulties with certain (generally very
+parameter space. This can lead to difficulties with certain (otherwise very
 effective) MCMC algorithms such as the affine-invariant stretch move
 \citep{goodman, emcee}.
 
@@ -148,7 +151,7 @@ also been proposed in the literature
 
 In this paper, we develop a Bayesian object detection model with the following
 features: i) the number $N$ of objects in the image is an unknown parameter
-to be inferred, ii) the objects that we expect to find are point sources such
+to be inferred from the data, ii) the objects that we expect to find are point sources such
 as stars, and iii) the point-spread function is unknown (but a parametric model is
 used) and must be inferred from
 the data (but a single bright star may not be available to help with estimating it).
@@ -295,7 +298,7 @@ pixel.
 Throughout this paper we will
 assume the pixel-convolved PSF is a weighted mixture of two concentric
 circular
-Gaussians (a similar mixture model is also used by DAOPHOT, \citet{1987PASP...99..191S}) with widths
+Gaussians (a similar mixture model that uses a Gaussian core and flexible wings is also used by DAOPHOT, \citet{1987PASP...99..191S}) with widths
 $s_1$ and $s_2$:
 \begin{eqnarray}
 \mathcal{P}(x, y) = \frac{w}{2\pi s_1^2}\exp
@@ -565,8 +568,7 @@ tool \sex~\citep{sextractor}. To achieve this, we executed \sex~on the two test 
 values of the detection threshold parameters {\tt DETECT\_THRESH} and {\tt ANALYSIS\_THRESH}
 ranging from 0.5 to 6.5. This results in a set of catalogs
 for each image, with more conservative thresholds resulting in less stars detected
-as compared to more aggressive thresholds. The results for the number of stars in
-the images are shown in Figure~\ref{fig:luminosity_function}. To compute flux
+as compared to more aggressive thresholds. To compute flux
 estimates that are directly comparable to the fluxes in our input catalogs, we
 configured \sex~to compute object fluxes within fixed circular apertures that were
 known to contain 70\% of the mass of the PSF. The \sex~flux estimates were then

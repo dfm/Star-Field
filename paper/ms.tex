@@ -385,7 +385,7 @@ w &\sim& \textnormal{Uniform}(0, 1)\\
 \ln \sigma_0 &\sim& \textnormal{Uniform}(\ln(10^{-3}), \ln(10^{3})) \\
 \ln \eta &\sim& \textnormal{Uniform}(\ln(10^{-3}), \ln(10^{3}))
 \end{eqnarray}
-where $L = (x_{\rm max} - x_{\rm min})/n$ is the width of a pixel. These priors
+where $L = x_{\rm range}/n$ is the width of a pixel. These priors
 describe vague prior knowledge about the overall scale of the PSF except that the
 wider component is less than 10 times as wide as the narrow component, as well
 as the knowledge that the noise variance is not extreme relative to the fluxes

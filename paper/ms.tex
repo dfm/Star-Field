@@ -322,8 +322,8 @@ following distribution:
 \begin{eqnarray}
 \epsilon_{ij} \sim \mathcal{N}(0, \sigma_0^2 + \eta \mathcal{M}(X_{ij}, Y_{ij})).
 \end{eqnarray}
-where $\sigma_0$ is a constant noise level and $\eta$ is a coefficient allowing
-the noise to be higher in brighter regions of the image. This dependence of the
+where $\sigma_0$ is a constant noise level and $\eta$ is an unknown = coefficient that allows for the possibility that
+the noise level is higher in brighter regions of the image. This dependence of the
 noise variances on the model intensity arises as a result of the Poissonian
 nature of photon counts, but allows for the fact that a ``sky'' background may
 have already been subtracted from the image in the reduction process.
@@ -472,7 +472,13 @@ within about an hour on a modern desktop PC. The inferences on the parameters
 $N$, $h_1$, $h_2$, $\alpha_1$, and $\alpha_2$ are shown in
 Figure~\ref{fig:results1}. The number of stars is correctly inferred, and the
 posterior distributions for the other parameters comfortably contain the true
-input values. Note that the uncertainty in $h_2$, $\alpha_1$, and $\alpha_2$ is
+input values. As $N$ is a parameter of our model, there is no need for Bayesian
+``Model Comparison'' calculations to be done between different values of $N$.
+The DNS method does compute the ``evidence'' value that is required for model
+comparison, but this is useful only to test completely separate models, it
+is not needed to infer the value of $N$.
+
+Note that the uncertainty in $h_2$, $\alpha_1$, and $\alpha_2$ is
 quite large. This is because the broken power-law model
 (Figure~\ref{fig:powerlaw}) does not change drastically in shape as the
 parameters are varied. Therefore, a large number of stars would be required to
@@ -596,6 +602,12 @@ Bayesian evidence for the exponential model was significantly lower (by a factor
 approximately $10^7$) than
 for the (correct) broken power-law model.
 
+In practice, we note that the wings of the PSF might become degenerate
+with an nonzero flat background level in the data. To test whether this
+was influencing the inferences (particularly about the faint end of the CLF)
+we also ran a model that included an unknown constant background. This
+had only a minor effect on the resulting inferences.
+
 \begin{figure}[ht!]
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/luminosity_function.eps}
@@ -626,7 +638,9 @@ This approach was contrasted with the results from the standard \sex~software.
 For the bright sources the results were essentially consistent, however the
 Bayesian approach was more successful at modelling the distribution of faint
 stars. Of course, the Bayesian method is much more computationally intensive,
-which is a significant issue in practice. To build a more complete picture of
+which is a significant issue in practice.
+However, the great value of upcoming imaging data sets, and the irreproducibility of astronomical imaging data in areas of time-domain astrophysics (for example in observations of rare events), make it important to extract as much information as possible from every patch of imaging.  Our view is that the additional CPU time, and the non-triviality of the outputs from our method, will be worth the effort in the next generation of astronomical experiments.
+To build a more complete picture of
 when our approach is necessary in practice, it will need to be tested against
 a wider variety of alternative methods  such as DAOPHOT \citep{1987PASP...99..191S}
 and DOLPHOT \citep{dolphot}.

@@ -23,9 +23,9 @@ Itemized Responses
 
 "Abstract seems to be overselling the case in multiple instances; for example, "introduce" may be too strong given Stetson's work on DAOPHOT"
 
-- We have changed "introduce" to "present". Related approaches definitely exist
-and we have added a few more citations that we have found about since (e.g.
-Hobson 2003)
+- We have considerably reworked the abstract to more moderate phrasing. Related approaches definitely exist
+and we have added a few more citations that we have found out about since (e.g.
+Hobson 2003).
 
 "SExtractor "significantly underestimates" and "incorrect inferences"? What do "significant" and "incorrect" mean here - something of practical importance that astronomers should be scared of? The results presented in the paper didn't convince me."
 
@@ -43,6 +43,7 @@ by using a known parametric form for the LF, a point we now discuss in the paper
 "p. 2, first paragraph: Can't you simplify this long discussion by just stating that catalogs are lists of best-fit model parameters?"
 
 - Sometimes they are lists of best fitting model parameters (by some criterion of "best"), but sometimes they are not. It depends on how they were produced. SExtractor, for example, doesn't really resembling fitting. It's a point estimation procedure.
+We have significantly restructured the introduction to try to make this and following discussion clearer, and to separate out the philosophical idea of doing things the Bayesian way from the practical effects of what can happen in crowded fields.
 
 "very lossy", "destroy information" etc. - this makes it sound like the end of the world. Either be quantitative or add appropriate caveats; (overselling this method may be counterproductive).
 
@@ -50,11 +51,11 @@ by using a known parametric form for the LF, a point we now discuss in the paper
 
 "p. 2, third paragraph: I am *very* confused by the statement that "Instead of estimating..." First, there is nothing more than "estimating" that we can do whatever the method. Second, and more importantly, standard methods (as in SExtractor, photo, and most other codes) *do* estimate errors for flux, positions, and many other parameters, and these error estimates *are* propagated (in most papers) to subsequent analysis. What is *not* probabilistic about giving flux+-error?"
 
-- This is a language issue. We were using estimation in the statistics sense of "point estimates obtained from some procedure". Standard errors are related to probability but there are many ways of obtaining them in the community.
+- This is a language issue. We were using estimation in the statistics sense of "point estimates obtained from some procedure". Standard errors are related to probability but there are many ways of obtaining them in the community. We have tried to be consistent about saying point estimation where that is what we mean.
 
 "general comment on Introduction: typically, one knows what exactly the paper is about after reading it - not the case here."
 
-- The introduction has been changed somewhat, hopefully making this more clear.
+- Hopefully our changes to the introduction make this more clear. In particular we have added a paragraph describing what we discuss in each following section.
 
 "section 3.3: it is a major omission not to give credit to Stetson and DAOPHOT here"
 
@@ -66,7 +67,7 @@ by using a known parametric form for the LF, a point we now discuss in the paper
 
 "minor comment: after eq. 13: I don't quite understand the purpose of eta"
 
-- The noise variance isn't constant, but may increase as a function of brightness. Eta controls whether, and to what extent, this happens.
+- The noise variance isn't constant, but may increase as a function of brightness. Eta controls whether, and to what extent, this happens. This is because images ultimately come from Poisson counts.
 
 "minor comment: eqs. 14 and 15: don't you want the tolerance to be +-0.1*(xmax-xmin)? That is, what if xmin=0?"
 
@@ -74,7 +75,7 @@ by using a known parametric form for the LF, a point we now discuss in the paper
 
 "Section 5: words like BIC and Bayesian model comparison are never mentioned; looking at the left panel in Fig. 5 I wonder if high-N models should be penalized for having more parameters (or if perhaps you already included this effect); I also wonder if the scatter in h1 and other global parameters is much larger than for the case when all the fluxes are perfectly known and only LF is determined."
 
-- BIC is an approximation that shouldn't be used (in my opinion). Model comparison is implicit in this analysis and doesn't need to be added on after the fact. That is because N is a parameter that we can propose to change. The Occam penalty occurs naturally in our model without us having to do anything.
+- BIC is an approximation that shouldn't be used (in my opinion). Model comparison is implicit in this analysis and doesn't need to be added on after the fact, we have added a short discussion about this to the Test Case 1 results section. That is because N is a parameter that we can propose to change. The Occam penalty occurs naturally in our model without us having to do anything.
 
 "Section 5: given that you discussed most basic features of Bayesian methodology, it would make sense to explain what is "the degree of compression" and why is it important (especially when a number such as exp(3000) is floated around)."
 
@@ -87,7 +88,7 @@ by using a known parametric form for the LF, a point we now discuss in the paper
 "fig. 5: what are the stretch and scale in the lower left panel? How do residuals compare to statistical fluctuations?"
 
 - The residuals are just the statistical fluctuations and pass all traditional tests such as reduced chi-squared. This essentially has to be true because we know the model is correct. In practice this may not be the case on real data, in which
-case the model assumptions (PSF etc) would need to be modified.
+case the model assumptions (PSF etc) would need to be modified. This is discussed in the paragraph that begins "From these samples".
 
 "Section 6: Fig. 6 is very misleading (it implies that SExtractor, which was so many times successfully tested, is lousy). A much more informative plot (I tried it in practice in a similar context) would be to plot cumulative counts vs. log(flux) (bright to faint) for your method and for SExtractor on the same panel. Additional useful plot would be to match sources from the two lists within some small radius and compare their photometry and astrometry with true values. It wouldn't be surprising if SExtractor has biases in crowded field case, and such biases would be *a really strong* argument in favor of your method!"
 
@@ -95,12 +96,11 @@ case the model assumptions (PSF etc) would need to be modified.
 
 "Section 6: running SExtractor down to 0.5sigma and computing LF with all these sources is pretty silly (as the sample will have a lot of faint junk; also large errors and Malmquist bias will be important). I find the clustering of alpha1 ~ alpha2 ~ 1 strongly suspect. Also, even for a clean sample with vanishing errors, there are many pitfalls when fitting power-law LFs. I strongly suggest the authors take a look at Clauset, Shalizi, and Newman (2009). Power-Law Distributions in Empirical Data. SIAM Review 51, 661-703."
 
-- I do not understand how else one would compute the LF from a traditional catalog apart from computing the catalog and then fitting the power-law. We are aware of the pitfalls of power laws and have added a caveat saying that it's mostly for demonstration purposes. However, we have removed this figure because it is too dramatic.
+- I do not understand how else one would compute the LF from a traditional catalog apart from computing the catalog and then fitting the power-law. We are aware of the pitfalls of power laws and have added a caveat saying that it's mostly for demonstration purposes. However, we have removed this figure because it is too dramatic. I do not understand what the referee means by "I find the clustering of alpha1 ~ alpha2 ~ 1 strongly suspect". We believe that there are no major technical errors in our work.
 
 "Discussion: second paragraph on p. 15: I don't think your model is limited for what you wanted to do - that is, to assess your method from a statistical point of view. What you listed are limitations for applying your procedure to real data."
 
 - Correct. We have modified the conclusions with the aim of separating out future testing-work (comparing to more codes like DAOPHOT and DOLPHOT) from realistic-science work (which we discussed here).
-
 
 Original Referee Report Email Appears Below
 ===========================================

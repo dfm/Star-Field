@@ -82,11 +82,11 @@ telescope-generated records of the intensity field and use this information
 to obtain quantities of astronomical interest with as little loss as
 possible.  Insertion of a catalog-generation step in the inference
 pipeline between the raw imaging and the final astrophysical analyses
-is potentially lossy; the hard decisions of catalog making destroy
+is potentially lossy. The hard decisions of catalog making destroy
 information, at least in principle.  Probability theory suggests that it may be less
 lossy to pass forward not a catalog but a probabilisitic
 description of all the catalogs that could be consistent with the
-imaging---a posterior probability in (enormously large) space of possible catalogs.
+imaging---a posterior probability distribution in the (enormously large) space of possible catalogs.
 Essentially, the creation of a catalog is an
 attempt to answer the question,
 ``Given the image we have obtained, what objects are present in the field and
@@ -94,8 +94,8 @@ what are their properties?''.
 This article represents an attempt at implementing this ambitous goal in the specific
 situation where the only objects in the field are stars or other point sources.
 
-Beyond these philosophical concerns, there are practical issues:
-Standard methods for constructing catalogs can have difficulty in some
+Beyond these philosophical concerns, there are practical issues;
+standard methods for constructing catalogs can have difficulty in some
 challenging situations. For example, when multiple sources overlap partially
 or completely, it can be difficult to determine how many sources are present,
 and how much flux belongs to each source. In principle, the uncertainty about

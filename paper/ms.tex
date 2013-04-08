@@ -260,7 +260,7 @@ position of each star. The use of independent priors for the positions creates
 a strong preference for catalogs where
 the stars are uniformly scattered across the image. Thus, this model is
 appropriate for small images where the density of stars is approximately
-uniform across the imaeg. In other scenarios, such as images of stellar clusters, it is possible
+uniform across the image. In other scenarios, such as images of stellar clusters, it is possible
 to parameterize the spatial distribution of the stars in a similar way to how
 we have parameterized the luminosity function, i.e. as a hierarchical model.
 
@@ -451,7 +451,11 @@ $w$ & 0.5 & 0.5\\
 \hline
 \end{tabular}
 \end{center}
-\caption{True parameter values used to generate the simulated data. The only
+\caption{True parameter values used to generate the simulated data. 
+$N$ is the number of stars, $h_1$ and $h_2$ are the lower limit and break
+point of the flux distribution respectively, and $\alpha_1$ and $\alpha_2$ 
+are the slopes of the flux distribution. $\sigma_0$ and $\eta$ describe the
+noise properties, and $s_1$, $s_2$, and $w$ are the PSF parameters. The only
 difference between the two images is that Test Case 2 contains more stars than
 Test Case 1.
 \label{tab:truth}}
@@ -461,8 +465,8 @@ Test Case 1.
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/test_cases.eps}
 \caption{The two simulated images used to test our methodology.
-{\bf Left}: A field containing $\sim$100 stars.
-{\bf Right}: A field containing $\sim$1000 stars.\label{fig:simulated_data}}
+{\bf Left}: An image containing $\sim$100 stars.
+{\bf Right}: An image containing $\sim$1000 stars.\label{fig:simulated_data}}
 \end{center}
 \end{figure}
 
@@ -488,7 +492,10 @@ tightly constrain these parameters.
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/inference1.eps}
 \end{center}
-\caption{Inference about the parameters for Test Case 1. Note that there is
+\caption{Inference about the parameters for Test Case 1. The left panel shows
+the posterior distribution for the number of stars $N$, and the right
+panels show the joint posterior distributions for the flux distribution
+(hyper)parameters. Note that there is
 considerable uncertainty (particularly about $h_2$), which occurs because the
 shape of the broken power-law does not depend strongly on the parameters.
 The true input values are plotted as filled squares.
@@ -515,10 +522,11 @@ modern multi-core PC.
 \includegraphics[width=\textwidth]{Figures/inference2.eps}
 \end{center}
 \caption{Inference about the parameters for Test Case 2. Note that the
-parameters are still not very well constrained even with the larger number of
+flux distribution (hyper)parameters are still not very well constrained even with
+the larger number of
 stars. This occurs because the fluxes of faint stars are not accurately measured
 and because the shape of the broken power-law distribution does not vary rapidly
-as a function of the parameters. The true input values are plotted as filled squares.\label{fig:results2}}
+as a function of its parameters. The true input values are plotted as filled squares.\label{fig:results2}}
 \end{figure}
 
 \begin{figure}[ht!]
@@ -530,7 +538,7 @@ distribution over the catalog space. Nine example catalogs are shown, sampled fr
 Test Case 2. Features in common represent features with high probability,
 and differences between the catalogs represent conclusions that are uncertain.
 The area of each circle is proportional to the flux of the star.
-The posterior samples may be used to compute summary images; these are presented
+The posterior samples may be used to compute summary images; some these are presented
 in Figure~\ref{fig:summaries}.
 \label{fig:catalogs}}
 \end{figure}
@@ -550,7 +558,7 @@ the residuals show only noise because the simulated images were actually generat
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/summaries.eps}
 \end{center}
-\caption{Summary images for Test Case 2. The upper left panel shows the posterior
+\caption{Summary images produced from the posterior distribution for Test Case 2. The upper left panel shows the posterior
 mean high-resolution scene. The upper right panel shows the posterior mean scene
 when observed at the resolution of the data, and the bottom panels show the
 standardized model residuals.
@@ -612,7 +620,8 @@ had only a minor effect on the resulting inferences.
 \begin{center}
 \includegraphics[width=\textwidth]{Figures/luminosity_function.eps}
 \end{center}
-\caption{The cumulative luminosity functions produced by the Bayesian method
+\caption{The cumulative luminosity functions (number of stars above a given
+flux, as a function of flux) produced by the Bayesian method
 (several posterior samples shown)
 and
 \sex~(for various values of the threshold parameters), compared with the

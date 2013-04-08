@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
-numHyperparams = 11
+numHyperparams = 12
 
 # CDF of p(flux|hyperparameters)
 def CDF(flux, params=[0.3, 0.6, 1.1, 2.]):

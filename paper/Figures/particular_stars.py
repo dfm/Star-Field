@@ -4,7 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-numHyperparams = 11
+numHyperparams = 12
 maxNumStars = 200
 
 # Load the truth and get catalog out

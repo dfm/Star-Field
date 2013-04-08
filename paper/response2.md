@@ -19,6 +19,21 @@ David W. Hogg
 Itemized Responses
 ==================
 
+"I have a remaining minor comment: the figure captions could be expanded a bit to be a more stand-alone explanation of figures."
+
+- We have expanded most figure captions with extra reminders about what is being displayed.
+
+"Fig. 6 in particular triggered this comment: for example, it's not clear from the caption what is "x", and "x" is also used in figs. 1 and 5 with an entirely different meaning."
+
+- x is a dummy variable for flux. We have renamed it to f to prevent confusion.
+
+"Another minor comment: as an astronomer I am very interested in your results and their importance - yet, I think there is a bit of oversell when fig. 6 has the lower limit on x axis of 0.1 because the extremely faint part is (over)emphasized, while the most interesting part (in practice) is 1 < x < 10. If I were Bertin (and I am not), I might say "I see that for x>4 we completely agree, and everyone detects to SNR=5 anyway, so what is the big deal?"
+
+- Fair enough. We do like that the flat part of the curve is recovered
+well (this corresponds to being able to measure the parameter h_1), so we would
+like to retain some of it in this figure. We do now show less of it though.
+We have also tidied up the figure so it uses the same fonts as the other figures
+and also ensured that it fits inside the page in the PDF version.
 
 Original Referee Report Email Appears Below
 ===========================================

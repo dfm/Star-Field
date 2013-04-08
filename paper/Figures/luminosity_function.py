@@ -2,6 +2,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
+import plot_utils
 
 numHyperparams = 12
 
@@ -44,12 +45,10 @@ plt.figure(figsize=(14, 6))
 for i in xrange(0, 2):
 	sample = np.loadtxt('../../Runs/' + names[i] + '/posterior_sample.txt')
 
-	# Dumb hack because the data had 2000 maxNumStars
-	# but inference was run with 1200
 	if i==0:
 		maxNumStars = 200
 	if i==1:
-		maxNumStars = 1200
+		maxNumStars = 2000
 
 	plt.subplot(1,2,i+1)
 	plt.hold(True)
@@ -71,9 +70,9 @@ for i in xrange(0, 2):
 		plt.loglog(_flux, F, 'r', alpha=0.25, label=theLabel)
 
 	plt.xlabel('$x$', fontsize=15)
-	plt.ylabel('Number (Flux > $x$)', fontsize=15)
+	plt.ylabel('Number (Flux $>$ $f$)', fontsize=15)
 	plt.title(titles[i], fontsize=16)
-	plt.legend(numpoints=1, loc='lower left')
+	plt.legend(numpoints=1, loc='upper right')
 	#plt.xlim([0.01, 10.])
 
 	if i==0:
@@ -103,8 +102,6 @@ for i in xrange(0, 2):
 for i in xrange(0, 2):
 	sample = np.loadtxt('../../c++_dnest/SimulatedData/' + names[i] + '_ground_truth.txt')
 
-	# Dumb hack because the data had 2000 maxNumStars
-	# but inference was run with 1200
 	if i==0:
 		maxNumStars = 200
 	if i==1:
@@ -124,18 +121,18 @@ for i in xrange(0, 2):
 	plt.subplot(1,2,i+1)
 	plt.loglog(_flux, F, 'k', linewidth=3, label='True')
 
-	plt.xlabel('$x$', fontsize=15)
-	plt.ylabel('Number (Flux > $x$)', fontsize=15)
+	plt.xlabel('$f$', fontsize=15)
+	plt.ylabel('Number (Flux $>$ $f$)', fontsize=15)
 	plt.title(titles[i], fontsize=16)
-	plt.legend(numpoints=1, loc='lower left')
+	plt.legend(numpoints=1, loc='upper right')
 	if i==0:
 		plt.ylim([0.6667, 150.])
 	elif i==1:
 		plt.ylim([0.6667, 1500.])
 	if i==0:
-		plt.xlim([0.1, 3.])
+		plt.xlim([0.2, 3.])
 	elif i==1:
-		plt.xlim([0.1, 25.])	
+		plt.xlim([0.2, 10.])	
 
 plt.savefig('luminosity_function.eps', bbox_inches='tight', dpi=600)
 plt.savefig('luminosity_function.png', bbox_inches='tight', dpi=600)

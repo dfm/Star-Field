@@ -14,7 +14,8 @@ class Data
 		Array image; // Pixel intensities
 		bool loaded;
 
-		double ni, nj, xMin, xMax, yMin, yMax;
+		int ni, nj;
+		double xMin, xMax, yMin, yMax;
 		double xRange, yRange, dx, dy, dA;
 
 		// Pixel centers

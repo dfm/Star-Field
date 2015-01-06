@@ -53,7 +53,7 @@ for i in xrange(0, sample.shape[0]):
 	gca().set_yticks([])
 	title('Mock Data ' + str(i+1))
 	subplot(2,2,4)
-	var = sample[i, 5]**2 + sample[i, 6]*(mock - sample[i, 7])
+	var = sample[i, 7]**2 + sample[i, 8]*(mock - sample[i, 9])
 	imshow((mock - data)/sqrt(var))
 	gca().set_xticks([])
 	gca().set_yticks([])

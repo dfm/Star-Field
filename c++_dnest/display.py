@@ -6,7 +6,7 @@ if saveFrames:
 	os.system('rm Frames/*.png')
 
 maxNumStars = 200
-numHyperparams = 12	# Number of parameters before catalog begins
+numHyperparams = 14	# Number of parameters before catalog begins
 			# maxNumStars, staleness, psf parameters, noise parameters
 			# luminosity function parameters
 

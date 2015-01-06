@@ -17,15 +17,18 @@ PSF::PSF()
 
 }
 
-PSF::PSF(double sigma1, double sigma2, double weight)
-:sigma1(sigma1), sigma2(sigma2), weight(weight)
+PSF::PSF(double sigma1, double sigma2, double weight, double q, double theta)
+:sigma1(sigma1), sigma2(sigma2), weight(weight), q(q), theta(theta)
 {
 	sync();
 }
 
 double PSF::evaluate(double x, double y) const
 {
-	double rsq = x*x + y*y;
+	double xx =  x*cosTheta + y*sinTheta;
+	double yy = -x*sinTheta + y*cosTheta;
+
+	double rsq = q*xx*xx + yy*yy/q;
 	double result = 0.;
 	if(rsq < rsqEdge)
 	{
@@ -43,6 +46,8 @@ void PSF::sync()
 	preFactor2 = pr2/(2*M_PI);
 	rEdge = PSF::edge*sigma2;
 	rsqEdge = pow(rEdge, 2);
+	cosTheta = cos(theta);
+	sinTheta = sin(theta);
 }
 
 void PSF::fromPrior()
@@ -52,6 +57,8 @@ void PSF::fromPrior()
 	double diff = 2.3*randomU();
 	sigma2 = exp(log(sigma1) + diff);
 	weight = randomU();
+	q = 0.1 + 0.9*randomU();
+	theta = M_PI*randomU();
 
 	sync();
 }
@@ -60,7 +67,7 @@ double PSF::perturb()
 {
 	double logH = 0.;
 
-	int which = randInt(3);
+	int which = randInt(5);
 	if(which == 0)
 	{
 		double diff = log(sigma2) - log(sigma1);
@@ -80,10 +87,20 @@ double PSF::perturb()
 		diff = mod(diff, 2.3);
 		sigma2 = exp(log(sigma1) + diff);
 	}
-	else
+	else if(which == 2)
 	{
 		weight += pow(10., 1.5 - 6.*randomU())*randn();
 		weight = mod(weight, 1.);
+	}
+	else if(which == 3)
+	{
+		q += 0.9*randh();
+		wrap(q, 0.1, 1.);
+	}
+	else
+	{
+		theta += M_PI*randh();
+		wrap(theta, 0., M_PI);
 	}
 
 	sync();
@@ -92,7 +109,8 @@ double PSF::perturb()
 
 ostream& operator << (ostream& out, const PSF& psf)
 {
-	out<<psf.sigma1<<' '<<psf.sigma2<<' '<<psf.weight;
+	out<<psf.sigma1<<' '<<psf.sigma2<<' '<<psf.weight<<' '<<psf.q;
+	out<<' '<<psf.theta<<' ';
 	return out;
 }
 

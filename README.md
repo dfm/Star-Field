@@ -1,10 +1,14 @@
 # Copyright
 
-This repository is (c) 2012, 2013 Brendon
-J. Brewer, Daniel Foreman-Mackey, David W. Hogg. All rights reserved.
+This repository is (c) 2012, 2013 Brendon J. Brewer, Daniel 
+Foreman-Mackey, David W. Hogg. Its contents are released under the
+MIT License. See the LICENSE file for details.
 
 Probabilistic Catalogs for Stellar Fields
 -----
+
+If you're looking for a more recent and somewhat more user-friendly implementation of this idea,
+see [StarStudded](https://github.com/eggplantbren/StarStudded).
 
 <!--# Synthetic Star Field Generator-->
 
